@@ -203,18 +203,18 @@ a:hover {
 }
 
 .hero {
-  margin: 0 0 26px;
-  padding: 18px 0 12px;
+  margin: 0 0 42px;
+  padding: 18px 0 0;
 }
 
 .panel {
-  margin: 0 0 26px;
+  margin: 0 0 50px;
   padding: 0;
   background: transparent;
 }
 
 .section-heading {
-  margin-bottom: 14px;
+  margin-bottom: 22px;
 }
 
 .section-heading h2 {
@@ -225,69 +225,70 @@ a:hover {
 }
 
 .section-heading p,
+.entry p,
 .placeholder-text,
-.definition-card p,
 .contact-note {
   margin: 0;
   color: var(--text);
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
-.workflow {
+.entry-list {
+  display: grid;
+  gap: 28px;
+}
+
+.entry {
+  display: grid;
+  gap: 8px;
+}
+
+.entry h3 {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.code-sample {
+  display: grid;
+  gap: 4px;
+}
+
+.code-actions {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px 14px;
-  padding-left: 0;
+  justify-content: flex-end;
 }
 
-.workflow-step {
+.copy-button {
   padding: 0;
-  background: transparent;
   border: 0;
-  border-radius: 0;
-  font: inherit;
-  font-weight: 700;
-}
-
-.workflow-arrow {
+  background: transparent;
   color: var(--text);
-  font-size: 1rem;
+  font: inherit;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  opacity: 0.72;
 }
 
-.placeholder-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px 28px;
-}
-
-.definition-card {
-  padding: 0;
-  background: transparent;
-  border: 0;
-  border-radius: 0;
-}
-
-.definition-card h3 {
-  margin: 0 0 6px;
-  font-size: 1rem;
-  font-weight: 700;
-}
-
-.section-body {
-  display: grid;
-  gap: 12px;
+.copy-button:hover,
+.copy-button:focus-visible {
+  opacity: 1;
+  text-decoration: underline;
+  outline: none;
 }
 
 pre {
   margin: 0;
-  padding: 0 0 0 1.5rem;
+  padding: 0 0 0 1.15rem;
   overflow: auto;
   background: transparent;
   color: var(--text);
   border: 0;
   border-radius: 0;
-  line-height: 1.55;
+  line-height: 1.6;
   white-space: pre-wrap;
 }
 
@@ -297,7 +298,7 @@ code {
 }
 
 .contact-note {
-  margin: 28px 0 0;
+  margin: 32px 0 0;
   padding: 0;
 }
 
@@ -329,10 +330,6 @@ code {
   .content,
   .footer {
     margin-left: calc(230px + 20px);
-  }
-
-  .placeholder-grid {
-    grid-template-columns: 1fr;
   }
 }
 

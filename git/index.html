@@ -47,59 +47,93 @@
     <section class="hero" id="page-header">
       <p class="eyebrow">Git cheatsheet prototype</p>
       <h1>Git Cheatsheet</h1>
-      <p class="lead">A clean static layout for checking structure, hierarchy, and anchor relationships before filling in real content.</p>
+      <p class="lead">A static layout for checking structure, hierarchy, and anchor relationships before filling in real content.</p>
     </section>
 
     <section class="panel" aria-labelledby="workflow-overview-title">
       <div class="section-heading">
         <h2 id="workflow-overview-title">Workflow Overview</h2>
-        <p>Quickly check where the workflow sits: local edit, staging, commit, and sync.</p>
+        <p>Use this strip to spot your place in the Git flow before moving to a specific command group.</p>
       </div>
 
-      <div class="workflow" aria-label="Git workflow overview">
-        <div class="workflow-step">Clone / Init</div>
-        <div class="workflow-arrow">→</div>
-        <div class="workflow-step">Edit files</div>
-        <div class="workflow-arrow">→</div>
-        <div class="workflow-step">git add</div>
-        <div class="workflow-arrow">→</div>
-        <div class="workflow-step">git commit</div>
-        <div class="workflow-arrow">→</div>
-        <div class="workflow-step">git pull</div>
-        <div class="workflow-arrow">→</div>
-        <div class="workflow-step">git push</div>
+      <div class="entry-list">
+        <article class="entry">
+          <h3>Current stage</h3>
+          <div class="code-sample">
+            <div class="code-actions">
+              <button type="button" class="copy-button" data-copy-target="workflow-code">Copy</button>
+            </div>
+            <pre><code id="workflow-code">Clone / Init
+Edit files
+git add
+git commit
+git pull
+git push</code></pre>
+          </div>
+          <p>A simple linear map for deciding whether you are still local, staging, or syncing.</p>
+        </article>
       </div>
     </section>
 
     <section class="panel" aria-labelledby="placeholders-title">
       <div class="section-heading">
         <h2 id="placeholders-title">Placeholder Description</h2>
-        <p>Each placeholder below has its own anchor so the sidebar can jump straight to the matching explanation.</p>
+        <p>Each placeholder is shown as a small entry so the sidebar can jump straight to its meaning.</p>
       </div>
 
-      <div class="placeholder-grid">
-        <article class="definition-card" id="placeholder-your-name">
+      <div class="entry-list">
+        <article class="entry" id="placeholder-your-name">
           <h3>your-name</h3>
-          <p>Placeholder for the author or contributor name used in local examples and command snippets.</p>
+          <div class="code-sample">
+            <div class="code-actions">
+              <button type="button" class="copy-button" data-copy-target="placeholder-your-name-code">Copy</button>
+            </div>
+            <pre><code id="placeholder-your-name-code">your-name</code></pre>
+          </div>
+          <p>Placeholder for the author or contributor name used in local examples.</p>
         </article>
 
-        <article class="definition-card" id="placeholder-your-email">
+        <article class="entry" id="placeholder-your-email">
           <h3>your-email</h3>
+          <div class="code-sample">
+            <div class="code-actions">
+              <button type="button" class="copy-button" data-copy-target="placeholder-your-email-code">Copy</button>
+            </div>
+            <pre><code id="placeholder-your-email-code">your-email</code></pre>
+          </div>
           <p>Placeholder for the email value that would normally be configured in Git identity settings.</p>
         </article>
 
-        <article class="definition-card" id="placeholder-origin">
+        <article class="entry" id="placeholder-origin">
           <h3>origin</h3>
+          <div class="code-sample">
+            <div class="code-actions">
+              <button type="button" class="copy-button" data-copy-target="placeholder-origin-code">Copy</button>
+            </div>
+            <pre><code id="placeholder-origin-code">origin</code></pre>
+          </div>
           <p>Placeholder for the default remote name that points to the main repository location.</p>
         </article>
 
-        <article class="definition-card" id="placeholder-main">
+        <article class="entry" id="placeholder-main">
           <h3>main</h3>
+          <div class="code-sample">
+            <div class="code-actions">
+              <button type="button" class="copy-button" data-copy-target="placeholder-main-code">Copy</button>
+            </div>
+            <pre><code id="placeholder-main-code">main</code></pre>
+          </div>
           <p>Placeholder for the primary branch name used as the central integration point.</p>
         </article>
 
-        <article class="definition-card" id="placeholder-remote-url">
+        <article class="entry" id="placeholder-remote-url">
           <h3>remote-url</h3>
+          <div class="code-sample">
+            <div class="code-actions">
+              <button type="button" class="copy-button" data-copy-target="placeholder-remote-url-code">Copy</button>
+            </div>
+            <pre><code id="placeholder-remote-url-code">remote-url</code></pre>
+          </div>
           <p>Placeholder for the repository address that Git uses when talking to a remote server.</p>
         </article>
       </div>
@@ -110,78 +144,195 @@
         <h2 id="setup-title">Setup</h2>
         <p>Prototype section for initial configuration and repository creation.</p>
       </div>
-      <div class="section-body">
-        <p class="placeholder-text">Placeholder content for setup steps.</p>
-        <pre><code>git config --global user.name "your-name"
-git config --global user.email "your-email"
-git init</code></pre>
+
+      <div class="entry-list">
+        <article class="entry">
+          <h3>Identity</h3>
+          <div class="code-sample">
+            <div class="code-actions">
+              <button type="button" class="copy-button" data-copy-target="setup-identity-code">Copy</button>
+            </div>
+            <pre><code id="setup-identity-code">git config --global user.name "your-name"
+git config --global user.email "your-email"</code></pre>
+          </div>
+          <p>Use this once to match local commits with the name and email shown in placeholders above.</p>
+        </article>
+
+        <article class="entry">
+          <h3>Repository start</h3>
+          <div class="code-sample">
+            <div class="code-actions">
+              <button type="button" class="copy-button" data-copy-target="setup-init-code">Copy</button>
+            </div>
+            <pre><code id="setup-init-code">git init</code></pre>
+          </div>
+          <p>Use this when a new folder needs Git metadata before any files are tracked.</p>
+        </article>
       </div>
     </section>
 
     <section class="panel" id="daily-commands" aria-labelledby="daily-commands-title">
       <div class="section-heading">
         <h2 id="daily-commands-title">Daily Commands</h2>
-        <p>Prototype area for the commands used most often during everyday work.</p>
+        <p>Everyday work stays in short entries so the page reads like a compact technical note.</p>
       </div>
-      <div class="section-body">
-        <p class="placeholder-text">Placeholder content for status, add, commit, and log commands.</p>
-        <pre><code>git status
+
+      <div class="entry-list">
+        <article class="entry">
+          <h3>Check state</h3>
+          <div class="code-sample">
+            <div class="code-actions">
+              <button type="button" class="copy-button" data-copy-target="daily-state-code">Copy</button>
+            </div>
+            <pre><code id="daily-state-code">git status
 git add .
-git commit -m "message"
-git log --oneline</code></pre>
+git commit -m "message"</code></pre>
+          </div>
+          <p>Use this sequence to inspect changes, stage them, and record a local checkpoint.</p>
+        </article>
+
+        <article class="entry">
+          <h3>Inspect history</h3>
+          <div class="code-sample">
+            <div class="code-actions">
+              <button type="button" class="copy-button" data-copy-target="daily-history-code">Copy</button>
+            </div>
+            <pre><code id="daily-history-code">git log --oneline</code></pre>
+          </div>
+          <p>Use this when you only need a compact view of recent commits.</p>
+        </article>
       </div>
     </section>
 
     <section class="panel" id="branching" aria-labelledby="branching-title">
       <div class="section-heading">
         <h2 id="branching-title">Branching</h2>
-        <p>Prototype area for feature branches, switching, and merge checkpoints.</p>
+        <p>Branch operations are split into small entries so creation and merging remain visually distinct.</p>
       </div>
-      <div class="section-body">
-        <p class="placeholder-text">Placeholder content for branch creation and navigation.</p>
-        <pre><code>git branch feature/example
-git switch feature/example
-git merge main</code></pre>
+
+      <div class="entry-list">
+        <article class="entry">
+          <h3>Create and switch</h3>
+          <div class="code-sample">
+            <div class="code-actions">
+              <button type="button" class="copy-button" data-copy-target="branch-create-code">Copy</button>
+            </div>
+            <pre><code id="branch-create-code">git branch feature/example
+git switch feature/example</code></pre>
+          </div>
+          <p>Use this to prepare an isolated line of work before editing code.</p>
+        </article>
+
+        <article class="entry">
+          <h3>Merge back</h3>
+          <div class="code-sample">
+            <div class="code-actions">
+              <button type="button" class="copy-button" data-copy-target="branch-merge-code">Copy</button>
+            </div>
+            <pre><code id="branch-merge-code">git merge main</code></pre>
+          </div>
+          <p>Use this once the branch is ready to fold back into the shared line.</p>
+        </article>
       </div>
     </section>
 
     <section class="panel" id="remote" aria-labelledby="remote-title">
       <div class="section-heading">
         <h2 id="remote-title">Remote</h2>
-        <p>Prototype area for remote tracking and synchronization commands.</p>
+        <p>Remote commands are split to separate inspection from synchronization.</p>
       </div>
-      <div class="section-body">
-        <p class="placeholder-text">Placeholder content for fetch, pull, and push operations.</p>
-        <pre><code>git remote -v
-git fetch origin
+
+      <div class="entry-list">
+        <article class="entry">
+          <h3>Inspect remotes</h3>
+          <div class="code-sample">
+            <div class="code-actions">
+              <button type="button" class="copy-button" data-copy-target="remote-inspect-code">Copy</button>
+            </div>
+            <pre><code id="remote-inspect-code">git remote -v</code></pre>
+          </div>
+          <p>Use this to confirm which remote names and URLs the repository knows about.</p>
+        </article>
+
+        <article class="entry">
+          <h3>Sync with main</h3>
+          <div class="code-sample">
+            <div class="code-actions">
+              <button type="button" class="copy-button" data-copy-target="remote-sync-code">Copy</button>
+            </div>
+            <pre><code id="remote-sync-code">git fetch origin
 git pull origin main
 git push origin main</code></pre>
+          </div>
+          <p>Use this sequence to bring in updates and then publish your own changes.</p>
+        </article>
       </div>
     </section>
 
     <section class="panel" id="undo" aria-labelledby="undo-title">
       <div class="section-heading">
         <h2 id="undo-title">Undo</h2>
-        <p>Prototype area for safely reversing mistakes at different stages.</p>
+        <p>Undo actions stay short so the page remains a quick reference instead of a tutorial.</p>
       </div>
-      <div class="section-body">
-        <p class="placeholder-text">Placeholder content for restore, reset, and revert examples.</p>
-        <pre><code>git restore file.txt
-git reset --soft HEAD~1
-git revert HEAD</code></pre>
+
+      <div class="entry-list">
+        <article class="entry">
+          <h3>Restore working tree</h3>
+          <div class="code-sample">
+            <div class="code-actions">
+              <button type="button" class="copy-button" data-copy-target="undo-restore-code">Copy</button>
+            </div>
+            <pre><code id="undo-restore-code">git restore file.txt
+git reset --soft HEAD~1</code></pre>
+          </div>
+          <p>Use this when the change should be removed locally without rewriting the whole branch story.</p>
+        </article>
+
+        <article class="entry">
+          <h3>Record a reversal</h3>
+          <div class="code-sample">
+            <div class="code-actions">
+              <button type="button" class="copy-button" data-copy-target="undo-revert-code">Copy</button>
+            </div>
+            <pre><code id="undo-revert-code">git revert HEAD</code></pre>
+          </div>
+          <p>Use this when the reversal itself should become a tracked commit.</p>
+        </article>
       </div>
     </section>
 
     <section class="panel" id="common-issues" aria-labelledby="common-issues-title">
       <div class="section-heading">
         <h2 id="common-issues-title">Common Issues</h2>
-        <p>Prototype area for common errors and quick checks before shipping the real cheatsheet.</p>
+        <p>Common checks are grouped as short entries so they read like quick notes during troubleshooting.</p>
       </div>
-      <div class="section-body">
-        <p class="placeholder-text">Placeholder content for merge conflicts, detached HEAD, and line-ending issues.</p>
-        <pre><code>git status
+
+      <div class="entry-list">
+        <article class="entry">
+          <h3>Quick checks</h3>
+          <div class="code-sample">
+            <div class="code-actions">
+              <button type="button" class="copy-button" data-copy-target="issues-checks-code">Copy</button>
+            </div>
+            <pre><code id="issues-checks-code">git status
 git diff
 git branch --show-current</code></pre>
+          </div>
+          <p>Use this when you need to answer what changed, where you are, and what is pending.</p>
+        </article>
+
+        <article class="entry">
+          <h3>Conflict path</h3>
+          <div class="code-sample">
+            <div class="code-actions">
+              <button type="button" class="copy-button" data-copy-target="issues-conflict-code">Copy</button>
+            </div>
+            <pre><code id="issues-conflict-code">git diff
+git add .
+git commit</code></pre>
+          </div>
+          <p>Use this as a reminder that conflicts usually become visible through the diff first.</p>
+        </article>
       </div>
     </section>
 
@@ -193,5 +344,45 @@ git branch --show-current</code></pre>
     <span>Repository</span>
     <span>Email</span>
   </footer>
+
+  <script>
+    (function () {
+      function copyText(text) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          return navigator.clipboard.writeText(text);
+        }
+
+        var textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.top = '-9999px';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        return Promise.resolve();
+      }
+
+      document.querySelectorAll('.copy-button').forEach(function (button) {
+        button.addEventListener('click', function () {
+          var targetId = button.getAttribute('data-copy-target');
+          var code = document.getElementById(targetId);
+          if (!code) {
+            return;
+          }
+
+          var originalLabel = button.textContent;
+          copyText(code.innerText.replace(/\n$/, '')).then(function () {
+            button.textContent = 'Copied';
+            window.setTimeout(function () {
+              button.textContent = originalLabel;
+            }, 1000);
+          });
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
