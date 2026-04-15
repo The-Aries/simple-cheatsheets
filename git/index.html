@@ -173,7 +173,7 @@
             <code class="command-code" id="setup-identity-code" data-template='git config --global user.name "your-name"'>git config --global user.name "your-name"</code>
             <button type="button" class="copy-button" data-copy-target="setup-identity-code">Copy</button>
           </div>
-          <p>Use this once to match local commits with the name and email shown in the values panel.</p>
+          <p>Use this once to match local commits with the name shown in the values panel.</p>
         </article>
 
         <article class="entry">
@@ -285,6 +285,15 @@
         </article>
 
         <article class="entry">
+          <h3>Fetch updates</h3>
+          <div class="code-line">
+            <code class="command-code" id="remote-fetch-code" data-template="git fetch origin">git fetch origin</code>
+            <button type="button" class="copy-button" data-copy-target="remote-fetch-code">Copy</button>
+          </div>
+          <p>Use this when you want to download remote changes without merging them yet.</p>
+        </article>
+
+        <article class="entry">
           <h3>Sync with main</h3>
           <div class="code-line">
             <code class="command-code" id="remote-sync-code" data-template="git pull origin main">git pull origin main</code>
@@ -376,22 +385,18 @@
       </div>
     </section>
 
-    <p class="contact-note">If you have questions or suggestions, you can contact the author.</p>
+    <p class="contact-note">If you have questions or suggestions, you can <a href="mailto:YOUR_EMAIL">email the author</a> or <a href="https://github.com/YOUR_NAME/YOUR_REPO/issues/new">raise an issue</a>.</p>
   </main>
 
   <footer class="footer">
-    <span>GitHub Profile</span>
-    <span>Repository</span>
-    <span>Email</span>
+    <a href="https://github.com/YOUR_NAME">GitHub Profile</a>
+    <a href="https://github.com/YOUR_NAME/YOUR_REPO">Repository</a>
+    <a href="./">Copyright © 2026 Junhao Zhang</a>
   </footer>
 
   <script>
     (function () {
       var placeholderKeys = ['your-name', 'your-email', 'origin', 'main', 'remote-url'];
-
-      function escapeRegExp(value) {
-        return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      }
 
       function getPlaceholderValues() {
         var values = {};

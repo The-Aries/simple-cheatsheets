@@ -339,8 +339,11 @@ a:hover {
 
 .code-line {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 14px;
+  background: #000000;
+  color: #ffffff;
+  padding: 0.8rem 0.95rem;
 }
 
 .command-code {
@@ -352,6 +355,7 @@ a:hover {
   font-family: "Cascadia Code", Consolas, "Courier New", monospace;
   font-size: 0.92rem;
   line-height: 1.6;
+  color: #ffffff;
 }
 
 .copy-button {
@@ -359,7 +363,7 @@ a:hover {
   padding: 0;
   border: 0;
   background: transparent;
-  color: var(--text);
+  color: #ffffff;
   font: inherit;
   font-size: 0.72rem;
   letter-spacing: 0.08em;
