@@ -10,7 +10,7 @@
   <header class="topbar">
     <a class="brand" href="../">simple-cheatsheets</a>
     <nav aria-label="Global navigation">
-      <a href="../">Overview</a>
+      <a href="../">Homepage</a>
       <a href="./">Git</a>
       <a href="../linux/">Linux</a>
       <a href="../markdown/">Markdown</a>
@@ -22,60 +22,63 @@
     <section class="sidebar-section">
       <h2>Placeholders</h2>
       <ul>
-        <li><a href="#placeholder-your-name">your-name</a></li>
-        <li><a href="#placeholder-your-email">your-email</a></li>
-        <li><a href="#placeholder-origin">origin</a></li>
-        <li><a href="#placeholder-main">main</a></li>
-        <li><a href="#placeholder-remote-url">remote-url</a></li>
+        <li><a href="#placeholder-github-username">githubUsername</a></li>
+        <li><a href="#placeholder-github-login-email">githubLoginEmail</a></li>
+        <li><a href="#placeholder-local-branch">localBranch</a></li>
+        <li><a href="#placeholder-cloud-branch">cloudBranch</a></li>
+        <li><a href="#placeholder-repo-url">repoUrl</a></li>
       </ul>
     </section>
 
     <section class="sidebar-section">
       <h2>On this page</h2>
       <ul>
-        <li><a href="#setup">Setup</a></li>
-        <li><a href="#daily-commands">Daily Commands</a></li>
-        <li><a href="#branching">Branching</a></li>
-        <li><a href="#remote">Remote</a></li>
-        <li><a href="#undo">Undo</a></li>
-        <li><a href="#common-issues">Common Issues</a></li>
+        <li><a href="#section-1">1. Setup and Repository</a></li>
+        <li><a href="#section-2">2. Save and Sync</a></li>
+        <li><a href="#section-3">3. Branching</a></li>
+        <li><a href="#section-4">4. Inspect</a></li>
+        <li><a href="#section-5">5. Fix and Integrate</a></li>
       </ul>
     </section>
   </aside>
 
   <main class="content">
     <section class="hero" id="page-header">
-      <p class="eyebrow">Git cheatsheet prototype</p>
       <h1>Git Cheatsheet</h1>
-      <p class="lead">A static layout for checking structure, hierarchy, and anchor relationships before filling in real content.</p>
+      <h2 class="description-title">Description</h2>
+      <p class="lead">This page is a practical cheatsheet for common Git commands. Fill in your placeholders, apply them, then copy commands with your own values. It is not a complete Git guide. For deeper coverage, see the <a href="https://git-scm.com/doc">official Git documentation</a>.</p>
     </section>
 
     <section class="panel values-panel" aria-labelledby="values-title">
       <div class="section-heading">
         <h2 id="values-title">Placeholders</h2>
-        <p>Enter values once, then apply them to the command entries below.</p>
+        <p>Set once, apply to all command lines, then copy ready-to-run commands.</p>
       </div>
 
       <form class="values-form" id="placeholder-form">
-        <label class="value-field" for="value-your-name">
-          <span>your-name</span>
-          <input id="value-your-name" name="your-name" type="text" data-placeholder-key="your-name" value="your-name" autocomplete="off">
+        <label class="value-row" for="value-github-username">
+          <span>A: githubUsername</span>
+          <input id="value-github-username" name="githubUsername" type="text" data-placeholder-key="githubUsername" value="githubUsername" autocomplete="off">
         </label>
-        <label class="value-field" for="value-your-email">
-          <span>your-email</span>
-          <input id="value-your-email" name="your-email" type="text" data-placeholder-key="your-email" value="your-email" autocomplete="off">
+
+        <label class="value-row" for="value-github-login-email">
+          <span>A: githubLoginEmail</span>
+          <input id="value-github-login-email" name="githubLoginEmail" type="text" data-placeholder-key="githubLoginEmail" value="githubLoginEmail" autocomplete="off">
         </label>
-        <label class="value-field" for="value-origin">
-          <span>origin</span>
-          <input id="value-origin" name="origin" type="text" data-placeholder-key="origin" value="origin" autocomplete="off">
+
+        <label class="value-row" for="value-local-branch">
+          <span>A: localBranch</span>
+          <input id="value-local-branch" name="localBranch" type="text" data-placeholder-key="localBranch" value="localBranch" autocomplete="off">
         </label>
-        <label class="value-field" for="value-main">
-          <span>main</span>
-          <input id="value-main" name="main" type="text" data-placeholder-key="main" value="main" autocomplete="off">
+
+        <label class="value-row" for="value-cloud-branch">
+          <span>A: cloudBranch</span>
+          <input id="value-cloud-branch" name="cloudBranch" type="text" data-placeholder-key="cloudBranch" value="cloudBranch" autocomplete="off">
         </label>
-        <label class="value-field value-field-wide" for="value-remote-url">
-          <span>remote-url</span>
-          <input id="value-remote-url" name="remote-url" type="text" data-placeholder-key="remote-url" value="remote-url" autocomplete="off">
+
+        <label class="value-row" for="value-repo-url">
+          <span>A: repoUrl</span>
+          <input id="value-repo-url" name="repoUrl" type="text" data-placeholder-key="repoUrl" value="repoUrl" autocomplete="off">
         </label>
 
         <div class="values-actions">
@@ -85,318 +88,338 @@
       </form>
     </section>
 
-    <section class="panel" aria-labelledby="workflow-overview-title">
+    <section class="panel" aria-labelledby="concepts-title">
+      <div class="section-heading">
+        <h2 id="concepts-title">Key Concepts</h2>
+      </div>
+      <div class="concept-list">
+        <p><strong>Local repo</strong> is the repository on your machine. <strong>Cloud repo</strong> is the repository on GitHub.</p>
+        <p>Git helps you keep local repo and cloud repo in sync so changes can move both ways.</p>
+        <p><strong>Branch</strong> is a line of work, <strong>remote</strong> is the linked cloud location, and <strong>sync</strong> means fetching, pulling, and pushing.</p>
+        <p>This page uses placeholders for branch names, repo URL, username, and email so commands match your own setup.</p>
+      </div>
+    </section>
+
+    <section class="panel workflow-panel" aria-labelledby="workflow-overview-title">
       <div class="section-heading">
         <h2 id="workflow-overview-title">Workflow Overview</h2>
-        <p>Use this strip to spot your place in the Git flow before moving to a specific command group.</p>
+        <p>Map each section to a concrete stage in local and cloud collaboration.</p>
       </div>
 
-      <div class="workflow" aria-label="Git workflow overview">
-        <div class="workflow-step">Clone / Init</div>
-        <div class="workflow-arrow">→</div>
-        <div class="workflow-step">Edit files</div>
-        <div class="workflow-arrow">→</div>
-        <div class="workflow-step">git add</div>
-        <div class="workflow-arrow">→</div>
-        <div class="workflow-step">git commit</div>
-        <div class="workflow-arrow">→</div>
-        <div class="workflow-step">git pull</div>
-        <div class="workflow-arrow">→</div>
-        <div class="workflow-step">git push</div>
+      <div class="workflow-grid" aria-label="Git workflow overview">
+        <article class="workflow-card">
+          <h3>Setup and Repository</h3>
+          <p>Connect local repo to cloud repo and define identity.</p>
+        </article>
+        <article class="workflow-card">
+          <h3>Save and Sync</h3>
+          <p>Record local changes, then fetch, pull, and push with cloud repo.</p>
+        </article>
+        <article class="workflow-card">
+          <h3>Branching</h3>
+          <p>Move work between localBranch and cloudBranch safely.</p>
+        </article>
+        <article class="workflow-card">
+          <h3>Inspect</h3>
+          <p>Read repo state before changing history or syncing.</p>
+        </article>
+        <article class="workflow-card">
+          <h3>Fix and Integrate</h3>
+          <p>Restore, reset, and merge when conflicts or mistakes happen.</p>
+        </article>
       </div>
     </section>
 
-    <section class="panel" aria-labelledby="placeholders-title">
+    <hr class="section-divider">
+
+    <section class="panel" id="section-1" aria-labelledby="section-1-title">
       <div class="section-heading">
-        <h2 id="placeholders-title">Placeholder Description</h2>
-        <p>Each placeholder is shown as a small entry so the sidebar can jump straight to its meaning.</p>
+        <h2 id="section-1-title">1. Setup and Repository</h2>
       </div>
 
       <div class="entry-list">
-        <article class="entry" id="placeholder-your-name">
-          <h3>your-name</h3>
-          <div class="code-line">
-            <code class="command-code" id="placeholder-your-name-code" data-template="your-name">your-name</code>
-            <button type="button" class="copy-button" data-copy-target="placeholder-your-name-code">Copy</button>
+        <article class="entry" id="placeholder-github-username">
+          <h3>1.1 Configure username</h3>
+          <div class="entry-command">
+            <h4>1.1.1 Set your Git identity name</h4>
+            <div class="code-line">
+              <code class="command-code" id="cmd-1-1-1" data-template='git config --global user.name "githubUsername"'>git config --global user.name "githubUsername"</code>
+              <button type="button" class="copy-button" data-copy-target="cmd-1-1-1">Copy</button>
+            </div>
+            <p>Use this once per machine so commits show your preferred display name.</p>
           </div>
-          <p>Placeholder for the author or contributor name used in local examples.</p>
         </article>
 
-        <article class="entry" id="placeholder-your-email">
-          <h3>your-email</h3>
-          <div class="code-line">
-            <code class="command-code" id="placeholder-your-email-code" data-template="your-email">your-email</code>
-            <button type="button" class="copy-button" data-copy-target="placeholder-your-email-code">Copy</button>
+        <article class="entry" id="placeholder-github-login-email">
+          <h3>1.2 Configure email</h3>
+          <div class="entry-command">
+            <h4>1.2.1 Set your Git login email</h4>
+            <div class="code-line">
+              <code class="command-code" id="cmd-1-2-1" data-template='git config --global user.email "githubLoginEmail"'>git config --global user.email "githubLoginEmail"</code>
+              <button type="button" class="copy-button" data-copy-target="cmd-1-2-1">Copy</button>
+            </div>
+            <p>Set this to the email you use for GitHub commit attribution.</p>
           </div>
-          <p>Placeholder for the email value that would normally be configured in Git identity settings.</p>
         </article>
 
-        <article class="entry" id="placeholder-origin">
-          <h3>origin</h3>
-          <div class="code-line">
-            <code class="command-code" id="placeholder-origin-code" data-template="origin">origin</code>
-            <button type="button" class="copy-button" data-copy-target="placeholder-origin-code">Copy</button>
+        <article class="entry" id="placeholder-repo-url">
+          <h3>1.3 Clone repository</h3>
+          <div class="entry-command">
+            <h4>1.3.1 Clone from cloud to local</h4>
+            <div class="code-line">
+              <code class="command-code" id="cmd-1-3-1" data-template='git clone "repoUrl"'>git clone "repoUrl"</code>
+              <button type="button" class="copy-button" data-copy-target="cmd-1-3-1">Copy</button>
+            </div>
+            <p>Use this when local repo does not exist yet and you need a fresh copy.</p>
           </div>
-          <p>Placeholder for the default remote name that points to the main repository location.</p>
         </article>
 
-        <article class="entry" id="placeholder-main">
-          <h3>main</h3>
-          <div class="code-line">
-            <code class="command-code" id="placeholder-main-code" data-template="main">main</code>
-            <button type="button" class="copy-button" data-copy-target="placeholder-main-code">Copy</button>
+        <article class="entry">
+          <h3>1.4 Initialize repository</h3>
+          <div class="entry-command">
+            <h4>1.4.1 Create local repo metadata</h4>
+            <div class="code-line">
+              <code class="command-code" id="cmd-1-4-1" data-template='git init'>git init</code>
+              <button type="button" class="copy-button" data-copy-target="cmd-1-4-1">Copy</button>
+            </div>
+            <p>Use this when starting a brand-new local project before linking to cloud.</p>
           </div>
-          <p>Placeholder for the primary branch name used as the central integration point.</p>
         </article>
 
-        <article class="entry" id="placeholder-remote-url">
-          <h3>remote-url</h3>
-          <div class="code-line">
-            <code class="command-code" id="placeholder-remote-url-code" data-template="remote-url">remote-url</code>
-            <button type="button" class="copy-button" data-copy-target="placeholder-remote-url-code">Copy</button>
+        <article class="entry">
+          <h3>1.5 Add remote</h3>
+          <div class="entry-command">
+            <h4>1.5.1 Link local repo to cloud repo</h4>
+            <div class="code-line">
+              <code class="command-code" id="cmd-1-5-1" data-template='git remote add origin "repoUrl"'>git remote add origin "repoUrl"</code>
+              <button type="button" class="copy-button" data-copy-target="cmd-1-5-1">Copy</button>
+            </div>
+            <p>Use this after `git init` to attach the local repo to a cloud destination.</p>
           </div>
-          <p>Placeholder for the repository address that Git uses when talking to a remote server.</p>
         </article>
       </div>
     </section>
 
-    <section class="panel" id="setup" aria-labelledby="setup-title">
+    <hr class="section-divider">
+
+    <section class="panel" id="section-2" aria-labelledby="section-2-title">
       <div class="section-heading">
-        <h2 id="setup-title">Setup</h2>
-        <p>Prototype section for initial configuration and repository creation.</p>
-      </div>
-
-      <div class="entry-list">
-        <article class="entry">
-          <h3>Identity</h3>
-          <div class="code-line">
-            <code class="command-code" id="setup-identity-code" data-template='git config --global user.name "your-name"'>git config --global user.name "your-name"</code>
-            <button type="button" class="copy-button" data-copy-target="setup-identity-code">Copy</button>
-          </div>
-          <p>Use this once to match local commits with the name shown in the values panel.</p>
-        </article>
-
-        <article class="entry">
-          <h3>Email</h3>
-          <div class="code-line">
-            <code class="command-code" id="setup-email-code" data-template='git config --global user.email "your-email"'>git config --global user.email "your-email"</code>
-            <button type="button" class="copy-button" data-copy-target="setup-email-code">Copy</button>
-          </div>
-          <p>Use this when the local machine needs a commit email before you start working.</p>
-        </article>
-
-        <article class="entry">
-          <h3>Repository start</h3>
-          <div class="code-line">
-            <code class="command-code" id="setup-init-code" data-template="git init">git init</code>
-            <button type="button" class="copy-button" data-copy-target="setup-init-code">Copy</button>
-          </div>
-          <p>Use this when a new folder needs Git metadata before any files are tracked.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel" id="daily-commands" aria-labelledby="daily-commands-title">
-      <div class="section-heading">
-        <h2 id="daily-commands-title">Daily Commands</h2>
-        <p>Everyday work stays in short entries so the page reads like a compact technical note.</p>
+        <h2 id="section-2-title">2. Save and Sync</h2>
       </div>
 
       <div class="entry-list">
         <article class="entry">
-          <h3>Check state</h3>
-          <div class="code-line">
-            <code class="command-code" id="daily-state-code" data-template="git status">git status</code>
-            <button type="button" class="copy-button" data-copy-target="daily-state-code">Copy</button>
+          <h3>2.1 Stage files</h3>
+          <div class="entry-command">
+            <h4>2.1.1 Add changed files to staging area</h4>
+            <div class="code-line">
+              <code class="command-code" id="cmd-2-1-1" data-template='git add .'>git add .</code>
+              <button type="button" class="copy-button" data-copy-target="cmd-2-1-1">Copy</button>
+            </div>
+            <p>Use this before commit to include current working-tree changes.</p>
           </div>
-          <p>Use this first to see what changed before staging or committing anything.</p>
         </article>
 
         <article class="entry">
-          <h3>Stage changes</h3>
-          <div class="code-line">
-            <code class="command-code" id="daily-stage-code" data-template="git add .">git add .</code>
-            <button type="button" class="copy-button" data-copy-target="daily-stage-code">Copy</button>
+          <h3>2.2 Commit snapshot</h3>
+          <div class="entry-command">
+            <h4>2.2.1 Save staged changes locally</h4>
+            <div class="code-line">
+              <code class="command-code" id="cmd-2-2-1" data-template='git commit -m "your message"'>git commit -m "your message"</code>
+              <button type="button" class="copy-button" data-copy-target="cmd-2-2-1">Copy</button>
+            </div>
+            <p>Use this to create a clear checkpoint before syncing with cloud repo.</p>
           </div>
-          <p>Use this once the working tree looks ready and you want to prepare a commit.</p>
         </article>
 
         <article class="entry">
-          <h3>Create commit</h3>
-          <div class="code-line">
-            <code class="command-code" id="daily-commit-code" data-template='git commit -m "message"'>git commit -m "message"</code>
-            <button type="button" class="copy-button" data-copy-target="daily-commit-code">Copy</button>
+          <h3>2.3 Fetch updates</h3>
+          <div class="entry-command">
+            <h4>2.3.1 Download cloud changes without merge</h4>
+            <div class="code-line">
+              <code class="command-code" id="cmd-2-3-1" data-template='git fetch origin'>git fetch origin</code>
+              <button type="button" class="copy-button" data-copy-target="cmd-2-3-1">Copy</button>
+            </div>
+            <p>Use this to inspect incoming work before touching localBranch.</p>
           </div>
-          <p>Use this to record the staged changes with a short message.</p>
+        </article>
+
+        <article class="entry" id="placeholder-cloud-branch">
+          <h3>2.4 Pull updates</h3>
+          <div class="entry-command">
+            <h4>2.4.1 Sync cloudBranch into localBranch</h4>
+            <div class="code-line">
+              <code class="command-code" id="cmd-2-4-1" data-template='git pull origin cloudBranch'>git pull origin cloudBranch</code>
+              <button type="button" class="copy-button" data-copy-target="cmd-2-4-1">Copy</button>
+            </div>
+            <p>Use this when local work should include the newest remote changes.</p>
+          </div>
+        </article>
+
+        <article class="entry">
+          <h3>2.5 Push commits</h3>
+          <div class="entry-command">
+            <h4>2.5.1 Publish localBranch to cloudBranch</h4>
+            <div class="code-line">
+              <code class="command-code" id="cmd-2-5-1" data-template='git push origin localBranch:cloudBranch'>git push origin localBranch:cloudBranch</code>
+              <button type="button" class="copy-button" data-copy-target="cmd-2-5-1">Copy</button>
+            </div>
+            <p>Use this after local commit is ready to share in the cloud repo.</p>
+          </div>
         </article>
       </div>
     </section>
 
-    <section class="panel" id="branching" aria-labelledby="branching-title">
+    <hr class="section-divider">
+
+    <section class="panel" id="section-3" aria-labelledby="section-3-title">
       <div class="section-heading">
-        <h2 id="branching-title">Branching</h2>
-        <p>Branch operations are split into small entries so creation and merging remain visually distinct.</p>
+        <h2 id="section-3-title">3. Branching</h2>
+      </div>
+
+      <div class="entry-list">
+        <article class="entry" id="placeholder-local-branch">
+          <h3>3.1 Create branch</h3>
+          <div class="entry-command">
+            <h4>3.1.1 Create localBranch</h4>
+            <div class="code-line">
+              <code class="command-code" id="cmd-3-1-1" data-template='git branch localBranch'>git branch localBranch</code>
+              <button type="button" class="copy-button" data-copy-target="cmd-3-1-1">Copy</button>
+            </div>
+            <p>Use this to define a separate line of work before editing files.</p>
+          </div>
+        </article>
+
+        <article class="entry">
+          <h3>3.2 Switch branch</h3>
+          <div class="entry-command">
+            <h4>3.2.1 Move to localBranch using switch</h4>
+            <div class="code-line">
+              <code class="command-code" id="cmd-3-2-1" data-template='git switch localBranch'>git switch localBranch</code>
+              <button type="button" class="copy-button" data-copy-target="cmd-3-2-1">Copy</button>
+            </div>
+            <p>Use this in modern Git to change branch context safely.</p>
+          </div>
+        </article>
+
+        <article class="entry">
+          <h3>3.3 Checkout branch</h3>
+          <div class="entry-command">
+            <h4>3.3.1 Move to localBranch using checkout</h4>
+            <div class="code-line">
+              <code class="command-code" id="cmd-3-3-1" data-template='git checkout localBranch'>git checkout localBranch</code>
+              <button type="button" class="copy-button" data-copy-target="cmd-3-3-1">Copy</button>
+            </div>
+            <p>Use this in older workflows or mixed repositories that still rely on checkout.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <section class="panel" id="section-4" aria-labelledby="section-4-title">
+      <div class="section-heading">
+        <h2 id="section-4-title">4. Inspect</h2>
       </div>
 
       <div class="entry-list">
         <article class="entry">
-          <h3>Create and switch</h3>
-          <div class="code-line">
-            <code class="command-code" id="branch-create-code" data-template="git branch feature/example">git branch feature/example</code>
-            <button type="button" class="copy-button" data-copy-target="branch-create-code">Copy</button>
+          <h3>4.1 Read status</h3>
+          <div class="entry-command">
+            <h4>4.1.1 Inspect current working state</h4>
+            <div class="code-line">
+              <code class="command-code" id="cmd-4-1-1" data-template='git status'>git status</code>
+              <button type="button" class="copy-button" data-copy-target="cmd-4-1-1">Copy</button>
+            </div>
+            <p>Use this first when you need a quick answer about staged and unstaged files.</p>
           </div>
-          <p>Use this to prepare an isolated line of work before editing code.</p>
         </article>
 
         <article class="entry">
-          <h3>Merge back</h3>
-          <div class="code-line">
-            <code class="command-code" id="branch-merge-code" data-template="git merge main">git merge main</code>
-            <button type="button" class="copy-button" data-copy-target="branch-merge-code">Copy</button>
+          <h3>4.2 Compare changes</h3>
+          <div class="entry-command">
+            <h4>4.2.1 Show line-by-line diff</h4>
+            <div class="code-line">
+              <code class="command-code" id="cmd-4-2-1" data-template='git diff'>git diff</code>
+              <button type="button" class="copy-button" data-copy-target="cmd-4-2-1">Copy</button>
+            </div>
+            <p>Use this before commit to verify exactly what changed.</p>
           </div>
-          <p>Use this once the branch is ready to fold back into the shared line.</p>
+        </article>
+
+        <article class="entry">
+          <h3>4.3 Review history</h3>
+          <div class="entry-command">
+            <h4>4.3.1 Show compact commit history</h4>
+            <div class="code-line">
+              <code class="command-code" id="cmd-4-3-1" data-template='git log --oneline'>git log --oneline</code>
+              <button type="button" class="copy-button" data-copy-target="cmd-4-3-1">Copy</button>
+            </div>
+            <p>Use this to inspect recent commit flow without opening full commit details.</p>
+          </div>
         </article>
       </div>
     </section>
 
-    <section class="panel" id="remote" aria-labelledby="remote-title">
+    <hr class="section-divider">
+
+    <section class="panel" id="section-5" aria-labelledby="section-5-title">
       <div class="section-heading">
-        <h2 id="remote-title">Remote</h2>
-        <p>Remote commands are split to separate inspection from synchronization.</p>
+        <h2 id="section-5-title">5. Fix and Integrate</h2>
       </div>
 
       <div class="entry-list">
         <article class="entry">
-          <h3>Set remote</h3>
-          <div class="code-line">
-            <code class="command-code" id="remote-add-code" data-template='git remote add origin "remote-url"'>git remote add origin "remote-url"</code>
-            <button type="button" class="copy-button" data-copy-target="remote-add-code">Copy</button>
+          <h3>5.1 Restore file</h3>
+          <div class="entry-command">
+            <h4>5.1.1 Discard local changes in one file</h4>
+            <div class="code-line">
+              <code class="command-code" id="cmd-5-1-1" data-template='git restore file.txt'>git restore file.txt</code>
+              <button type="button" class="copy-button" data-copy-target="cmd-5-1-1">Copy</button>
+            </div>
+            <p>Use this when one file should return to the last committed state.</p>
           </div>
-          <p>Use this when the local repository still needs a remote destination.</p>
         </article>
 
         <article class="entry">
-          <h3>Inspect remotes</h3>
-          <div class="code-line">
-            <code class="command-code" id="remote-inspect-code" data-template="git remote -v">git remote -v</code>
-            <button type="button" class="copy-button" data-copy-target="remote-inspect-code">Copy</button>
+          <h3>5.2 Reset commit</h3>
+          <div class="entry-command">
+            <h4>5.2.1 Move HEAD back while keeping changes</h4>
+            <div class="code-line">
+              <code class="command-code" id="cmd-5-2-1" data-template='git reset --soft HEAD~1'>git reset --soft HEAD~1</code>
+              <button type="button" class="copy-button" data-copy-target="cmd-5-2-1">Copy</button>
+            </div>
+            <p>Use this when the latest commit message or content needs immediate correction.</p>
           </div>
-          <p>Use this to confirm which remote names and URLs the repository knows about.</p>
         </article>
 
         <article class="entry">
-          <h3>Fetch updates</h3>
-          <div class="code-line">
-            <code class="command-code" id="remote-fetch-code" data-template="git fetch origin">git fetch origin</code>
-            <button type="button" class="copy-button" data-copy-target="remote-fetch-code">Copy</button>
+          <h3>5.3 Merge branch</h3>
+          <div class="entry-command">
+            <h4>5.3.1 Integrate localBranch into cloudBranch</h4>
+            <div class="code-line">
+              <code class="command-code" id="cmd-5-3-1" data-template='git merge localBranch'>git merge localBranch</code>
+              <button type="button" class="copy-button" data-copy-target="cmd-5-3-1">Copy</button>
+            </div>
+            <p>Use this to integrate finished work from one branch into another branch.</p>
           </div>
-          <p>Use this when you want to download remote changes without merging them yet.</p>
-        </article>
-
-        <article class="entry">
-          <h3>Sync with main</h3>
-          <div class="code-line">
-            <code class="command-code" id="remote-sync-code" data-template="git pull origin main">git pull origin main</code>
-            <button type="button" class="copy-button" data-copy-target="remote-sync-code">Copy</button>
-          </div>
-          <p>Use this when you need to bring in updates from the shared branch.</p>
-        </article>
-
-        <article class="entry">
-          <h3>Publish changes</h3>
-          <div class="code-line">
-            <code class="command-code" id="remote-push-code" data-template="git push origin main">git push origin main</code>
-            <button type="button" class="copy-button" data-copy-target="remote-push-code">Copy</button>
-          </div>
-          <p>Use this after a commit is ready to move back to the shared remote.</p>
         </article>
       </div>
     </section>
 
-    <section class="panel" id="undo" aria-labelledby="undo-title">
-      <div class="section-heading">
-        <h2 id="undo-title">Undo</h2>
-        <p>Undo actions stay short so the page remains a quick reference instead of a tutorial.</p>
-      </div>
-
-      <div class="entry-list">
-        <article class="entry">
-          <h3>Restore working tree</h3>
-          <div class="code-line">
-            <code class="command-code" id="undo-restore-code" data-template="git restore file.txt">git restore file.txt</code>
-            <button type="button" class="copy-button" data-copy-target="undo-restore-code">Copy</button>
-          </div>
-          <p>Use this when the change should be removed locally without rewriting history.</p>
-        </article>
-
-        <article class="entry">
-          <h3>Undo last commit locally</h3>
-          <div class="code-line">
-            <code class="command-code" id="undo-reset-code" data-template="git reset --soft HEAD~1">git reset --soft HEAD~1</code>
-            <button type="button" class="copy-button" data-copy-target="undo-reset-code">Copy</button>
-          </div>
-          <p>Use this when the last commit should be reopened without losing the staged state.</p>
-        </article>
-
-        <article class="entry">
-          <h3>Record a reversal</h3>
-          <div class="code-line">
-            <code class="command-code" id="undo-revert-code" data-template="git revert HEAD">git revert HEAD</code>
-            <button type="button" class="copy-button" data-copy-target="undo-revert-code">Copy</button>
-          </div>
-          <p>Use this when the reversal itself should become a tracked commit.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel" id="common-issues" aria-labelledby="common-issues-title">
-      <div class="section-heading">
-        <h2 id="common-issues-title">Common Issues</h2>
-        <p>Common checks are grouped as short entries so they read like quick notes during troubleshooting.</p>
-      </div>
-
-      <div class="entry-list">
-        <article class="entry">
-          <h3>Quick checks</h3>
-          <div class="code-line">
-            <code class="command-code" id="issues-checks-code" data-template="git status">git status</code>
-            <button type="button" class="copy-button" data-copy-target="issues-checks-code">Copy</button>
-          </div>
-          <p>Use this when you need to answer what changed, where you are, and what is pending.</p>
-        </article>
-
-        <article class="entry">
-          <h3>Compare changes</h3>
-          <div class="code-line">
-            <code class="command-code" id="issues-diff-code" data-template="git diff">git diff</code>
-            <button type="button" class="copy-button" data-copy-target="issues-diff-code">Copy</button>
-          </div>
-          <p>Use this to inspect the exact edits before you decide the next step.</p>
-        </article>
-
-        <article class="entry">
-          <h3>Confirm branch</h3>
-          <div class="code-line">
-            <code class="command-code" id="issues-branch-code" data-template="git branch --show-current">git branch --show-current</code>
-            <button type="button" class="copy-button" data-copy-target="issues-branch-code">Copy</button>
-          </div>
-          <p>Use this when branch confusion is the main thing you need to clear up.</p>
-        </article>
-      </div>
-    </section>
-
-    <p class="contact-note">If you have questions or suggestions, you can <a href="mailto:YOUR_EMAIL">email the author</a> or <a href="https://github.com/YOUR_NAME/YOUR_REPO/issues/new">raise an issue</a>.</p>
+    <p class="contact-note">If you have questions or suggestions, you can <a href="mailto:653537305@qq.com">email the author</a> or <a href="https://github.com/The-Aries/simple-cheatsheets/issues/new">raise an issue</a>.</p>
   </main>
 
   <footer class="footer">
-    <a href="https://github.com/YOUR_NAME">GitHub Profile</a>
-    <a href="https://github.com/YOUR_NAME/YOUR_REPO">Repository</a>
-    <a href="./">Copyright © 2026 Junhao Zhang</a>
+    <a href="https://github.com/The-Aries">GitHub Profile</a>
+    <a href="https://github.com/The-Aries/simple-cheatsheets">Repository</a>
+    <a href="../">Copyright © 2026 Junhao Zhang</a>
   </footer>
 
   <script>
     (function () {
-      var placeholderKeys = ['your-name', 'your-email', 'origin', 'main', 'remote-url'];
+      var placeholderKeys = ['githubUsername', 'githubLoginEmail', 'localBranch', 'cloudBranch', 'repoUrl'];
 
       function getPlaceholderValues() {
         var values = {};
