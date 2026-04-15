@@ -50,28 +50,59 @@
       <p class="lead">A static layout for checking structure, hierarchy, and anchor relationships before filling in real content.</p>
     </section>
 
+    <section class="panel values-panel" aria-labelledby="values-title">
+      <div class="section-heading">
+        <h2 id="values-title">Placeholders</h2>
+        <p>Enter values once, then apply them to the command entries below.</p>
+      </div>
+
+      <form class="values-form" id="placeholder-form">
+        <label class="value-field" for="value-your-name">
+          <span>your-name</span>
+          <input id="value-your-name" name="your-name" type="text" data-placeholder-key="your-name" value="your-name" autocomplete="off">
+        </label>
+        <label class="value-field" for="value-your-email">
+          <span>your-email</span>
+          <input id="value-your-email" name="your-email" type="text" data-placeholder-key="your-email" value="your-email" autocomplete="off">
+        </label>
+        <label class="value-field" for="value-origin">
+          <span>origin</span>
+          <input id="value-origin" name="origin" type="text" data-placeholder-key="origin" value="origin" autocomplete="off">
+        </label>
+        <label class="value-field" for="value-main">
+          <span>main</span>
+          <input id="value-main" name="main" type="text" data-placeholder-key="main" value="main" autocomplete="off">
+        </label>
+        <label class="value-field value-field-wide" for="value-remote-url">
+          <span>remote-url</span>
+          <input id="value-remote-url" name="remote-url" type="text" data-placeholder-key="remote-url" value="remote-url" autocomplete="off">
+        </label>
+
+        <div class="values-actions">
+          <button type="button" class="form-button" id="apply-placeholders">Apply</button>
+          <button type="button" class="form-button" id="reset-placeholders">Reset</button>
+        </div>
+      </form>
+    </section>
+
     <section class="panel" aria-labelledby="workflow-overview-title">
       <div class="section-heading">
         <h2 id="workflow-overview-title">Workflow Overview</h2>
         <p>Use this strip to spot your place in the Git flow before moving to a specific command group.</p>
       </div>
 
-      <div class="entry-list">
-        <article class="entry">
-          <h3>Current stage</h3>
-          <div class="code-sample">
-            <div class="code-actions">
-              <button type="button" class="copy-button" data-copy-target="workflow-code">Copy</button>
-            </div>
-            <pre><code id="workflow-code">Clone / Init
-Edit files
-git add
-git commit
-git pull
-git push</code></pre>
-          </div>
-          <p>A simple linear map for deciding whether you are still local, staging, or syncing.</p>
-        </article>
+      <div class="workflow" aria-label="Git workflow overview">
+        <div class="workflow-step">Clone / Init</div>
+        <div class="workflow-arrow">→</div>
+        <div class="workflow-step">Edit files</div>
+        <div class="workflow-arrow">→</div>
+        <div class="workflow-step">git add</div>
+        <div class="workflow-arrow">→</div>
+        <div class="workflow-step">git commit</div>
+        <div class="workflow-arrow">→</div>
+        <div class="workflow-step">git pull</div>
+        <div class="workflow-arrow">→</div>
+        <div class="workflow-step">git push</div>
       </div>
     </section>
 
@@ -84,55 +115,45 @@ git push</code></pre>
       <div class="entry-list">
         <article class="entry" id="placeholder-your-name">
           <h3>your-name</h3>
-          <div class="code-sample">
-            <div class="code-actions">
-              <button type="button" class="copy-button" data-copy-target="placeholder-your-name-code">Copy</button>
-            </div>
-            <pre><code id="placeholder-your-name-code">your-name</code></pre>
+          <div class="code-line">
+            <code class="command-code" id="placeholder-your-name-code" data-template="your-name">your-name</code>
+            <button type="button" class="copy-button" data-copy-target="placeholder-your-name-code">Copy</button>
           </div>
           <p>Placeholder for the author or contributor name used in local examples.</p>
         </article>
 
         <article class="entry" id="placeholder-your-email">
           <h3>your-email</h3>
-          <div class="code-sample">
-            <div class="code-actions">
-              <button type="button" class="copy-button" data-copy-target="placeholder-your-email-code">Copy</button>
-            </div>
-            <pre><code id="placeholder-your-email-code">your-email</code></pre>
+          <div class="code-line">
+            <code class="command-code" id="placeholder-your-email-code" data-template="your-email">your-email</code>
+            <button type="button" class="copy-button" data-copy-target="placeholder-your-email-code">Copy</button>
           </div>
           <p>Placeholder for the email value that would normally be configured in Git identity settings.</p>
         </article>
 
         <article class="entry" id="placeholder-origin">
           <h3>origin</h3>
-          <div class="code-sample">
-            <div class="code-actions">
-              <button type="button" class="copy-button" data-copy-target="placeholder-origin-code">Copy</button>
-            </div>
-            <pre><code id="placeholder-origin-code">origin</code></pre>
+          <div class="code-line">
+            <code class="command-code" id="placeholder-origin-code" data-template="origin">origin</code>
+            <button type="button" class="copy-button" data-copy-target="placeholder-origin-code">Copy</button>
           </div>
           <p>Placeholder for the default remote name that points to the main repository location.</p>
         </article>
 
         <article class="entry" id="placeholder-main">
           <h3>main</h3>
-          <div class="code-sample">
-            <div class="code-actions">
-              <button type="button" class="copy-button" data-copy-target="placeholder-main-code">Copy</button>
-            </div>
-            <pre><code id="placeholder-main-code">main</code></pre>
+          <div class="code-line">
+            <code class="command-code" id="placeholder-main-code" data-template="main">main</code>
+            <button type="button" class="copy-button" data-copy-target="placeholder-main-code">Copy</button>
           </div>
           <p>Placeholder for the primary branch name used as the central integration point.</p>
         </article>
 
         <article class="entry" id="placeholder-remote-url">
           <h3>remote-url</h3>
-          <div class="code-sample">
-            <div class="code-actions">
-              <button type="button" class="copy-button" data-copy-target="placeholder-remote-url-code">Copy</button>
-            </div>
-            <pre><code id="placeholder-remote-url-code">remote-url</code></pre>
+          <div class="code-line">
+            <code class="command-code" id="placeholder-remote-url-code" data-template="remote-url">remote-url</code>
+            <button type="button" class="copy-button" data-copy-target="placeholder-remote-url-code">Copy</button>
           </div>
           <p>Placeholder for the repository address that Git uses when talking to a remote server.</p>
         </article>
@@ -148,23 +169,27 @@ git push</code></pre>
       <div class="entry-list">
         <article class="entry">
           <h3>Identity</h3>
-          <div class="code-sample">
-            <div class="code-actions">
-              <button type="button" class="copy-button" data-copy-target="setup-identity-code">Copy</button>
-            </div>
-            <pre><code id="setup-identity-code">git config --global user.name "your-name"
-git config --global user.email "your-email"</code></pre>
+          <div class="code-line">
+            <code class="command-code" id="setup-identity-code" data-template='git config --global user.name "your-name"'>git config --global user.name "your-name"</code>
+            <button type="button" class="copy-button" data-copy-target="setup-identity-code">Copy</button>
           </div>
-          <p>Use this once to match local commits with the name and email shown in placeholders above.</p>
+          <p>Use this once to match local commits with the name and email shown in the values panel.</p>
+        </article>
+
+        <article class="entry">
+          <h3>Email</h3>
+          <div class="code-line">
+            <code class="command-code" id="setup-email-code" data-template='git config --global user.email "your-email"'>git config --global user.email "your-email"</code>
+            <button type="button" class="copy-button" data-copy-target="setup-email-code">Copy</button>
+          </div>
+          <p>Use this when the local machine needs a commit email before you start working.</p>
         </article>
 
         <article class="entry">
           <h3>Repository start</h3>
-          <div class="code-sample">
-            <div class="code-actions">
-              <button type="button" class="copy-button" data-copy-target="setup-init-code">Copy</button>
-            </div>
-            <pre><code id="setup-init-code">git init</code></pre>
+          <div class="code-line">
+            <code class="command-code" id="setup-init-code" data-template="git init">git init</code>
+            <button type="button" class="copy-button" data-copy-target="setup-init-code">Copy</button>
           </div>
           <p>Use this when a new folder needs Git metadata before any files are tracked.</p>
         </article>
@@ -180,26 +205,29 @@ git config --global user.email "your-email"</code></pre>
       <div class="entry-list">
         <article class="entry">
           <h3>Check state</h3>
-          <div class="code-sample">
-            <div class="code-actions">
-              <button type="button" class="copy-button" data-copy-target="daily-state-code">Copy</button>
-            </div>
-            <pre><code id="daily-state-code">git status
-git add .
-git commit -m "message"</code></pre>
+          <div class="code-line">
+            <code class="command-code" id="daily-state-code" data-template="git status">git status</code>
+            <button type="button" class="copy-button" data-copy-target="daily-state-code">Copy</button>
           </div>
-          <p>Use this sequence to inspect changes, stage them, and record a local checkpoint.</p>
+          <p>Use this first to see what changed before staging or committing anything.</p>
         </article>
 
         <article class="entry">
-          <h3>Inspect history</h3>
-          <div class="code-sample">
-            <div class="code-actions">
-              <button type="button" class="copy-button" data-copy-target="daily-history-code">Copy</button>
-            </div>
-            <pre><code id="daily-history-code">git log --oneline</code></pre>
+          <h3>Stage changes</h3>
+          <div class="code-line">
+            <code class="command-code" id="daily-stage-code" data-template="git add .">git add .</code>
+            <button type="button" class="copy-button" data-copy-target="daily-stage-code">Copy</button>
           </div>
-          <p>Use this when you only need a compact view of recent commits.</p>
+          <p>Use this once the working tree looks ready and you want to prepare a commit.</p>
+        </article>
+
+        <article class="entry">
+          <h3>Create commit</h3>
+          <div class="code-line">
+            <code class="command-code" id="daily-commit-code" data-template='git commit -m "message"'>git commit -m "message"</code>
+            <button type="button" class="copy-button" data-copy-target="daily-commit-code">Copy</button>
+          </div>
+          <p>Use this to record the staged changes with a short message.</p>
         </article>
       </div>
     </section>
@@ -213,23 +241,18 @@ git commit -m "message"</code></pre>
       <div class="entry-list">
         <article class="entry">
           <h3>Create and switch</h3>
-          <div class="code-sample">
-            <div class="code-actions">
-              <button type="button" class="copy-button" data-copy-target="branch-create-code">Copy</button>
-            </div>
-            <pre><code id="branch-create-code">git branch feature/example
-git switch feature/example</code></pre>
+          <div class="code-line">
+            <code class="command-code" id="branch-create-code" data-template="git branch feature/example">git branch feature/example</code>
+            <button type="button" class="copy-button" data-copy-target="branch-create-code">Copy</button>
           </div>
           <p>Use this to prepare an isolated line of work before editing code.</p>
         </article>
 
         <article class="entry">
           <h3>Merge back</h3>
-          <div class="code-sample">
-            <div class="code-actions">
-              <button type="button" class="copy-button" data-copy-target="branch-merge-code">Copy</button>
-            </div>
-            <pre><code id="branch-merge-code">git merge main</code></pre>
+          <div class="code-line">
+            <code class="command-code" id="branch-merge-code" data-template="git merge main">git merge main</code>
+            <button type="button" class="copy-button" data-copy-target="branch-merge-code">Copy</button>
           </div>
           <p>Use this once the branch is ready to fold back into the shared line.</p>
         </article>
@@ -244,27 +267,39 @@ git switch feature/example</code></pre>
 
       <div class="entry-list">
         <article class="entry">
+          <h3>Set remote</h3>
+          <div class="code-line">
+            <code class="command-code" id="remote-add-code" data-template='git remote add origin "remote-url"'>git remote add origin "remote-url"</code>
+            <button type="button" class="copy-button" data-copy-target="remote-add-code">Copy</button>
+          </div>
+          <p>Use this when the local repository still needs a remote destination.</p>
+        </article>
+
+        <article class="entry">
           <h3>Inspect remotes</h3>
-          <div class="code-sample">
-            <div class="code-actions">
-              <button type="button" class="copy-button" data-copy-target="remote-inspect-code">Copy</button>
-            </div>
-            <pre><code id="remote-inspect-code">git remote -v</code></pre>
+          <div class="code-line">
+            <code class="command-code" id="remote-inspect-code" data-template="git remote -v">git remote -v</code>
+            <button type="button" class="copy-button" data-copy-target="remote-inspect-code">Copy</button>
           </div>
           <p>Use this to confirm which remote names and URLs the repository knows about.</p>
         </article>
 
         <article class="entry">
           <h3>Sync with main</h3>
-          <div class="code-sample">
-            <div class="code-actions">
-              <button type="button" class="copy-button" data-copy-target="remote-sync-code">Copy</button>
-            </div>
-            <pre><code id="remote-sync-code">git fetch origin
-git pull origin main
-git push origin main</code></pre>
+          <div class="code-line">
+            <code class="command-code" id="remote-sync-code" data-template="git pull origin main">git pull origin main</code>
+            <button type="button" class="copy-button" data-copy-target="remote-sync-code">Copy</button>
           </div>
-          <p>Use this sequence to bring in updates and then publish your own changes.</p>
+          <p>Use this when you need to bring in updates from the shared branch.</p>
+        </article>
+
+        <article class="entry">
+          <h3>Publish changes</h3>
+          <div class="code-line">
+            <code class="command-code" id="remote-push-code" data-template="git push origin main">git push origin main</code>
+            <button type="button" class="copy-button" data-copy-target="remote-push-code">Copy</button>
+          </div>
+          <p>Use this after a commit is ready to move back to the shared remote.</p>
         </article>
       </div>
     </section>
@@ -278,23 +313,27 @@ git push origin main</code></pre>
       <div class="entry-list">
         <article class="entry">
           <h3>Restore working tree</h3>
-          <div class="code-sample">
-            <div class="code-actions">
-              <button type="button" class="copy-button" data-copy-target="undo-restore-code">Copy</button>
-            </div>
-            <pre><code id="undo-restore-code">git restore file.txt
-git reset --soft HEAD~1</code></pre>
+          <div class="code-line">
+            <code class="command-code" id="undo-restore-code" data-template="git restore file.txt">git restore file.txt</code>
+            <button type="button" class="copy-button" data-copy-target="undo-restore-code">Copy</button>
           </div>
-          <p>Use this when the change should be removed locally without rewriting the whole branch story.</p>
+          <p>Use this when the change should be removed locally without rewriting history.</p>
+        </article>
+
+        <article class="entry">
+          <h3>Undo last commit locally</h3>
+          <div class="code-line">
+            <code class="command-code" id="undo-reset-code" data-template="git reset --soft HEAD~1">git reset --soft HEAD~1</code>
+            <button type="button" class="copy-button" data-copy-target="undo-reset-code">Copy</button>
+          </div>
+          <p>Use this when the last commit should be reopened without losing the staged state.</p>
         </article>
 
         <article class="entry">
           <h3>Record a reversal</h3>
-          <div class="code-sample">
-            <div class="code-actions">
-              <button type="button" class="copy-button" data-copy-target="undo-revert-code">Copy</button>
-            </div>
-            <pre><code id="undo-revert-code">git revert HEAD</code></pre>
+          <div class="code-line">
+            <code class="command-code" id="undo-revert-code" data-template="git revert HEAD">git revert HEAD</code>
+            <button type="button" class="copy-button" data-copy-target="undo-revert-code">Copy</button>
           </div>
           <p>Use this when the reversal itself should become a tracked commit.</p>
         </article>
@@ -310,28 +349,29 @@ git reset --soft HEAD~1</code></pre>
       <div class="entry-list">
         <article class="entry">
           <h3>Quick checks</h3>
-          <div class="code-sample">
-            <div class="code-actions">
-              <button type="button" class="copy-button" data-copy-target="issues-checks-code">Copy</button>
-            </div>
-            <pre><code id="issues-checks-code">git status
-git diff
-git branch --show-current</code></pre>
+          <div class="code-line">
+            <code class="command-code" id="issues-checks-code" data-template="git status">git status</code>
+            <button type="button" class="copy-button" data-copy-target="issues-checks-code">Copy</button>
           </div>
           <p>Use this when you need to answer what changed, where you are, and what is pending.</p>
         </article>
 
         <article class="entry">
-          <h3>Conflict path</h3>
-          <div class="code-sample">
-            <div class="code-actions">
-              <button type="button" class="copy-button" data-copy-target="issues-conflict-code">Copy</button>
-            </div>
-            <pre><code id="issues-conflict-code">git diff
-git add .
-git commit</code></pre>
+          <h3>Compare changes</h3>
+          <div class="code-line">
+            <code class="command-code" id="issues-diff-code" data-template="git diff">git diff</code>
+            <button type="button" class="copy-button" data-copy-target="issues-diff-code">Copy</button>
           </div>
-          <p>Use this as a reminder that conflicts usually become visible through the diff first.</p>
+          <p>Use this to inspect the exact edits before you decide the next step.</p>
+        </article>
+
+        <article class="entry">
+          <h3>Confirm branch</h3>
+          <div class="code-line">
+            <code class="command-code" id="issues-branch-code" data-template="git branch --show-current">git branch --show-current</code>
+            <button type="button" class="copy-button" data-copy-target="issues-branch-code">Copy</button>
+          </div>
+          <p>Use this when branch confusion is the main thing you need to clear up.</p>
         </article>
       </div>
     </section>
@@ -347,6 +387,44 @@ git commit</code></pre>
 
   <script>
     (function () {
+      var placeholderKeys = ['your-name', 'your-email', 'origin', 'main', 'remote-url'];
+
+      function escapeRegExp(value) {
+        return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }
+
+      function getPlaceholderValues() {
+        var values = {};
+        placeholderKeys.forEach(function (key) {
+          var input = document.querySelector('[data-placeholder-key="' + key + '"]');
+          values[key] = input ? input.value.trim() || key : key;
+        });
+        return values;
+      }
+
+      function renderTemplates() {
+        var values = getPlaceholderValues();
+        document.querySelectorAll('.command-code[data-template]').forEach(function (code) {
+          var template = code.getAttribute('data-template') || '';
+          var rendered = template;
+
+          placeholderKeys.forEach(function (key) {
+            rendered = rendered.split(key).join(values[key]);
+          });
+
+          code.textContent = rendered;
+        });
+      }
+
+      function resetInputs() {
+        placeholderKeys.forEach(function (key) {
+          var input = document.querySelector('[data-placeholder-key="' + key + '"]');
+          if (input) {
+            input.value = key;
+          }
+        });
+      }
+
       function copyText(text) {
         if (navigator.clipboard && navigator.clipboard.writeText) {
           return navigator.clipboard.writeText(text);
@@ -374,7 +452,7 @@ git commit</code></pre>
           }
 
           var originalLabel = button.textContent;
-          copyText(code.innerText.replace(/\n$/, '')).then(function () {
+          copyText(code.textContent).then(function () {
             button.textContent = 'Copied';
             window.setTimeout(function () {
               button.textContent = originalLabel;
@@ -382,6 +460,22 @@ git commit</code></pre>
           });
         });
       });
+
+      var applyButton = document.getElementById('apply-placeholders');
+      var resetButton = document.getElementById('reset-placeholders');
+
+      if (applyButton) {
+        applyButton.addEventListener('click', renderTemplates);
+      }
+
+      if (resetButton) {
+        resetButton.addEventListener('click', function () {
+          resetInputs();
+          renderTemplates();
+        });
+      }
+
+      renderTemplates();
     })();
   </script>
 </body>

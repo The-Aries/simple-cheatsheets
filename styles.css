@@ -63,13 +63,13 @@ a:hover {
 }
 
 .home-content {
-  max-width: 920px;
+  max-width: 840px;
   margin: 0 auto;
   padding: calc(var(--topbar-height) + 34px) 28px 42px;
 }
 
 .home-hero {
-  margin-bottom: 30px;
+  margin-bottom: 38px;
   padding-top: 12px;
 }
 
@@ -96,14 +96,12 @@ a:hover {
   line-height: 1.65;
 }
 
-.home-section,
-.home-note {
-  margin-top: 28px;
+.home-section {
+  margin-top: 34px;
 }
 
-.home-section h2,
-.home-note h2 {
-  margin: 0 0 10px;
+.home-section h2 {
+  margin: 0 0 12px;
   font-size: 1.1rem;
   line-height: 1.2;
   font-weight: 700;
@@ -111,7 +109,7 @@ a:hover {
 
 .topic-list {
   display: grid;
-  gap: 10px;
+  gap: 12px;
 }
 
 .topic-link {
@@ -141,7 +139,7 @@ a:hover {
   flex-wrap: wrap;
   gap: 18px;
   padding: 0 28px 28px;
-  max-width: 920px;
+  max-width: 840px;
   margin: 0 auto;
   font-size: 0.92rem;
 }
@@ -203,18 +201,18 @@ a:hover {
 }
 
 .hero {
-  margin: 0 0 42px;
+  margin: 0 0 40px;
   padding: 18px 0 0;
 }
 
 .panel {
-  margin: 0 0 50px;
+  margin: 0 0 52px;
   padding: 0;
   background: transparent;
 }
 
 .section-heading {
-  margin-bottom: 22px;
+  margin-bottom: 18px;
 }
 
 .section-heading h2 {
@@ -233,9 +231,98 @@ a:hover {
   line-height: 1.7;
 }
 
+.values-panel {
+  margin-bottom: 56px;
+}
+
+.values-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 24px;
+}
+
+.value-field {
+  display: grid;
+  gap: 6px;
+}
+
+.value-field span {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.value-field-wide {
+  grid-column: 1 / -1;
+}
+
+.values-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 18px;
+  padding-top: 2px;
+}
+
+.value-field input {
+  width: 100%;
+  padding: 0 0 6px;
+  border: 0;
+  border-bottom: 1px solid #000;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  line-height: 1.4;
+  outline: none;
+}
+
+.value-field input:focus {
+  border-bottom-width: 2px;
+}
+
+.form-button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.form-button:hover,
+.form-button:focus-visible {
+  text-decoration: underline;
+  outline: none;
+}
+
+.workflow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+}
+
+.workflow-step {
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  font: inherit;
+  font-weight: 700;
+}
+
+.workflow-arrow {
+  color: var(--text);
+  font-size: 1rem;
+}
+
 .entry-list {
   display: grid;
-  gap: 28px;
+  gap: 32px;
 }
 
 .entry {
@@ -250,17 +337,25 @@ a:hover {
   font-weight: 700;
 }
 
-.code-sample {
-  display: grid;
-  gap: 4px;
+.code-line {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
 }
 
-.code-actions {
-  display: flex;
-  justify-content: flex-end;
+.command-code {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: block;
+  white-space: nowrap;
+  overflow-x: auto;
+  font-family: "Cascadia Code", Consolas, "Courier New", monospace;
+  font-size: 0.92rem;
+  line-height: 1.6;
 }
 
 .copy-button {
+  flex: 0 0 auto;
   padding: 0;
   border: 0;
   background: transparent;
@@ -280,25 +375,8 @@ a:hover {
   outline: none;
 }
 
-pre {
-  margin: 0;
-  padding: 0 0 0 1.15rem;
-  overflow: auto;
-  background: transparent;
-  color: var(--text);
-  border: 0;
-  border-radius: 0;
-  line-height: 1.6;
-  white-space: pre-wrap;
-}
-
-code {
-  font-family: "Cascadia Code", Consolas, "Courier New", monospace;
-  font-size: 0.92rem;
-}
-
 .contact-note {
-  margin: 32px 0 0;
+  margin: 34px 0 0;
   padding: 0;
 }
 
@@ -318,7 +396,8 @@ code {
 #remote,
 #undo,
 #common-issues,
-#placeholders-title {
+#placeholders-title,
+#values-title {
   scroll-margin-top: calc(var(--topbar-height) + 20px);
 }
 
@@ -356,5 +435,23 @@ code {
 
   .topbar {
     padding: 0 20px;
+  }
+
+  .values-form {
+    grid-template-columns: 1fr;
+  }
+
+  .value-field-wide,
+  .values-actions {
+    grid-column: auto;
+  }
+
+  .values-actions {
+    justify-content: flex-start;
+  }
+
+  .code-line {
+    align-items: flex-start;
+    gap: 10px;
   }
 }
