@@ -3,193 +3,63 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Git Cheatsheet - Simple Cheatsheets</title>
+  <title>Simple Cheatsheets</title>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="home-page">
   <header class="topbar">
-    <a class="brand" href="#page-header">simple-cheatsheets</a>
+    <a class="brand" href="./">simple-cheatsheets</a>
     <nav aria-label="Global navigation">
-      <a href="./">simple-cheatsheets</a>
+      <a href="./">Overview</a>
       <a href="./git/">Git</a>
       <a href="./linux/">Linux</a>
-      <a href="./react/">React</a>
-      <a href="./kotlin/">Kotlin</a>
-      <a href="./github/">GitHub</a>
+      <a href="./markdown/">Markdown</a>
+      <a href="./regex/">Regex</a>
     </nav>
   </header>
 
-  <aside class="sidebar" aria-label="Page navigation">
-    <section class="sidebar-section">
-      <h2>Placeholders</h2>
-      <ul>
-        <li><a href="#placeholder-your-name">your-name</a></li>
-        <li><a href="#placeholder-your-email">your-email</a></li>
-        <li><a href="#placeholder-origin">origin</a></li>
-        <li><a href="#placeholder-main">main</a></li>
-        <li><a href="#placeholder-remote-url">remote-url</a></li>
-      </ul>
+  <main class="home-content">
+    <section class="home-hero" id="home-overview">
+      <p class="eyebrow">Simple Cheatsheets</p>
+      <h1>Choose a topic</h1>
+      <p class="lead">This site is a compact collection of static cheatsheets. Git is the current entry point.</p>
     </section>
 
-    <section class="sidebar-section">
-      <h2>On this page</h2>
-      <ul>
-        <li><a href="#setup">Setup</a></li>
-        <li><a href="#daily-commands">Daily Commands</a></li>
-        <li><a href="#branching">Branching</a></li>
-        <li><a href="#remote">Remote</a></li>
-        <li><a href="#undo">Undo</a></li>
-        <li><a href="#common-issues">Common Issues</a></li>
-      </ul>
-    </section>
-  </aside>
-
-  <main class="content">
-    <section class="hero" id="page-header">
-      <p class="eyebrow">Git cheatsheet prototype</p>
-      <h1>Git Cheatsheet</h1>
-      <p class="lead">A clean static layout for checking structure, hierarchy, and anchor relationships before filling in real content.</p>
-    </section>
-
-    <section class="panel" aria-labelledby="workflow-overview-title">
-      <div class="section-heading">
-        <h2 id="workflow-overview-title">Workflow Overview</h2>
-        <p>Quickly check where the workflow sits: local edit, staging, commit, and sync.</p>
-      </div>
-
-      <div class="workflow" aria-label="Git workflow overview">
-        <div class="workflow-step">Clone / Init</div>
-        <div class="workflow-arrow">→</div>
-        <div class="workflow-step">Edit files</div>
-        <div class="workflow-arrow">→</div>
-        <div class="workflow-step">git add</div>
-        <div class="workflow-arrow">→</div>
-        <div class="workflow-step">git commit</div>
-        <div class="workflow-arrow">→</div>
-        <div class="workflow-step">git pull</div>
-        <div class="workflow-arrow">→</div>
-        <div class="workflow-step">git push</div>
+    <section class="home-section" aria-labelledby="start-here-title">
+      <h2 id="start-here-title">Start here</h2>
+      <div class="topic-list">
+        <a class="topic-link topic-link-primary" href="./git/">
+          <span class="topic-name">Git Cheatsheet</span>
+          <span class="topic-meta">Open the current prototype</span>
+        </a>
       </div>
     </section>
 
-    <section class="panel" aria-labelledby="placeholders-title">
-      <div class="section-heading">
-        <h2 id="placeholders-title">Placeholder Description</h2>
-        <p>Each placeholder below has its own anchor so the sidebar can jump straight to the matching explanation.</p>
-      </div>
-
-      <div class="placeholder-grid">
-        <article class="definition-card" id="placeholder-your-name">
-          <h3>your-name</h3>
-          <p>Placeholder for the author or contributor name used in local examples and command snippets.</p>
-        </article>
-
-        <article class="definition-card" id="placeholder-your-email">
-          <h3>your-email</h3>
-          <p>Placeholder for the email value that would normally be configured in Git identity settings.</p>
-        </article>
-
-        <article class="definition-card" id="placeholder-origin">
-          <h3>origin</h3>
-          <p>Placeholder for the default remote name that points to the main repository location.</p>
-        </article>
-
-        <article class="definition-card" id="placeholder-main">
-          <h3>main</h3>
-          <p>Placeholder for the primary branch name used as the central integration point.</p>
-        </article>
-
-        <article class="definition-card" id="placeholder-remote-url">
-          <h3>remote-url</h3>
-          <p>Placeholder for the repository address that Git uses when talking to a remote server.</p>
-        </article>
+    <section class="home-section" aria-labelledby="other-topics-title">
+      <h2 id="other-topics-title">Other topics</h2>
+      <div class="topic-list">
+        <a class="topic-link" href="./linux/">
+          <span class="topic-name">Linux</span>
+          <span class="topic-meta">System commands and shell basics</span>
+        </a>
+        <a class="topic-link" href="./markdown/">
+          <span class="topic-name">Markdown</span>
+          <span class="topic-meta">Lightweight writing syntax</span>
+        </a>
+        <a class="topic-link" href="./regex/">
+          <span class="topic-name">Regex</span>
+          <span class="topic-meta">Pattern matching reference</span>
+        </a>
       </div>
     </section>
 
-    <section class="panel" id="setup" aria-labelledby="setup-title">
-      <div class="section-heading">
-        <h2 id="setup-title">Setup</h2>
-        <p>Prototype section for initial configuration and repository creation.</p>
-      </div>
-      <div class="section-body">
-        <p class="placeholder-text">Placeholder content for setup steps.</p>
-        <pre><code>git config --global user.name "your-name"
-git config --global user.email "your-email"
-git init</code></pre>
-      </div>
+    <section class="home-note" aria-labelledby="note-title">
+      <h2 id="note-title">Structure</h2>
+      <p>The homepage stays shallow on purpose: pick a topic first, then open the dedicated cheatsheet page.</p>
     </section>
-
-    <section class="panel" id="daily-commands" aria-labelledby="daily-commands-title">
-      <div class="section-heading">
-        <h2 id="daily-commands-title">Daily Commands</h2>
-        <p>Prototype area for the commands used most often during everyday work.</p>
-      </div>
-      <div class="section-body">
-        <p class="placeholder-text">Placeholder content for status, add, commit, and log commands.</p>
-        <pre><code>git status
-git add .
-git commit -m "message"
-git log --oneline</code></pre>
-      </div>
-    </section>
-
-    <section class="panel" id="branching" aria-labelledby="branching-title">
-      <div class="section-heading">
-        <h2 id="branching-title">Branching</h2>
-        <p>Prototype area for feature branches, switching, and merge checkpoints.</p>
-      </div>
-      <div class="section-body">
-        <p class="placeholder-text">Placeholder content for branch creation and navigation.</p>
-        <pre><code>git branch feature/example
-git switch feature/example
-git merge main</code></pre>
-      </div>
-    </section>
-
-    <section class="panel" id="remote" aria-labelledby="remote-title">
-      <div class="section-heading">
-        <h2 id="remote-title">Remote</h2>
-        <p>Prototype area for remote tracking and synchronization commands.</p>
-      </div>
-      <div class="section-body">
-        <p class="placeholder-text">Placeholder content for fetch, pull, and push operations.</p>
-        <pre><code>git remote -v
-git fetch origin
-git pull origin main
-git push origin main</code></pre>
-      </div>
-    </section>
-
-    <section class="panel" id="undo" aria-labelledby="undo-title">
-      <div class="section-heading">
-        <h2 id="undo-title">Undo</h2>
-        <p>Prototype area for safely reversing mistakes at different stages.</p>
-      </div>
-      <div class="section-body">
-        <p class="placeholder-text">Placeholder content for restore, reset, and revert examples.</p>
-        <pre><code>git restore file.txt
-git reset --soft HEAD~1
-git revert HEAD</code></pre>
-      </div>
-    </section>
-
-    <section class="panel" id="common-issues" aria-labelledby="common-issues-title">
-      <div class="section-heading">
-        <h2 id="common-issues-title">Common Issues</h2>
-        <p>Prototype area for common errors and quick checks before shipping the real cheatsheet.</p>
-      </div>
-      <div class="section-body">
-        <p class="placeholder-text">Placeholder content for merge conflicts, detached HEAD, and line-ending issues.</p>
-        <pre><code>git status
-git diff
-git branch --show-current</code></pre>
-      </div>
-    </section>
-
-    <p class="contact-note">If you have questions or suggestions, you can contact the author.</p>
   </main>
 
-  <footer class="footer">
+  <footer class="footer footer-home">
     <span>GitHub Profile</span>
     <span>Repository</span>
     <span>Email</span>
