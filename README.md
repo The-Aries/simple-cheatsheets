@@ -18,8 +18,6 @@ A compact static cheatsheet site built with plain HTML, CSS, and vanilla JavaScr
 - `markdown/index.html`
 - `regex/index.html`
 - `matlab/index.html`
-- `react/index.html`
-- `kotlin/index.html`
 
 All template driven module pages share one shell and reuse the same renderer + data structure.
 

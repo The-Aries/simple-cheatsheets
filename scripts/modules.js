@@ -3,7 +3,5 @@ window.CHEATSHEET_MODULES = [
   { key: "linux", label: "Linux", dir: "linux" },
   { key: "markdown", label: "Markdown", dir: "markdown" },
   { key: "regex", label: "Regex", dir: "regex" },
-  { key: "matlab", label: "MATLAB", dir: "matlab" },
-  { key: "react", label: "React", dir: "react" },
-  { key: "kotlin", label: "Kotlin", dir: "kotlin" }
+  { key: "matlab", label: "MATLAB", dir: "matlab" }
 ];
