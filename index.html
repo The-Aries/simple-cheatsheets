@@ -6,15 +6,10 @@
   <title>Simple Cheatsheets</title>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="home-page">
+<body class="home-page" data-root="./">
   <header class="topbar">
     <a class="brand" href="./">simple-cheatsheets</a>
-    <nav aria-label="Global navigation">
-      <a href="./git/">Git</a>
-      <a href="./linux/">Linux</a>
-      <a href="./markdown/">Markdown</a>
-      <a href="./regex/">Regex</a>
-    </nav>
+    <nav id="home-top-nav" aria-label="Global navigation"></nav>
   </header>
 
   <main class="home-content">
@@ -25,19 +20,17 @@
 
     <section class="home-section" aria-labelledby="home-nav-title">
       <h2 id="home-nav-title">Cheatsheets</h2>
-      <nav class="topic-list" aria-label="Homepage cheatsheet navigation">
-        <a class="topic-link" href="./git/">Git</a>
-        <a class="topic-link" href="./linux/">Linux</a>
-        <a class="topic-link" href="./markdown/">Markdown</a>
-        <a class="topic-link" href="./regex/">Regex</a>
-      </nav>
+      <nav id="home-topic-nav" class="topic-list" aria-label="Homepage cheatsheet navigation"></nav>
     </section>
   </main>
 
   <footer class="footer footer-home">
     <a href="https://github.com/The-Aries">GitHub Profile</a>
     <a href="https://github.com/The-Aries/simple-cheatsheets">Repository</a>
-    <a href="./">Copyright © 2026 Junhao Zhang</a>
+    <span>Copyright © 2026 Junhao Zhang</span>
   </footer>
+
+  <script src="scripts/modules.js"></script>
+  <script src="scripts/home-renderer.js"></script>
 </body>
 </html>
