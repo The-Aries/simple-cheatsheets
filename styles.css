@@ -50,18 +50,18 @@ a:hover { text-decoration-thickness: 0.08em; }
 .sidebar-group:not([open]) summary::before { transform: rotate(0deg); }
 .sidebar-group ul { margin: 10px 0 0; padding: 0; list-style: none; }
 .sidebar-group li + li { margin-top: 7px; }
-.placeholder-links a, .page-nav-list a {
+.placeholder-links a, .sidebar-subgroup summary a, .sidebar-subgroup ul a {
   font-family: Calibri, "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 0.95rem;
+  font-weight: 400;
+  line-height: 1.5;
   text-decoration: underline;
   text-underline-offset: 0.12em;
 }
 .page-nav-list > li + li { margin-top: 6px; }
 .sidebar-subgroup { margin: 0; }
-.sidebar-subgroup summary { font-size: 0.95rem; text-transform: none; letter-spacing: 0; font-weight: 700; }
-.sidebar-subgroup summary a { text-decoration: underline; }
+.sidebar-subgroup summary { font-size: 0.95rem; text-transform: none; letter-spacing: 0; font-weight: 400; }
 .sidebar-subgroup ul { margin-left: 18px; }
-.sidebar-subgroup ul a { font-size: 0.95rem; text-decoration: underline; }
 .content { max-width: 1140px; margin-left: calc(var(--sidebar-width) + 34px); padding: calc(var(--topbar-height) + 38px) 34px 44px; }
 .hero, .panel, .contact-note, .footer { max-width: 960px; }
 .hero { margin: 0 0 44px; }
@@ -82,17 +82,17 @@ a:hover { text-decoration-thickness: 0.08em; }
 }
 .value-row input:focus { box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.35); }
 .value-help { font-size: 0.94rem; color: #2c2c2c; }
-.values-actions { display: flex; justify-content: flex-start; gap: 10px; padding-top: 4px; }
+.values-actions { display: flex; justify-content: flex-start; align-items: center; gap: 10px; padding-top: 4px; width: 100%; margin-left: 0; }
 .form-button {
   padding: 0.55rem 0.9rem; border: 0; border-radius: var(--radius); background: #000; color: #fff;
   font: inherit; font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer;
 }
 .form-button:hover, .form-button:focus-visible { opacity: 0.9; outline: none; }
 .concept-list { display: grid; gap: 10px; }
-.workflow-sequence { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
-.workflow-sequence li { background: #000; color: #fff; border-radius: var(--radius); padding: 8px 12px; font-size: 0.93rem; line-height: 1.35; white-space: nowrap; }
-.workflow-sequence h3 { margin: 0; font-size: 1.04rem; }
-.workflow-sequence p { margin: 0; font-size: 0.95rem; line-height: 1.55; }
+.workflow-sequence { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.workflow-sequence li { background: #000; color: #fff; border-radius: var(--radius); padding: 10px 12px; min-width: 0; }
+.workflow-sequence h3 { margin: 0 0 4px; font-size: 0.92rem; line-height: 1.3; }
+.workflow-sequence p { margin: 0; font-size: 0.82rem; line-height: 1.4; }
 .section-divider { margin: 8px 0 40px; border: 0; height: 1px; background: #000; }
 .command-group + .command-group { margin-top: 32px; }
 .command-group h3 { margin: 0; font-size: 1.21rem; }
@@ -119,6 +119,7 @@ a:hover { text-decoration-thickness: 0.08em; }
   .value-row span { flex-basis: 175px; }
 }
 @media (max-width: 760px) {
+  .workflow-sequence { grid-template-columns: 1fr; }
   .home-content, .footer { padding-left: 20px; padding-right: 20px; }
   .content { margin-left: 0; padding-left: 20px; padding-right: 20px; }
   .git-page .footer { margin-left: 0; padding-left: 20px; padding-right: 20px; }
