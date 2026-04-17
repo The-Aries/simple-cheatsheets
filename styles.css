@@ -33,6 +33,7 @@ a:hover { text-decoration-thickness: 0.08em; }
 .topic-list { display: grid; gap: 11px; }
 .topic-link { display: inline-block; width: fit-content; text-decoration: none; font-weight: 700; font-size: 1.08rem; }
 .sidebar {
+  font-family: Calibri, "Segoe UI", Arial, Helvetica, sans-serif;
   position: fixed; top: var(--topbar-height); left: 0; bottom: 0; width: var(--sidebar-width);
   overflow: auto; padding: 22px 18px 28px; background: #fff;
 }
@@ -49,13 +50,18 @@ a:hover { text-decoration-thickness: 0.08em; }
 .sidebar-group:not([open]) summary::before { transform: rotate(0deg); }
 .sidebar-group ul { margin: 10px 0 0; padding: 0; list-style: none; }
 .sidebar-group li + li { margin-top: 7px; }
-.placeholder-links a { text-decoration: underline; }
+.placeholder-links a, .page-nav-list a {
+  font-family: Calibri, "Segoe UI", Arial, Helvetica, sans-serif;
+  font-size: 0.95rem;
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+}
 .page-nav-list > li + li { margin-top: 6px; }
 .sidebar-subgroup { margin: 0; }
 .sidebar-subgroup summary { font-size: 0.95rem; text-transform: none; letter-spacing: 0; font-weight: 700; }
-.sidebar-subgroup summary a { text-decoration: none; }
+.sidebar-subgroup summary a { text-decoration: underline; }
 .sidebar-subgroup ul { margin-left: 18px; }
-.sidebar-subgroup ul a { font-size: 0.9rem; text-decoration: none; }
+.sidebar-subgroup ul a { font-size: 0.95rem; text-decoration: underline; }
 .content { max-width: 1140px; margin-left: calc(var(--sidebar-width) + 34px); padding: calc(var(--topbar-height) + 38px) 34px 44px; }
 .hero, .panel, .contact-note, .footer { max-width: 960px; }
 .hero { margin: 0 0 44px; }
@@ -76,16 +82,16 @@ a:hover { text-decoration-thickness: 0.08em; }
 }
 .value-row input:focus { box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.35); }
 .value-help { font-size: 0.94rem; color: #2c2c2c; }
-.values-actions { display: flex; justify-content: flex-end; gap: 10px; padding-top: 4px; }
+.values-actions { display: flex; justify-content: flex-start; gap: 10px; padding-top: 4px; }
 .form-button {
   padding: 0.55rem 0.9rem; border: 0; border-radius: var(--radius); background: #000; color: #fff;
   font: inherit; font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer;
 }
 .form-button:hover, .form-button:focus-visible { opacity: 0.9; outline: none; }
 .concept-list { display: grid; gap: 10px; }
-.workflow-sequence { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
-.workflow-sequence li { background: #000; color: #fff; border-radius: var(--radius); padding: 13px 14px; }
-.workflow-sequence h3 { margin: 0 0 7px; font-size: 1.04rem; }
+.workflow-sequence { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
+.workflow-sequence li { background: #000; color: #fff; border-radius: var(--radius); padding: 8px 12px; font-size: 0.93rem; line-height: 1.35; white-space: nowrap; }
+.workflow-sequence h3 { margin: 0; font-size: 1.04rem; }
 .workflow-sequence p { margin: 0; font-size: 0.95rem; line-height: 1.55; }
 .section-divider { margin: 8px 0 40px; border: 0; height: 1px; background: #000; }
 .command-group + .command-group { margin-top: 32px; }
@@ -121,6 +127,6 @@ a:hover { text-decoration-thickness: 0.08em; }
   .hero h1 { font-size: 2.42rem; }
   .value-row { flex-direction: column; align-items: flex-start; gap: 6px; }
   .value-row span { flex-basis: auto; }
-  .values-actions { justify-content: flex-end; }
+  .values-actions { justify-content: flex-start; }
   .command-table { display: block; overflow-x: auto; }
 }
