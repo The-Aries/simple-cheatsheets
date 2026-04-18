@@ -269,7 +269,7 @@ a:hover { text-decoration-thickness: 0.08em; }
 
 /* Force stronger visual indentation for sidebar hierarchy */
 .sidebar .sidebar-root-group > .sidebar-root-list {
-  padding-left: 36px;
+  padding-left: 34px;
 }
 
 .sidebar .sidebar-root-list > .sidebar-level2-item {
@@ -281,11 +281,11 @@ a:hover { text-decoration-thickness: 0.08em; }
 }
 
 .sidebar .sidebar-root-list > .sidebar-level2-item > .sidebar-subgroup > summary {
-  padding-left: 14px;
+  padding-left: 13px;
 }
 
 .sidebar .sidebar-root-list > .sidebar-level2-item > .sidebar-subgroup > .sidebar-level3-list {
-  padding-left: 20px;
+  padding-left: 18px;
 }
 
 .sidebar .sidebar-root-list > .sidebar-level2-item > .sidebar-subgroup > .sidebar-level3-list > .sidebar-level3-item > .sidebar-level3-link {
