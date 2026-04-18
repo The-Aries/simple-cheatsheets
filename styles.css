@@ -23,7 +23,15 @@ a:hover { text-decoration-thickness: 0.08em; }
   padding: 0 24px; background: #fff;
 }
 .brand { font-weight: 700; font-size: 1.58rem; line-height: 1; letter-spacing: 0.01em; text-decoration: none; }
-.topbar nav { display: flex; flex-wrap: wrap; gap: 18px; font-size: 1.04rem; }
+.topbar nav { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; font-size: 0.95rem; line-height: 1.5; }
+.topbar nav a {
+  font-family: Calibri, "Segoe UI", Arial, Helvetica, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  line-height: 1.5;
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+}
 .home-page { min-height: 100vh; display: flex; flex-direction: column; }
 .home-content { flex: 1 0 auto; width: 100%; max-width: 920px; margin: 0 auto; padding: calc(var(--topbar-height) + 46px) 30px 44px; }
 .home-hero h1 { margin: 0; font-size: 2.55rem; line-height: 1.08; }
@@ -51,8 +59,10 @@ a:hover { text-decoration-thickness: 0.08em; }
 .sidebar-group ul { margin: 10px 0 0; padding: 0; list-style: none; }
 .sidebar-group li + li { margin-top: 7px; }
 .sidebar-link-group { margin-top: 0; }
-.sidebar-top-link { display: block; font-family: Calibri, "Segoe UI", Arial, Helvetica, sans-serif; font-size: 0.95rem; font-weight: 400; line-height: 1.5; text-decoration: underline; text-underline-offset: 0.12em; }
-.placeholder-links a, .sidebar-subgroup summary a, .sidebar-subgroup ul a {
+.sidebar-link-group + .sidebar-link-group { margin-top: 7px; }
+.sidebar-link-group + .sidebar-group { margin-top: 14px; }
+.sidebar-top-link { display: block; }
+.sidebar-top-link, .placeholder-links a, .sidebar-subgroup summary a, .sidebar-subgroup ul a {
   font-family: Calibri, "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 0.95rem;
   font-weight: 400;
