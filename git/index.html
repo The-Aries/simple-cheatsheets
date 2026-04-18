@@ -27,11 +27,19 @@
       var lead = document.querySelector("#page-header .lead");
       if (!lead) { return; }
       if (lead.querySelector('a[href="https://git-scm.com/doc"]')) { return; }
-      lead.appendChild(document.createTextNode(" "));
+      var phrase = "official Git documentation";
+      var text = lead.textContent || "";
+      var index = text.indexOf(phrase);
+      if (index === -1) { return; }
+      var before = text.slice(0, index);
+      var after = text.slice(index + phrase.length);
+      lead.textContent = "";
+      lead.appendChild(document.createTextNode(before));
       var link = document.createElement("a");
       link.href = "https://git-scm.com/doc";
-      link.textContent = "official Git documentation";
+      link.textContent = phrase;
       lead.appendChild(link);
+      lead.appendChild(document.createTextNode(after));
     })();
   </script>
 </body>
