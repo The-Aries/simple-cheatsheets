@@ -50,6 +50,8 @@ a:hover { text-decoration-thickness: 0.08em; }
 .sidebar-group:not([open]) summary::before { transform: rotate(0deg); }
 .sidebar-group ul { margin: 10px 0 0; padding: 0; list-style: none; }
 .sidebar-group li + li { margin-top: 7px; }
+.sidebar-link-group { margin-top: 0; }
+.sidebar-top-link { display: block; font-family: Calibri, "Segoe UI", Arial, Helvetica, sans-serif; font-size: 0.95rem; font-weight: 400; line-height: 1.5; text-decoration: underline; text-underline-offset: 0.12em; }
 .placeholder-links a, .sidebar-subgroup summary a, .sidebar-subgroup ul a {
   font-family: Calibri, "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 0.95rem;
@@ -101,10 +103,12 @@ a:hover { text-decoration-thickness: 0.08em; }
 .command-table { width: 100%; border-collapse: collapse; }
 .command-table thead th { background: #000; color: #fff; text-align: left; padding: 0.66rem 0.72rem; font-size: 0.9rem; }
 .command-table tbody td { padding: 0.66rem 0.72rem; vertical-align: middle; border-top: 1px solid #000; font-size: 0.96rem; }
+.command-table thead th:last-child, .command-table tbody td:last-child { width: 88px; text-align: center; white-space: nowrap; }
 .command-code { font-family: "Cascadia Code", Consolas, "Courier New", monospace; font-size: 0.92rem; line-height: 1.45; white-space: nowrap; }
 .group-description { margin-top: 10px; }
 .group-description h4 { margin: 0 0 6px; font-size: 0.98rem; }
 .copy-button {
+  display: inline-flex; align-items: center; justify-content: center; min-width: 56px;
   border: 0; border-radius: var(--radius); background: #000; color: #fff; font: inherit;
   font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.07em; padding: 0.34rem 0.56rem; cursor: pointer;
 }
@@ -114,7 +118,7 @@ a:hover { text-decoration-thickness: 0.08em; }
 .git-page .footer, .cheatsheet-page .footer { margin-left: calc(var(--sidebar-width) + 34px); margin-right: 0; }
 .no-sidebar .content { margin-left: 0; }
 .no-sidebar .footer { margin-left: 0; }
-#page-header, #values-title, #construction-status, [id^="section-"], [id^="group-"], [id^="placeholder-"], .command-group, .value-item {
+#page-header, #placeholders, #values-title, #workflow-overview, #preview, #construction-status, [id^="section-"], [id^="group-"], [id^="placeholder-"], .command-group, .value-item {
   scroll-margin-top: calc(var(--topbar-height) + 18px);
 }
 @media (max-width: 980px) {

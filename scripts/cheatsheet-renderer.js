@@ -108,7 +108,13 @@
 
   function renderSidebar() {
     var sidebar = document.getElementById("page-sidebar");
+    var shell = window.CHEATSHEET_SHELL && window.CHEATSHEET_SHELL.renderSidebar;
     if (!sidebar) { return; }
+
+    if (!shell) {
+      hideSidebar();
+      return;
+    }
 
     var layout = page.layout || {};
     if (layout.hasSidebar === false) {
@@ -118,43 +124,51 @@
 
     var fields = resolvePlaceholderFields();
     var sections = resolveSectionGroups();
+    var pageHeader = findBlock("pageHeader");
+    var workflow = findBlock("workflow");
+    var preview = findBlock("preview");
 
-    if (!fields.length && !sections.length) {
-      hideSidebar();
-      return;
-    }
+    var hasWorkflow = workflow && Array.isArray(workflow.cards) && workflow.cards.length > 0;
+    var hasPreview = preview && typeof preview.text === "string" && preview.text.trim() !== "";
+    var placeholderItems = fields.map(function (field) {
+      return {
+        label: field.key,
+        href: "#placeholder-" + safeKey(field.key)
+      };
+    });
 
-    showSidebar();
-
-    var html = "";
-    if (fields.length) {
-      html += "<details class=\"sidebar-group\" open><summary>Placeholders</summary><ul class=\"placeholder-links\">";
-      fields.forEach(function (field) {
-        var fieldAnchor = "placeholder-" + safeKey(field.key);
-        html += "<li><a href=\"#" + fieldAnchor + "\">" + escapeHtml(field.key) + "</a></li>";
+    var sectionItems = sections.map(function (section, sectionIndex) {
+      var sAnchor = sectionAnchor(section, sectionIndex);
+      var sNumber = section.number || String(sectionIndex + 1);
+      var sTitle = section.title || "Untitled section";
+      var children = (section.groups || []).map(function (group, groupIndex) {
+        var gAnchor = groupAnchor(section, group, sectionIndex, groupIndex);
+        var gNumber = group.number || String(groupIndex + 1);
+        var gTitle = group.title || group.key || "Untitled group";
+        return {
+          label: sNumber + "." + gNumber + " " + gTitle,
+          href: "#" + gAnchor
+        };
       });
-      html += "</ul></details>";
-    }
 
-    if (sections.length) {
-      html += "<details class=\"sidebar-group\" open><summary>On this page</summary><ul class=\"page-nav-list\">";
-      sections.forEach(function (section, sectionIndex) {
-        var sAnchor = sectionAnchor(section, sectionIndex);
-        var sNumber = section.number || String(sectionIndex + 1);
-        var sTitle = section.title || "Untitled section";
-        html += "<li><details class=\"sidebar-subgroup\" open><summary><a href=\"#" + sAnchor + "\">" + escapeHtml(sNumber) + ". " + escapeHtml(sTitle) + "</a></summary><ul>";
-        (section.groups || []).forEach(function (group, groupIndex) {
-          var gAnchor = groupAnchor(section, group, sectionIndex, groupIndex);
-          var gNumber = group.number || String(groupIndex + 1);
-          var gTitle = group.title || group.key || "Untitled group";
-          html += "<li><a href=\"#" + gAnchor + "\">" + escapeHtml(sNumber) + "." + escapeHtml(gNumber) + " " + escapeHtml(gTitle) + "</a></li>";
-        });
-        html += "</ul></details></li>";
-      });
-      html += "</ul></details>";
-    }
+      return {
+        label: sNumber + ". " + sTitle,
+        href: "#" + sAnchor,
+        children: children
+      };
+    });
 
-    sidebar.innerHTML = html;
+    shell({
+      sidebarId: "page-sidebar",
+      bodyClassTarget: body,
+      model: {
+        overview: pageHeader ? { label: "Overview", href: "#" + (pageHeader.id || "page-header") } : null,
+        placeholders: { label: "Placeholders", open: true, items: placeholderItems },
+        workflow: hasWorkflow ? { label: "Workflow", href: "#" + (workflow.id || "workflow-overview") } : null,
+        preview: hasPreview ? { label: "Preview", href: "#" + (preview.id || "preview") } : null,
+        sections: { label: "On this page", open: true, items: sectionItems }
+      }
+    });
   }
 
   function renderPageHeader(block) {
@@ -164,10 +178,11 @@
   function renderPlaceholderForm(block, fields) {
     if (!fields.length) { return ""; }
 
+    var panelId = block.id || "placeholders";
     var headingId = block.headingId || "values-title";
     var heading = block.title || "Placeholders";
     var intro = block.intro || "Set once, apply to command lines, then copy ready to run commands.";
-    var html = "<section class=\"panel values-panel\" aria-labelledby=\"" + escapeAttr(headingId) + "\"><div class=\"section-heading\"><h2 id=\"" + escapeAttr(headingId) + "\">" + escapeHtml(heading) + "</h2><p>" + escapeHtml(intro) + "</p></div><form class=\"values-form\" id=\"placeholder-form\">";
+    var html = '<section class="panel values-panel" id="' + escapeAttr(panelId) + '" aria-labelledby="' + escapeAttr(headingId) + '"><div class="section-heading"><h2 id="' + escapeAttr(headingId) + '">' + escapeHtml(heading) + '</h2><p>' + escapeHtml(intro) + '</p></div><form class="values-form" id="placeholder-form">';
 
     fields.forEach(function (field) {
       var key = field.key;
@@ -191,7 +206,9 @@
   function renderWorkflow(block) {
     var cards = Array.isArray(block.cards) ? block.cards : [];
     if (!cards.length) { return ""; }
-    var html = "<section class=\"panel workflow-panel\" aria-labelledby=\"workflow-overview-title\"><div class=\"section-heading\"><h2 id=\"workflow-overview-title\">" + escapeHtml(block.title || "Workflow Overview") + "</h2><p>" + escapeHtml(block.description || "") + "</p></div><ol class=\"workflow-sequence\">";
+    var workflowId = block.id || "workflow-overview";
+    var workflowHeadingId = workflowId + "-title";
+    var html = '<section class="panel workflow-panel" id="' + escapeAttr(workflowId) + '" aria-labelledby="' + escapeAttr(workflowHeadingId) + '"><div class="section-heading"><h2 id="' + escapeAttr(workflowHeadingId) + '">' + escapeHtml(block.title || 'Workflow Overview') + '</h2><p>' + escapeHtml(block.description || '') + '</p></div><ol class="workflow-sequence">';
     cards.forEach(function (card) {
       html += "<li><h3>" + escapeHtml(card.title || "") + "</h3><p>" + escapeHtml(card.text || "") + "</p></li>";
     });
@@ -260,7 +277,8 @@
   function renderPreview(block) {
     var previewText = block.text || "";
     if (!previewText) { return ""; }
-    return "<section class=\"panel\"><div class=\"section-heading\"><h2>" + escapeHtml(block.title || "Preview") + "</h2></div><div class=\"command-table-wrap\"><pre class=\"command-code\">" + escapeHtml(previewText) + "</pre></div></section>";
+    var previewId = block.id || "preview";
+    return "<section class=\"panel\" id=\"" + escapeAttr(previewId) + "\"><div class=\"section-heading\"><h2>" + escapeHtml(block.title || "Preview") + "</h2></div><div class=\"command-table-wrap\"><pre class=\"command-code\">" + escapeHtml(previewText) + "</pre></div></section>";
   }
 
   function renderNote(block) {
