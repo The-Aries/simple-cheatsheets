@@ -33,6 +33,8 @@ a:hover { text-decoration-thickness: 0.08em; }
   text-underline-offset: 0.12em;
 }
 .home-page { min-height: 100vh; display: flex; flex-direction: column; }
+.cheatsheet-page { min-height: 100vh; display: flex; flex-direction: column; }
+.cheatsheet-page .content { flex: 1 0 auto; }
 .home-content { flex: 1 0 auto; width: 100%; max-width: 920px; margin: 0 auto; padding: calc(var(--topbar-height) + 46px) 30px 44px; }
 .home-hero h1 { margin: 0; font-size: 2.55rem; line-height: 1.08; }
 .home-hero p { margin: 14px 0 0; max-width: 56ch; font-size: 1.1rem; line-height: 1.68; }
