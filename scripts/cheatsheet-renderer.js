@@ -125,17 +125,39 @@
     var fields = resolvePlaceholderFields();
     var sections = resolveSectionGroups();
     var pageHeader = findBlock("pageHeader");
+    var placeholderBlock = findBlock("placeholderForm");
+    var concepts = findBlock("concepts");
     var workflow = findBlock("workflow");
-    var preview = findBlock("preview");
 
+    var hasDescription = !!pageHeader;
+    var hasPlaceholders = !!(placeholderBlock && fields.length);
+    var hasConcepts = !!(concepts && Array.isArray(concepts.items) && concepts.items.length > 0);
     var hasWorkflow = workflow && Array.isArray(workflow.cards) && workflow.cards.length > 0;
-    var hasPreview = preview && typeof preview.text === "string" && preview.text.trim() !== "";
-    var placeholderItems = fields.map(function (field) {
-      return {
-        label: field.key,
-        href: "#placeholder-" + safeKey(field.key)
-      };
-    });
+    var overviewItems = [];
+    if (hasDescription) {
+      overviewItems.push({
+        label: "Description",
+        href: "#" + (pageHeader.id || "page-header")
+      });
+    }
+    if (hasPlaceholders) {
+      overviewItems.push({
+        label: "Placeholders",
+        href: "#" + (placeholderBlock.id || "placeholders")
+      });
+    }
+    if (hasConcepts) {
+      overviewItems.push({
+        label: concepts.title || "Key Concepts",
+        href: "#" + (concepts.id || "key-concepts")
+      });
+    }
+    if (hasWorkflow) {
+      overviewItems.push({
+        label: workflow.title || "Workflow",
+        href: "#" + (workflow.id || "workflow-overview")
+      });
+    }
 
     var sectionItems = sections.map(function (section, sectionIndex) {
       var sAnchor = sectionAnchor(section, sectionIndex);
@@ -162,11 +184,8 @@
       sidebarId: "page-sidebar",
       bodyClassTarget: body,
       model: {
-        overview: pageHeader ? { label: "Overview", href: "#" + (pageHeader.id || "page-header") } : null,
-        placeholders: { label: "Placeholders", open: true, items: placeholderItems },
-        workflow: hasWorkflow ? { label: "Workflow", href: "#" + (workflow.id || "workflow-overview") } : null,
-        preview: hasPreview ? { label: "Preview", href: "#" + (preview.id || "preview") } : null,
-        sections: { label: "On this page", open: true, items: sectionItems }
+        overview: { label: "Overview", open: true, items: overviewItems },
+        mainContent: { label: "Main content", open: true, items: sectionItems }
       }
     });
   }
@@ -200,7 +219,9 @@
   function renderConcepts(block) {
     var items = Array.isArray(block.items) ? block.items : [];
     if (!items.length) { return ""; }
-    return "<section class=\"panel\" aria-labelledby=\"concepts-title\"><div class=\"section-heading\"><h2 id=\"concepts-title\">" + escapeHtml(block.title || "Key Concepts") + "</h2></div><div class=\"concept-list\">" + items.map(function (item) { return "<p>" + escapeHtml(item) + "</p>"; }).join("") + "</div></section>";
+    var conceptsId = block.id || "key-concepts";
+    var headingId = conceptsId + "-title";
+    return "<section class=\"panel\" id=\"" + escapeAttr(conceptsId) + "\" aria-labelledby=\"" + escapeAttr(headingId) + "\"><div class=\"section-heading\"><h2 id=\"" + escapeAttr(headingId) + "\">" + escapeHtml(block.title || "Key Concepts") + "</h2></div><div class=\"concept-list\">" + items.map(function (item) { return "<p>" + escapeHtml(item) + "</p>"; }).join("") + "</div></section>";
   }
 
   function renderWorkflow(block) {
