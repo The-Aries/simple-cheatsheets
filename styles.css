@@ -291,3 +291,26 @@ a:hover { text-decoration-thickness: 0.08em; }
 .sidebar .sidebar-root-list > .sidebar-level2-item > .sidebar-subgroup > .sidebar-level3-list > .sidebar-level3-item > .sidebar-level3-link {
   padding-left: 0;
 }
+
+
+/* Character-based indent alignment: child starts at parent third letter */
+.sidebar {
+  --nav-arrow-offset: 13px;
+  --nav-indent-step: 2ch;
+}
+
+.sidebar .sidebar-root-group > .sidebar-root-list {
+  padding-left: calc(var(--nav-arrow-offset) + var(--nav-indent-step));
+}
+
+.sidebar .sidebar-root-list > .sidebar-level2-item > .sidebar-level2-link {
+  padding-left: 0;
+}
+
+.sidebar .sidebar-root-list > .sidebar-level2-item > .sidebar-subgroup > summary {
+  padding-left: var(--nav-arrow-offset);
+}
+
+.sidebar .sidebar-root-list > .sidebar-level2-item > .sidebar-subgroup > .sidebar-level3-list {
+  padding-left: calc(var(--nav-arrow-offset) + var(--nav-indent-step));
+}
