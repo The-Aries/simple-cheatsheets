@@ -40,13 +40,12 @@ Footer is configured separately from blocks through `footer.contactLinks`, `foot
 ## Module Pages
 
 - `git/index.html`: template shell + `data/pages/git.js` (official production Git page).
-- `git-test/index.html`: comparison page for Git template migration validation.
 - `linux/index.html`: template shell + `data/pages/linux.js` (`underConstruction`).
 - `markdown/index.html`: template shell + `data/pages/markdown.js` (`underConstruction`).
 - `regex/index.html`: template shell + `data/pages/regex.js` (`underConstruction`).
 - `matlab/index.html`: template shell + `data/pages/matlab.js` (`underConstruction`).
 
-Official top/home navigation remains `git/linux/markdown/regex/matlab`; `git-test` is intentionally excluded.
+Official top/home navigation is `git/linux/markdown/regex/matlab`.
 
 ## Add a New Module (Minimum Changes)
 
