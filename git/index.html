@@ -21,5 +21,18 @@
   <script src="../scripts/sidebar-shell.js?v=20260418h"></script>
   <script src="../scripts/template-page.js?v=20260418h"></script>
   <script src="../scripts/cheatsheet-renderer.js?v=20260418h"></script>
+  <script>
+    (function () {
+      if (!document.body || document.body.dataset.module !== "git") { return; }
+      var lead = document.querySelector("#page-header .lead");
+      if (!lead) { return; }
+      if (lead.querySelector('a[href="https://git-scm.com/doc"]')) { return; }
+      lead.appendChild(document.createTextNode(" "));
+      var link = document.createElement("a");
+      link.href = "https://git-scm.com/doc";
+      link.textContent = "official Git documentation";
+      lead.appendChild(link);
+    })();
+  </script>
 </body>
 </html>
