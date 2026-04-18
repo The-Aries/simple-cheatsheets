@@ -39,8 +39,8 @@ Footer is configured separately from blocks through `footer.contactLinks`, `foot
 
 ## Module Pages
 
-- `git/index.html`: standalone implementation (kept as stable baseline).
-- `git-test/index.html`: template-path Git test page, direct URL access only (`/git-test/`).
+- `git/index.html`: template shell + `data/pages/git.js` (official production Git page).
+- `git-test/index.html`: comparison page for Git template migration validation.
 - `linux/index.html`: template shell + `data/pages/linux.js` (`underConstruction`).
 - `markdown/index.html`: template shell + `data/pages/markdown.js` (`underConstruction`).
 - `regex/index.html`: template shell + `data/pages/regex.js` (`underConstruction`).
