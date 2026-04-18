@@ -30,25 +30,28 @@ Footer is configured separately from blocks through `footer.contactLinks`, `foot
 
 - `styles.css`: shared visual system for homepage and cheatsheet pages.
 - `scripts/modules.js`: central module registry used by homepage and page top navigation.
-- `scripts/pages-data.js`: v1 schema page data for template-driven modules.
-- `scripts/template-page.js`: resolves `data-module` to the matching v1 page object.
+- `scripts/template-page.js`: resolves a single page from `window.CHEATSHEET_PAGE_DATA` and provides detailed fallback diagnostics.
+- `data/common.js`: shared footer and `makeUnderConstructionPage()` factory.
+- `data/pages/<slug>.js`: one page data file per template module.
+- `scripts/pages-data.js`: temporary legacy data file kept for migration safety (not used by template module pages).
 - `scripts/cheatsheet-renderer.js`: v1 renderer for blocks, sidebar derivation, footer rendering, copy, and placeholder apply/reset.
 - `scripts/home-renderer.js`: auto renders homepage module links from `modules.js`.
 
 ## Module Pages
 
-- `git/index.html`: template shell page, rendered from `scripts/pages-data.js` through the shared v1 renderer.
-- `linux/index.html`: template shell page (`underConstruction`).
-- `markdown/index.html`: template shell page (`underConstruction`).
-- `regex/index.html`: template shell page (`underConstruction`).
-- `matlab/index.html`: template shell page (`underConstruction`).
+- `git/index.html`: standalone implementation (kept as stable baseline).
+- `git-test/index.html`: template-path Git test page, direct URL access only (`/git-test/`).
+- `linux/index.html`: template shell + `data/pages/linux.js` (`underConstruction`).
+- `markdown/index.html`: template shell + `data/pages/markdown.js` (`underConstruction`).
+- `regex/index.html`: template shell + `data/pages/regex.js` (`underConstruction`).
+- `matlab/index.html`: template shell + `data/pages/matlab.js` (`underConstruction`).
 
-Current production content is the Git cheatsheet data in `scripts/pages-data.js` (`gitPage`). Other modules intentionally render under-construction content through the same template path.
+Official top/home navigation remains `git/linux/markdown/regex/matlab`; `git-test` is intentionally excluded.
 
 ## Add a New Module (Minimum Changes)
 
-1. Add one item in `scripts/modules.js`.
-2. Add one page object in `scripts/pages-data.js` using the v1 schema.
-3. Add one page shell folder like `newtopic/index.html` with `data-module="newtopic"`.
+1. Add one item in `scripts/modules.js` (only for official modules).
+2. Add one page data file in `data/pages/<slug>.js`.
+3. Add one page shell folder like `<slug>/index.html` and point it to `data/common.js` + `data/pages/<slug>.js`.
 
 No CSS duplication is required, and homepage/module navigation updates automatically from the module list.
