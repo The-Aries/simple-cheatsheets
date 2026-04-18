@@ -5,11 +5,13 @@
 
   var body = document.body;
   var root = (body && body.dataset && body.dataset.root) || "../";
-  var isUnderConstruction = !!page.underConstruction;
-  document.title = page.pageTitle || document.title;
+  var blocks = Array.isArray(page.blocks) ? page.blocks : [];
 
-  function moduleHref(module) {
-    return root + module.dir + "/";
+  function safeKey(text) {
+    return String(text || "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
   }
 
   function escapeHtml(text) {
@@ -20,117 +22,301 @@
       .replace(/\"/g, "&quot;");
   }
 
+  function escapeAttr(text) {
+    return escapeHtml(text).replace(/\n/g, "&#10;");
+  }
+
+  function findBlock(type) {
+    for (var i = 0; i < blocks.length; i += 1) {
+      if (blocks[i] && blocks[i].type === type) { return blocks[i]; }
+    }
+    return null;
+  }
+
+  function resolvePlaceholderFields() {
+    var fromPage = page.placeholders && Array.isArray(page.placeholders.fields) ? page.placeholders.fields : [];
+    if (fromPage.length) { return fromPage; }
+    var placeholderBlock = findBlock("placeholderForm");
+    if (placeholderBlock && Array.isArray(placeholderBlock.fields)) { return placeholderBlock.fields; }
+    return [];
+  }
+
+  function resolveSectionGroups() {
+    var sectionBlock = findBlock("sectionGroups");
+    if (!sectionBlock || !Array.isArray(sectionBlock.sections)) { return []; }
+    return sectionBlock.sections;
+  }
+
+  function moduleHref(module) {
+    return root + module.dir + "/";
+  }
+
+  function sectionAnchor(section, sectionIndex) {
+    var number = section && section.number ? section.number : String(sectionIndex + 1);
+    return "section-" + safeKey(number);
+  }
+
+  function groupAnchor(section, group, sectionIndex, groupIndex) {
+    var sectionNumber = section && section.number ? section.number : String(sectionIndex + 1);
+    var groupNumber = group && group.number ? group.number : String(groupIndex + 1);
+    var groupKey = group && group.key ? "-" + safeKey(group.key) : "";
+    return "group-" + safeKey(sectionNumber) + "-" + safeKey(groupNumber) + groupKey;
+  }
+
   function renderTopNav() {
     var nav = document.getElementById("page-top-nav");
     if (!nav) { return; }
+
+    var currentSlug = page.slug || "";
     var links = ["<a href=\"" + root + "\">Homepage</a>"];
-    modules.forEach(function (m) {
-      links.push("<a href=\"" + moduleHref(m) + "\">" + m.label + "</a>");
+    modules.forEach(function (module) {
+      if (module.key === currentSlug) { return; }
+      links.push("<a href=\"" + moduleHref(module) + "\">" + module.label + "</a>");
     });
     nav.innerHTML = links.join("");
+  }
+
+  function hideSidebar() {
+    var sidebar = document.getElementById("page-sidebar");
+    body.classList.add("no-sidebar");
+    if (sidebar) {
+      sidebar.hidden = true;
+      sidebar.innerHTML = "";
+    }
+  }
+
+  function showSidebar() {
+    var sidebar = document.getElementById("page-sidebar");
+    body.classList.remove("no-sidebar");
+    if (sidebar) { sidebar.hidden = false; }
   }
 
   function renderSidebar() {
     var sidebar = document.getElementById("page-sidebar");
     if (!sidebar) { return; }
 
-    if (isUnderConstruction) {
-      sidebar.innerHTML =
-        "<details class=\"sidebar-group\" open>" +
-        "<summary>On this page</summary>" +
-        "<ul class=\"page-nav-list\">" +
-        "<li><a href=\"#page-header\">Overview</a></li>" +
-        "<li><a href=\"#construction-status\">Status</a></li>" +
-        "</ul></details>";
+    var layout = page.layout || {};
+    if (layout.hasSidebar === false) {
+      hideSidebar();
       return;
     }
 
+    var fields = resolvePlaceholderFields();
+    var sections = resolveSectionGroups();
+
+    if (!fields.length && !sections.length) {
+      hideSidebar();
+      return;
+    }
+
+    showSidebar();
+
     var html = "";
-    if ((page.placeholders || []).length) {
+    if (fields.length) {
       html += "<details class=\"sidebar-group\" open><summary>Placeholders</summary><ul class=\"placeholder-links\">";
-      page.placeholders.forEach(function (item) {
-        html += "<li><a href=\"#placeholder-" + item.key + "\">" + item.key + "</a></li>";
+      fields.forEach(function (field) {
+        var fieldAnchor = "placeholder-" + safeKey(field.key);
+        html += "<li><a href=\"#" + fieldAnchor + "\">" + escapeHtml(field.key) + "</a></li>";
       });
       html += "</ul></details>";
     }
 
-    html += "<details class=\"sidebar-group\" open><summary>On this page</summary><ul class=\"page-nav-list\">";
-    (page.sections || []).forEach(function (section, sectionIndex) {
-      var sectionId = "section-" + (sectionIndex + 1);
-      html += "<li><details class=\"sidebar-subgroup\" open><summary><a href=\"#" + sectionId + "\">" + (sectionIndex + 1) + ". " + section.title + "</a></summary><ul>";
-      (section.groups || []).forEach(function (group, groupIndex) {
-        var groupId = sectionId + "-" + (groupIndex + 1);
-        html += "<li><a href=\"#" + groupId + "\">" + (sectionIndex + 1) + "." + (groupIndex + 1) + " " + group.name + "</a></li>";
+    if (sections.length) {
+      html += "<details class=\"sidebar-group\" open><summary>On this page</summary><ul class=\"page-nav-list\">";
+      sections.forEach(function (section, sectionIndex) {
+        var sAnchor = sectionAnchor(section, sectionIndex);
+        var sNumber = section.number || String(sectionIndex + 1);
+        var sTitle = section.title || "Untitled section";
+        html += "<li><details class=\"sidebar-subgroup\" open><summary><a href=\"#" + sAnchor + "\">" + escapeHtml(sNumber) + ". " + escapeHtml(sTitle) + "</a></summary><ul>";
+        (section.groups || []).forEach(function (group, groupIndex) {
+          var gAnchor = groupAnchor(section, group, sectionIndex, groupIndex);
+          var gNumber = group.number || String(groupIndex + 1);
+          var gTitle = group.title || group.key || "Untitled group";
+          html += "<li><a href=\"#" + gAnchor + "\">" + escapeHtml(sNumber) + "." + escapeHtml(gNumber) + " " + escapeHtml(gTitle) + "</a></li>";
+        });
+        html += "</ul></details></li>";
       });
-      html += "</ul></details></li>";
-    });
-    html += "</ul></details>";
+      html += "</ul></details>";
+    }
+
     sidebar.innerHTML = html;
+  }
+
+  function renderPageHeader(block) {
+    return "<section class=\"hero\" id=\"" + escapeAttr(block.id || "page-header") + "\"><h1>" + escapeHtml(block.title || "") + "</h1><h2 class=\"description-title\">" + escapeHtml(block.descriptionTitle || "Description") + "</h2><p class=\"lead\">" + escapeHtml(block.lead || "") + "</p></section>";
+  }
+
+  function renderPlaceholderForm(block, fields) {
+    if (!fields.length) { return ""; }
+
+    var headingId = block.headingId || "values-title";
+    var heading = block.title || "Placeholders";
+    var intro = block.intro || "Set once, apply to command lines, then copy ready to run commands.";
+    var html = "<section class=\"panel values-panel\" aria-labelledby=\"" + escapeAttr(headingId) + "\"><div class=\"section-heading\"><h2 id=\"" + escapeAttr(headingId) + "\">" + escapeHtml(heading) + "</h2><p>" + escapeHtml(intro) + "</p></div><form class=\"values-form\" id=\"placeholder-form\">";
+
+    fields.forEach(function (field) {
+      var key = field.key;
+      var fieldId = safeKey(key);
+      var label = field.label || key;
+      var value = field.defaultValue || key;
+      var help = field.help || "";
+      html += "<div class=\"value-item\" id=\"placeholder-" + fieldId + "\"><label class=\"value-row\" for=\"value-" + fieldId + "\"><span>" + escapeHtml(label) + ":</span><input class=\"auto-size-input\" id=\"value-" + fieldId + "\" data-placeholder-key=\"" + escapeAttr(key) + "\" value=\"" + escapeAttr(value) + "\" autocomplete=\"off\"></label><p class=\"value-help\">" + escapeHtml(help) + "</p></div>";
+    });
+
+    html += "<div class=\"values-actions\"><button type=\"button\" class=\"form-button\" id=\"apply-placeholders\">Apply</button><button type=\"button\" class=\"form-button\" id=\"reset-placeholders\">Reset</button></div></form></section>";
+    return html;
+  }
+
+  function renderConcepts(block) {
+    var items = Array.isArray(block.items) ? block.items : [];
+    if (!items.length) { return ""; }
+    return "<section class=\"panel\" aria-labelledby=\"concepts-title\"><div class=\"section-heading\"><h2 id=\"concepts-title\">" + escapeHtml(block.title || "Key Concepts") + "</h2></div><div class=\"concept-list\">" + items.map(function (item) { return "<p>" + escapeHtml(item) + "</p>"; }).join("") + "</div></section>";
+  }
+
+  function renderWorkflow(block) {
+    var cards = Array.isArray(block.cards) ? block.cards : [];
+    if (!cards.length) { return ""; }
+    var html = "<section class=\"panel workflow-panel\" aria-labelledby=\"workflow-overview-title\"><div class=\"section-heading\"><h2 id=\"workflow-overview-title\">" + escapeHtml(block.title || "Workflow Overview") + "</h2><p>" + escapeHtml(block.description || "") + "</p></div><ol class=\"workflow-sequence\">";
+    cards.forEach(function (card) {
+      html += "<li><h3>" + escapeHtml(card.title || "") + "</h3><p>" + escapeHtml(card.text || "") + "</p></li>";
+    });
+    html += "</ol></section>";
+    return html;
+  }
+
+  function renderGroupDescription(description) {
+    if (!description) { return ""; }
+    if (typeof description === "string") { return "<p>" + escapeHtml(description) + "</p>"; }
+
+    var text = description.text ? escapeHtml(description.text) : "";
+    var officialUrl = description.officialUrl || "";
+    var officialLabel = description.officialLabel || "official documentation";
+    var link = officialUrl ? "<a href=\"" + escapeAttr(officialUrl) + "\">" + escapeHtml(officialLabel) + "</a>" : "";
+
+    if (text && link) {
+      return "<p>" + text + " More flags and advanced combinations are available in the " + link + ".</p>";
+    }
+    if (text) { return "<p>" + text + "</p>"; }
+    if (link) { return "<p>See the " + link + " for the full command reference.</p>"; }
+    return "";
+  }
+
+  function renderSectionGroups(block) {
+    var sections = Array.isArray(block.sections) ? block.sections : [];
+    if (!sections.length) { return ""; }
+
+    var html = "";
+    sections.forEach(function (section, sectionIndex) {
+      var sAnchor = sectionAnchor(section, sectionIndex);
+      var sNumber = section.number || String(sectionIndex + 1);
+      var sTitle = section.title || "Untitled section";
+      var sIntro = section.intro || "";
+
+      if (sectionIndex > 0) {
+        html += "<hr class=\"section-divider\">";
+      }
+
+      html += "<section class=\"panel\" id=\"" + escapeAttr(sAnchor) + "\"><div class=\"section-heading\"><h2>" + escapeHtml(sNumber) + ". " + escapeHtml(sTitle) + "</h2>" + (sIntro ? "<p>" + escapeHtml(sIntro) + "</p>" : "") + "</div>";
+
+      (section.groups || []).forEach(function (group, groupIndex) {
+        var gAnchor = groupAnchor(section, group, sectionIndex, groupIndex);
+        var gNumber = group.number || String(groupIndex + 1);
+        var gTitle = group.title || group.key || "Untitled group";
+        var gIntro = group.intro || "";
+        var gRows = Array.isArray(group.rows) ? group.rows : [];
+
+        html += "<section class=\"command-group\" id=\"" + escapeAttr(gAnchor) + "\"><h3>" + escapeHtml(sNumber) + "." + escapeHtml(gNumber) + " " + escapeHtml(gTitle) + "</h3>" + (gIntro ? "<p class=\"group-intro\">" + escapeHtml(gIntro) + "</p>" : "") + "<div class=\"command-table-wrap\"><table class=\"command-table\"><thead><tr><th>Command</th><th>Purpose</th><th>Copy</th></tr></thead><tbody>";
+
+        gRows.forEach(function (row, rowIndex) {
+          var commandId = "cmd-" + safeKey(sNumber) + "-" + safeKey(gNumber) + "-" + String(rowIndex + 1);
+          var template = row.template || "";
+          html += "<tr><td><code class=\"command-code\" id=\"" + escapeAttr(commandId) + "\" data-template=\"" + escapeAttr(template) + "\">" + escapeHtml(template) + "</code></td><td>" + escapeHtml(row.purpose || "") + "</td><td><button type=\"button\" class=\"copy-button\" data-copy-target=\"" + escapeAttr(commandId) + "\">Copy</button></td></tr>";
+        });
+
+        html += "</tbody></table></div><div class=\"group-description\"><h4>Description</h4>" + renderGroupDescription(group.description) + "</div></section>";
+      });
+
+      html += "</section>";
+    });
+
+    return html;
+  }
+
+  function renderPreview(block) {
+    var previewText = block.text || "";
+    if (!previewText) { return ""; }
+    return "<section class=\"panel\"><div class=\"section-heading\"><h2>" + escapeHtml(block.title || "Preview") + "</h2></div><div class=\"command-table-wrap"><pre class=\"command-code\">" + escapeHtml(previewText) + "</pre></div></section>";
+  }
+
+  function renderNote(block) {
+    var text = block.text || "";
+    if (!text) { return ""; }
+    return "<section class=\"panel\"><div class=\"section-heading\"><h2>" + escapeHtml(block.title || "Note") + "</h2><p>" + escapeHtml(text) + "</p></div></section>";
+  }
+
+  function renderUnderConstruction(block) {
+    return "<section class=\"panel\" id=\"" + escapeAttr(block.id || "construction-status") + "\" aria-labelledby=\"construction-title\"><div class=\"section-heading\"><h2 id=\"construction-title\">" + escapeHtml(block.title || "Status") + "</h2><p>" + escapeHtml(block.text || "This cheatsheet is under construction.") + "</p></div></section>";
+  }
+
+  function renderBlock(block, placeholderFields) {
+    if (!block || !block.type) { return ""; }
+    if (block.type === "pageHeader") { return renderPageHeader(block); }
+    if (block.type === "placeholderForm") { return renderPlaceholderForm(block, placeholderFields); }
+    if (block.type === "concepts") { return renderConcepts(block); }
+    if (block.type === "workflow") { return renderWorkflow(block); }
+    if (block.type === "sectionGroups") { return renderSectionGroups(block); }
+    if (block.type === "preview") { return renderPreview(block); }
+    if (block.type === "note") { return renderNote(block); }
+    if (block.type === "underConstruction") { return renderUnderConstruction(block); }
+    return "";
   }
 
   function renderMain() {
     var content = document.getElementById("page-content");
     if (!content) { return; }
 
-    var html = "";
-    html += "<section class=\"hero\" id=\"page-header\"><h1>" + page.heroTitle + "</h1><h2 class=\"description-title\">Description</h2><p class=\"lead\">" + (page.lead || "") + "</p></section>";
+    var placeholderFields = resolvePlaceholderFields();
+    var html = blocks.map(function (block) {
+      return renderBlock(block, placeholderFields);
+    }).join("");
 
-    if (isUnderConstruction) {
-      html += "<section class=\"panel\" id=\"construction-status\" aria-labelledby=\"construction-title\"><div class=\"section-heading\"><h2 id=\"construction-title\">Status</h2><p>This cheatsheet is under construction. The current release keeps the shared layout and navigation in place, and content will be added in a later update.</p></div></section>";
-      html += "<p class=\"contact-note\">If you have questions or suggestions, you can <a href=\"mailto:653537305@qq.com\">email the author</a> or <a href=\"https://github.com/The-Aries/simple-cheatsheets/issues/new\">raise an issue</a>.</p>";
-      content.innerHTML = html;
-      return;
-    }
-
-    if ((page.placeholders || []).length) {
-      html += "<section class=\"panel values-panel\" aria-labelledby=\"values-title\"><div class=\"section-heading\"><h2 id=\"values-title\">Placeholders</h2><p>Set once, apply to command lines, then copy ready to run commands.</p></div><form class=\"values-form\" id=\"placeholder-form\">";
-      page.placeholders.forEach(function (item) {
-        html += "<div class=\"value-item\" id=\"placeholder-" + item.key + "\"><label class=\"value-row\" for=\"value-" + item.key + "\"><span>" + item.key + ":</span><input class=\"auto-size-input\" id=\"value-" + item.key + "\" data-placeholder-key=\"" + item.key + "\" value=\"" + item.key + "\" autocomplete=\"off\"></label><p class=\"value-help\">" + item.help + "</p></div>";
-      });
-      html += "<div class=\"values-actions\"><button type=\"button\" class=\"form-button\" id=\"apply-placeholders\">Apply</button><button type=\"button\" class=\"form-button\" id=\"reset-placeholders\">Reset</button></div></form></section>";
-    }
-
-    html += "<section class=\"panel\" aria-labelledby=\"concepts-title\"><div class=\"section-heading\"><h2 id=\"concepts-title\">Key Concepts</h2></div><div class=\"concept-list\">" + (page.concepts || []).map(function (item) { return "<p>" + item + "</p>"; }).join("") + "</div></section>";
-
-    if (page.workflow && (page.workflow.cards || []).length) {
-      html += "<section class=\"panel workflow-panel\" aria-labelledby=\"workflow-overview-title\"><div class=\"section-heading\"><h2 id=\"workflow-overview-title\">Workflow Overview</h2><p>" + (page.workflow.description || "") + "</p></div><ol class=\"workflow-sequence\">";
-      page.workflow.cards.forEach(function (card) {
-        html += "<li><h3>" + card.title + "</h3><p>" + card.text + "</p></li>";
-      });
-      html += "</ol></section>";
-    }
-
-    (page.sections || []).forEach(function (section, sectionIndex) {
-      var sectionId = "section-" + (sectionIndex + 1);
-      if (sectionIndex > 0 || (page.workflow && (page.workflow.cards || []).length)) {
-        html += "<hr class=\"section-divider\">";
-      }
-      html += "<section class=\"panel\" id=\"" + sectionId + "\"><div class=\"section-heading\"><h2>" + (sectionIndex + 1) + ". " + section.title + "</h2></div>";
-      (section.groups || []).forEach(function (group, groupIndex) {
-        var groupId = sectionId + "-" + (groupIndex + 1);
-        html += "<section class=\"command-group\" id=\"" + groupId + "\"><h3>" + (sectionIndex + 1) + "." + (groupIndex + 1) + " " + group.name + "</h3><p class=\"group-intro\">" + (group.intro || "") + "</p><div class=\"command-table-wrap\"><table class=\"command-table\"><thead><tr><th>Command</th><th>Purpose</th><th>Copy</th></tr></thead><tbody>";
-        (group.rows || []).forEach(function (row, rowIndex) {
-          var commandId = "cmd-" + (sectionIndex + 1) + "-" + (groupIndex + 1) + "-" + (rowIndex + 1);
-          var safe = escapeHtml(row.template);
-          html += "<tr><td><code class=\"command-code\" id=\"" + commandId + "\" data-template=\"" + safe + "\">" + safe + "</code></td><td>" + row.purpose + "</td><td><button type=\"button\" class=\"copy-button\" data-copy-target=\"" + commandId + "\">Copy</button></td></tr>";
-        });
-        html += "</tbody></table></div><div class=\"group-description\"><h4>Description</h4><p>" + (group.description || "") + "</p></div></section>";
-      });
-      html += "</section>";
-    });
-
-    html += "<p class=\"contact-note\">If you have questions or suggestions, you can <a href=\"mailto:653537305@qq.com\">email the author</a> or <a href=\"https://github.com/The-Aries/simple-cheatsheets/issues/new\">raise an issue</a>.</p>";
     content.innerHTML = html;
   }
 
   function renderFooter() {
     var footer = document.getElementById("page-footer");
     if (!footer) { return; }
-    footer.innerHTML = "<a href=\"https://github.com/The-Aries\">GitHub Profile</a><a href=\"https://github.com/The-Aries/simple-cheatsheets\">Repository</a><span>Copyright © 2026 Junhao Zhang</span>";
+
+    var fallbackFooter = {
+      contactLinks: [
+        { label: "Email the author", href: "mailto:653537305@qq.com" },
+        { label: "Raise an issue", href: "https://github.com/The-Aries/simple-cheatsheets/issues/new" }
+      ],
+      links: [
+        { label: "GitHub Profile", href: "https://github.com/The-Aries" },
+        { label: "Repository", href: "https://github.com/The-Aries/simple-cheatsheets" }
+      ],
+      copyright: "Copyright © 2026 Junhao Zhang"
+    };
+
+    var footerConfig = page.footer || fallbackFooter;
+    var contactLinks = Array.isArray(footerConfig.contactLinks) ? footerConfig.contactLinks : [];
+    var links = Array.isArray(footerConfig.links) ? footerConfig.links : [];
+    var html = "";
+
+    contactLinks.forEach(function (item) {
+      html += "<a href=\"" + escapeAttr(item.href || "#") + "\">" + escapeHtml(item.label || "") + "</a>";
+    });
+    links.forEach(function (item) {
+      html += "<a href=\"" + escapeAttr(item.href || "#") + "\">" + escapeHtml(item.label || "") + "</a>";
+    });
+    html += "<span>" + escapeHtml(footerConfig.copyright || "") + "</span>";
+    footer.innerHTML = html;
   }
 
   function initActions() {
-    var placeholderKeys = (page.placeholders || []).map(function (item) { return item.key; });
+    var fields = resolvePlaceholderFields();
+    var placeholderKeys = fields.map(function (field) { return field.key; });
     var autoSizeInputs = document.querySelectorAll(".auto-size-input");
 
     function resizeInput(input) {
@@ -160,7 +346,20 @@
     }
 
     function copyText(text) {
-      if (navigator.clipboard && navigator.clipboard.writeText) { return navigator.clipboard.writeText(text); }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        return navigator.clipboard.writeText(text);
+      }
+
+      var textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.top = "-9999px";
+      textarea.style.left = "-9999px";
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
       return Promise.resolve();
     }
 
@@ -186,15 +385,24 @@
     if (applyButton) { applyButton.addEventListener("click", renderTemplates); }
     if (resetButton) {
       resetButton.addEventListener("click", function () {
-        placeholderKeys.forEach(function (key) {
-          var input = document.querySelector("[data-placeholder-key=\"" + key + "\"]");
-          if (input) { input.value = key; resizeInput(input); }
+        fields.forEach(function (field) {
+          var input = document.querySelector("[data-placeholder-key=\"" + field.key + "\"]");
+          if (!input) { return; }
+          input.value = field.defaultValue || field.key;
+          resizeInput(input);
         });
         renderTemplates();
       });
     }
 
     renderTemplates();
+  }
+
+  if (page.meta && page.meta.title) {
+    document.title = page.meta.title;
+  }
+  if (page.meta && page.meta.lang) {
+    document.documentElement.lang = page.meta.lang;
   }
 
   renderTopNav();
