@@ -265,3 +265,29 @@ a:hover { text-decoration-thickness: 0.08em; }
   text-decoration-thickness: 0.07em;
   outline: none;
 }
+
+
+/* Force stronger visual indentation for sidebar hierarchy */
+.sidebar .sidebar-root-group > .sidebar-root-list {
+  padding-left: 56px;
+}
+
+.sidebar .sidebar-root-list > .sidebar-level2-item {
+  padding-left: 0;
+}
+
+.sidebar .sidebar-root-list > .sidebar-level2-item > .sidebar-level2-link {
+  padding-left: 0;
+}
+
+.sidebar .sidebar-root-list > .sidebar-level2-item > .sidebar-subgroup > summary {
+  padding-left: 18px;
+}
+
+.sidebar .sidebar-root-list > .sidebar-level2-item > .sidebar-subgroup > .sidebar-level3-list {
+  padding-left: 34px;
+}
+
+.sidebar .sidebar-root-list > .sidebar-level2-item > .sidebar-subgroup > .sidebar-level3-list > .sidebar-level3-item > .sidebar-level3-link {
+  padding-left: 0;
+}
