@@ -20,6 +20,7 @@ A compact static cheatsheet site built with plain HTML, CSS, and vanilla JavaScr
 - `matlab/index.html`
 
 All template driven module pages share one shell and reuse the same renderer + data structure.
+Currently, only `git/index.html` contains full production content; other modules intentionally render as under-construction placeholders.
 
 ## Add a New Module (Minimum Changes)
 

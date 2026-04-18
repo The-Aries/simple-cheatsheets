@@ -5,6 +5,7 @@
 
   var body = document.body;
   var root = (body && body.dataset && body.dataset.root) || "../";
+  var isUnderConstruction = !!page.underConstruction;
   document.title = page.pageTitle || document.title;
 
   function moduleHref(module) {
@@ -32,6 +33,18 @@
   function renderSidebar() {
     var sidebar = document.getElementById("page-sidebar");
     if (!sidebar) { return; }
+
+    if (isUnderConstruction) {
+      sidebar.innerHTML =
+        "<details class=\"sidebar-group\" open>" +
+        "<summary>On this page</summary>" +
+        "<ul class=\"page-nav-list\">" +
+        "<li><a href=\"#page-header\">Overview</a></li>" +
+        "<li><a href=\"#construction-status\">Status</a></li>" +
+        "</ul></details>";
+      return;
+    }
+
     var html = "";
     if ((page.placeholders || []).length) {
       html += "<details class=\"sidebar-group\" open><summary>Placeholders</summary><ul class=\"placeholder-links\">";
@@ -40,6 +53,7 @@
       });
       html += "</ul></details>";
     }
+
     html += "<details class=\"sidebar-group\" open><summary>On this page</summary><ul class=\"page-nav-list\">";
     (page.sections || []).forEach(function (section, sectionIndex) {
       var sectionId = "section-" + (sectionIndex + 1);
@@ -57,8 +71,16 @@
   function renderMain() {
     var content = document.getElementById("page-content");
     if (!content) { return; }
+
     var html = "";
     html += "<section class=\"hero\" id=\"page-header\"><h1>" + page.heroTitle + "</h1><h2 class=\"description-title\">Description</h2><p class=\"lead\">" + (page.lead || "") + "</p></section>";
+
+    if (isUnderConstruction) {
+      html += "<section class=\"panel\" id=\"construction-status\" aria-labelledby=\"construction-title\"><div class=\"section-heading\"><h2 id=\"construction-title\">Status</h2><p>This cheatsheet is under construction. The current release keeps the shared layout and navigation in place, and content will be added in a later update.</p></div></section>";
+      html += "<p class=\"contact-note\">If you have questions or suggestions, you can <a href=\"mailto:653537305@qq.com\">email the author</a> or <a href=\"https://github.com/The-Aries/simple-cheatsheets/issues/new\">raise an issue</a>.</p>";
+      content.innerHTML = html;
+      return;
+    }
 
     if ((page.placeholders || []).length) {
       html += "<section class=\"panel values-panel\" aria-labelledby=\"values-title\"><div class=\"section-heading\"><h2 id=\"values-title\">Placeholders</h2><p>Set once, apply to command lines, then copy ready to run commands.</p></div><form class=\"values-form\" id=\"placeholder-form\">";
@@ -110,11 +132,13 @@
   function initActions() {
     var placeholderKeys = (page.placeholders || []).map(function (item) { return item.key; });
     var autoSizeInputs = document.querySelectorAll(".auto-size-input");
+
     function resizeInput(input) {
       var text = input.value || input.placeholder || "";
       var width = Math.max(18, Math.min(46, text.length + 2));
       input.style.width = width + "ch";
     }
+
     function getPlaceholderValues() {
       var values = {};
       placeholderKeys.forEach(function (key) {
@@ -123,6 +147,7 @@
       });
       return values;
     }
+
     function renderTemplates() {
       var values = getPlaceholderValues();
       document.querySelectorAll(".command-code[data-template]").forEach(function (code) {
@@ -133,10 +158,12 @@
         code.textContent = rendered;
       });
     }
+
     function copyText(text) {
       if (navigator.clipboard && navigator.clipboard.writeText) { return navigator.clipboard.writeText(text); }
       return Promise.resolve();
     }
+
     document.querySelectorAll(".copy-button").forEach(function (button) {
       button.addEventListener("click", function () {
         var code = document.getElementById(button.getAttribute("data-copy-target"));
@@ -148,10 +175,12 @@
         });
       });
     });
+
     autoSizeInputs.forEach(function (input) {
       resizeInput(input);
       input.addEventListener("input", function () { resizeInput(input); });
     });
+
     var applyButton = document.getElementById("apply-placeholders");
     var resetButton = document.getElementById("reset-placeholders");
     if (applyButton) { applyButton.addEventListener("click", renderTemplates); }
@@ -164,6 +193,7 @@
         renderTemplates();
       });
     }
+
     renderTemplates();
   }
 
