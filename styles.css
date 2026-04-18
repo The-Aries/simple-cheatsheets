@@ -344,3 +344,9 @@ a:hover { text-decoration-thickness: 0.08em; }
   margin-left: 0;
   padding-left: var(--nav-indent-step);
 }
+
+
+/* Final baseline correction: remove residual extra shift on main-content level-2 */
+.sidebar .sidebar-root-list > .sidebar-level2-item > .sidebar-subgroup {
+  margin-left: 0;
+}
