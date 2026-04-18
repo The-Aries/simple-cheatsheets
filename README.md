@@ -37,13 +37,13 @@ Footer is configured separately from blocks through `footer.contactLinks`, `foot
 
 ## Module Pages
 
-- `git/index.html`: mature custom page kept as current implementation baseline (not yet migrated to v1 template path).
-- `linux/index.html`
-- `markdown/index.html`
-- `regex/index.html`
-- `matlab/index.html`
+- `git/index.html`: template shell page, rendered from `scripts/pages-data.js` through the shared v1 renderer.
+- `linux/index.html`: template shell page (`underConstruction`).
+- `markdown/index.html`: template shell page (`underConstruction`).
+- `regex/index.html`: template shell page (`underConstruction`).
+- `matlab/index.html`: template shell page (`underConstruction`).
 
-Currently, only `git/index.html` contains full production content. Other modules intentionally render as under-construction pages through the v1 template schema.
+Current production content is the Git cheatsheet data in `scripts/pages-data.js` (`gitPage`). Other modules intentionally render under-construction content through the same template path.
 
 ## Add a New Module (Minimum Changes)
 
