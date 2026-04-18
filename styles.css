@@ -207,7 +207,7 @@ a:hover { text-decoration-thickness: 0.08em; }
   transition: transform 120ms linear;
 }
 .sidebar-root-group:not([open]) > .sidebar-root-title::before { transform: rotate(0deg); }
-.sidebar-root-list { margin: 6px 0 0; padding: 0 0 0 28px; list-style: none; }
+.sidebar-root-list { margin: 6px 0 0; padding: 0 0 0 40px; list-style: none; }
 .sidebar-level2-item { padding-left: 0; }
 .sidebar-level2-item + .sidebar-level2-item { margin-top: 5px; }
 .sidebar-level2-link {
@@ -225,7 +225,7 @@ a:hover { text-decoration-thickness: 0.08em; }
   position: relative;
   margin: 0;
   list-style: none;
-  padding-left: 12px;
+  padding-left: 14px;
 }
 .sidebar-subgroup > summary::-webkit-details-marker { display: none; }
 .sidebar-subgroup > summary::marker { content: ""; }
@@ -244,11 +244,11 @@ a:hover { text-decoration-thickness: 0.08em; }
   transition: transform 120ms linear;
 }
 .sidebar-subgroup:not([open]) > summary::before { transform: rotate(0deg); }
-.sidebar-level3-list { margin: 3px 0 0; padding: 0 0 0 20px; list-style: none; }
+.sidebar-level3-list { margin: 3px 0 0; padding: 0 0 0 26px; list-style: none; }
 .sidebar-level3-item + .sidebar-level3-item { margin-top: 4px; }
 .sidebar-level3-link {
   display: block;
-  padding-left: 2px;
+  padding-left: 0;
   font-family: Calibri, "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 0.88rem;
   font-weight: 400;
