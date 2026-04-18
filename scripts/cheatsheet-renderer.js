@@ -1,7 +1,22 @@
 (function () {
   var page = window.CHEATSHEET_PAGE;
   var modules = window.CHEATSHEET_MODULES || [];
-  if (!page) { return; }
+  function renderHardFallback(title, message) {
+    var content = document.getElementById("page-content");
+    var footer = document.getElementById("page-footer");
+    if (content) {
+      content.innerHTML =
+        "<section class=\"hero\" id=\"page-header\"><h1>" + String(title || "Template Page") + "</h1><h2 class=\"description-title\">Description</h2><p class=\"lead\">" + String(message || "Under Construction") + "</p></section>" +
+        "<section class=\"panel\" id=\"construction-status\"><div class=\"section-heading\"><h2>Status</h2><p>Under Construction</p></div></section>";
+    }
+    if (footer) {
+      footer.innerHTML = "<a href=\"https://github.com/The-Aries\">GitHub Profile</a><a href=\"https://github.com/The-Aries/simple-cheatsheets\">Repository</a><span>Copyright © 2026 Junhao Zhang</span><a href=\"mailto:653537305@qq.com\">Email the author</a><a href=\"https://github.com/The-Aries/simple-cheatsheets/issues/new\">Raise an issue</a>";
+    }
+  }
+  if (!page) {
+    renderHardFallback("Template Page", "Page data missing or module not found.");
+    return;
+  }
 
   var body = document.body;
   var root = (body && body.dataset && body.dataset.root) || "../";
@@ -245,7 +260,7 @@
   function renderPreview(block) {
     var previewText = block.text || "";
     if (!previewText) { return ""; }
-    return "<section class=\"panel\"><div class=\"section-heading\"><h2>" + escapeHtml(block.title || "Preview") + "</h2></div><div class=\"command-table-wrap"><pre class=\"command-code\">" + escapeHtml(previewText) + "</pre></div></section>";
+    return "<section class=\"panel\"><div class=\"section-heading\"><h2>" + escapeHtml(block.title || "Preview") + "</h2></div><div class=\"command-table-wrap\"><pre class=\"command-code\">" + escapeHtml(previewText) + "</pre></div></section>";
   }
 
   function renderNote(block) {
@@ -280,7 +295,7 @@
       return renderBlock(block, placeholderFields);
     }).join("");
 
-    content.innerHTML = html;
+    content.innerHTML = html && html.trim() ? html : '<section class="hero" id="page-header"><h1>Template Page</h1><h2 class="description-title">Description</h2><p class="lead">Page data missing.</p></section><section class="panel" id="construction-status"><div class="section-heading"><h2>Status</h2><p>Under Construction</p></div></section>';
   }
 
   function renderFooter() {
@@ -304,13 +319,13 @@
     var links = Array.isArray(footerConfig.links) ? footerConfig.links : [];
     var html = "";
 
-    contactLinks.forEach(function (item) {
-      html += "<a href=\"" + escapeAttr(item.href || "#") + "\">" + escapeHtml(item.label || "") + "</a>";
-    });
     links.forEach(function (item) {
       html += "<a href=\"" + escapeAttr(item.href || "#") + "\">" + escapeHtml(item.label || "") + "</a>";
     });
     html += "<span>" + escapeHtml(footerConfig.copyright || "") + "</span>";
+    contactLinks.forEach(function (item) {
+      html += "<a href=\"" + escapeAttr(item.href || "#") + "\">" + escapeHtml(item.label || "") + "</a>";
+    });
     footer.innerHTML = html;
   }
 
@@ -405,9 +420,13 @@
     document.documentElement.lang = page.meta.lang;
   }
 
-  renderTopNav();
-  renderSidebar();
-  renderMain();
-  renderFooter();
-  initActions();
+  try {
+    renderTopNav();
+    renderSidebar();
+    renderMain();
+    renderFooter();
+    initActions();
+  } catch (error) {
+    renderHardFallback((page.meta && page.meta.title) || "Template Page", "Renderer failed. Under Construction.");
+  }
 })();
