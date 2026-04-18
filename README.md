@@ -47,6 +47,13 @@ Footer is configured separately from blocks through `footer.contactLinks`, `foot
 
 Official top/home navigation is `git/linux/markdown/regex/matlab`.
 
+## Latest Status (2026-04-18)
+
+- `git-test` migration sandbox has been fully removed from the repository.
+- Git is now served as the single official module page through the template path.
+- Git command-group descriptions keep per-command official documentation links.
+- Git page header now includes a direct link to the official Git documentation.
+
 ## Add a New Module (Minimum Changes)
 
 1. Add one item in `scripts/modules.js` (only for official modules).
