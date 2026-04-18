@@ -225,7 +225,7 @@ a:hover { text-decoration-thickness: 0.08em; }
   position: relative;
   margin: 0;
   list-style: none;
-  padding-left: 14px;
+  padding-left: 12px;
 }
 .sidebar-subgroup > summary::-webkit-details-marker { display: none; }
 .sidebar-subgroup > summary::marker { content: ""; }
@@ -269,7 +269,7 @@ a:hover { text-decoration-thickness: 0.08em; }
 
 /* Force stronger visual indentation for sidebar hierarchy */
 .sidebar .sidebar-root-group > .sidebar-root-list {
-  padding-left: 42px;
+  padding-left: 36px;
 }
 
 .sidebar .sidebar-root-list > .sidebar-level2-item {
@@ -285,7 +285,7 @@ a:hover { text-decoration-thickness: 0.08em; }
 }
 
 .sidebar .sidebar-root-list > .sidebar-level2-item > .sidebar-subgroup > .sidebar-level3-list {
-  padding-left: 24px;
+  padding-left: 20px;
 }
 
 .sidebar .sidebar-root-list > .sidebar-level2-item > .sidebar-subgroup > .sidebar-level3-list > .sidebar-level3-item > .sidebar-level3-link {
