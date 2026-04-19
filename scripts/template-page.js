@@ -6,6 +6,7 @@
   var loadError = window.CHEATSHEET_PAGE_LOAD_ERROR || "";
   var pageData = window.CHEATSHEET_PAGE_DATA || null;
   var common = window.CHEATSHEET_COMMON || {};
+  var validation = window.CHEATSHEET_RUNTIME_VALIDATION || {};
 
   var fallbackFooter = {
     contactLinks: [
@@ -28,7 +29,7 @@
       "pageData.slug=" + dataSlug,
       "loadError=" + (loadError ? String(loadError) : "none"),
       "expectedDataSource=" + expectedSource
-    ].join(" ; " );
+    ].join(" ; ");
 
     return {
       slug: key || "unknown",
@@ -62,15 +63,29 @@
   }
 
   var page = null;
-  if (pageData && (!pageData.slug || pageData.slug === key)) {
-    page = pageData;
-  } else {
+  var pageIsFallback = false;
+  var bootstrap = null;
+  if (validation && typeof validation.validatePageBootstrap === "function") {
+    bootstrap = validation.validatePageBootstrap(pageData, { slug: key, source: expectedSource });
+  }
+
+  if (!pageData || (pageData.slug && key && pageData.slug !== key) || (bootstrap && bootstrap.fallback)) {
     page = makeFallbackPage();
+    pageIsFallback = true;
+  } else {
+    page = pageData;
   }
 
   if (!page.slug) {
     page.slug = key || "unknown";
   }
 
+  if (validation && typeof validation.inferPageMode === "function") {
+    window.CHEATSHEET_PAGE_MODE = validation.inferPageMode(page.slug || key, page);
+  } else {
+    window.CHEATSHEET_PAGE_MODE = key === "git" ? "formal" : "underConstruction";
+  }
+
+  window.CHEATSHEET_PAGE_IS_FALLBACK = pageIsFallback;
   window.CHEATSHEET_PAGE = page;
 })();

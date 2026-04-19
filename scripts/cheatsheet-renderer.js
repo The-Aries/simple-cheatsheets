@@ -1,6 +1,7 @@
 (function () {
   var page = window.CHEATSHEET_PAGE;
   var modules = window.CHEATSHEET_MODULES || [];
+  var validation = window.CHEATSHEET_RUNTIME_VALIDATION || {};
   function renderHardFallback(title, message) {
     var content = document.getElementById("page-content");
     var footer = document.getElementById("page-footer");
@@ -13,6 +14,10 @@
       footer.innerHTML = "<a href=\"https://github.com/The-Aries\">GitHub Profile</a><a href=\"https://github.com/The-Aries/simple-cheatsheets\">Repository</a><span>Copyright © 2026 Junhao Zhang</span><a href=\"mailto:653537305@qq.com\">Email the author</a><a href=\"https://github.com/The-Aries/simple-cheatsheets/issues/new\">Raise an issue</a>";
     }
   }
+  if (validation && typeof validation.validatePageData === "function") {
+    validation.validatePageData(page, { slug: (page && page.slug) || "unknown", skipSuccess: true });
+  }
+
   if (!page) {
     renderHardFallback("Template Page", "Page data missing or module not found.");
     return;
@@ -52,7 +57,9 @@
     var fromPage = page.placeholders && Array.isArray(page.placeholders.fields) ? page.placeholders.fields : [];
     if (fromPage.length) { return fromPage; }
     var placeholderBlock = findBlock("placeholderForm");
-    if (placeholderBlock && Array.isArray(placeholderBlock.fields)) { return placeholderBlock.fields; }
+    if (placeholderBlock && Array.isArray(placeholderBlock.fields)) {
+      return placeholderBlock.fields;
+    }
     return [];
   }
 
@@ -460,11 +467,19 @@
   }
 
   try {
+    if (validation && typeof validation.validatePageData === "function") {
+      validation.validatePageData(page, { slug: page.slug || "unknown", skipSuccess: true });
+    }
+
     renderTopNav();
     renderSidebar();
     renderMain();
     renderFooter();
     initActions();
+
+    if (validation && typeof validation.validatePageData === "function") {
+      validation.validatePageData(page, { slug: page.slug || "unknown", skipSuccess: !!window.CHEATSHEET_PAGE_IS_FALLBACK });
+    }
   } catch (error) {
     renderHardFallback((page.meta && page.meta.title) || "Template Page", "Renderer failed. Under Construction.");
   }
