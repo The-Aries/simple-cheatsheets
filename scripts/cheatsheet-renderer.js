@@ -69,6 +69,10 @@
     return sectionBlock.sections;
   }
 
+  function resolvePreviewBlock() {
+    return findBlock("preview");
+  }
+
   function moduleHref(module) {
     return root + module.dir + "/";
   }
@@ -133,11 +137,13 @@
     var sections = resolveSectionGroups();
     var pageHeader = findBlock("pageHeader");
     var placeholderBlock = findBlock("placeholderForm");
+    var previewBlock = resolvePreviewBlock();
     var concepts = findBlock("concepts");
     var workflow = findBlock("workflow");
 
     var hasDescription = !!pageHeader;
     var hasPlaceholders = !!(placeholderBlock && fields.length);
+    var hasPreview = !!previewBlock;
     var hasConcepts = !!(concepts && Array.isArray(concepts.items) && concepts.items.length > 0);
     var hasWorkflow = workflow && Array.isArray(workflow.cards) && workflow.cards.length > 0;
     var overviewItems = [];
@@ -151,6 +157,12 @@
       overviewItems.push({
         label: "Placeholders",
         href: "#" + (placeholderBlock.id || "placeholders")
+      });
+    }
+    if (hasPreview) {
+      overviewItems.push({
+        label: previewBlock.title || "Preview",
+        href: "#" + (previewBlock.id || "preview")
       });
     }
     if (hasConcepts) {
@@ -199,6 +211,181 @@
 
   function renderPageHeader(block) {
     return "<section class=\"hero\" id=\"" + escapeAttr(block.id || "page-header") + "\"><h1>" + escapeHtml(block.title || "") + "</h1><h2 class=\"description-title\">" + escapeHtml(block.descriptionTitle || "Description") + "</h2><p class=\"lead\">" + escapeHtml(block.lead || "") + "</p></section>";
+  }
+
+  function applyPlaceholderValues(text, values) {
+    var rendered = String(text || "");
+    Object.keys(values || {}).forEach(function (key) {
+      rendered = rendered.split(key).join(values[key]);
+    });
+    return rendered;
+  }
+
+  function renderMarkdownInline(text) {
+    var output = escapeHtml(text || "");
+    output = output.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, function (_, alt, src) {
+      return '<img src="' + escapeAttr(src) + '" alt="' + escapeAttr(alt) + '">';
+    });
+    output = output.replace(/\[([^\]]+)\]\(([^)]+)\)/g, function (_, label, href) {
+      return '<a href="' + escapeAttr(href) + '">' + label + '</a>';
+    });
+    output = output.replace(/`([^`]+)`/g, function (_, code) {
+      return '<code>' + code + '</code>';
+    });
+    output = output.replace(/\*\*([^*]+)\*\*/g, function (_, strong) {
+      return '<strong>' + strong + '</strong>';
+    });
+    output = output.replace(/~~([^~]+)~~/g, function (_, strike) {
+      return '<del>' + strike + '</del>';
+    });
+    output = output.replace(/\*([^*]+)\*/g, function (_, italic) {
+      return '<em>' + italic + '</em>';
+    });
+    return output;
+  }
+
+  function renderMarkdownPreview(text) {
+    var lines = String(text || "").replace(/\r\n/g, "\n").split("\n");
+    var html = [];
+    var paragraph = [];
+    var quote = [];
+    var listType = "";
+    var listItems = [];
+    var inCode = false;
+    var codeLines = [];
+
+    function flushParagraph() {
+      if (!paragraph.length) { return; }
+      html.push("<p>" + renderMarkdownInline(paragraph.join(" ")) + "</p>");
+      paragraph = [];
+    }
+
+    function flushQuote() {
+      if (!quote.length) { return; }
+      html.push("<blockquote><p>" + renderMarkdownInline(quote.join(" ")) + "</p></blockquote>");
+      quote = [];
+    }
+
+    function flushList() {
+      if (!listItems.length) { return; }
+      var listTag = listType === "ordered" ? "ol" : "ul";
+      var listHtml = "<" + listTag + ">";
+      listItems.forEach(function (item) {
+        if (item.type === "task") {
+          listHtml += "<li><label><input type=\"checkbox\" disabled" + (item.checked ? " checked" : "") + "> " + renderMarkdownInline(item.text) + "</label></li>";
+        } else {
+          listHtml += "<li>" + renderMarkdownInline(item.text) + "</li>";
+        }
+      });
+      listHtml += "</" + listTag + ">";
+      html.push(listHtml);
+      listItems = [];
+      listType = "";
+    }
+
+    function flushCode() {
+      if (!codeLines.length) { return; }
+      html.push("<pre><code>" + escapeHtml(codeLines.join("\n")) + "</code></pre>");
+      codeLines = [];
+    }
+
+    function flushAll() {
+      flushParagraph();
+      flushQuote();
+      flushList();
+    }
+
+    function parseListLine(line) {
+      var taskMatch = /^-\s+\[([ xX])\]\s+(.+)$/.exec(line);
+      if (taskMatch) {
+        return { type: "task", checked: taskMatch[1].toLowerCase() === "x", text: taskMatch[2] };
+      }
+      var orderedMatch = /^\d+\.\s+(.+)$/.exec(line);
+      if (orderedMatch) {
+        return { type: "ordered", text: orderedMatch[1] };
+      }
+      var bulletMatch = /^[-*+]\s+(.+)$/.exec(line);
+      if (bulletMatch) {
+        return { type: "unordered", text: bulletMatch[1] };
+      }
+      return null;
+    }
+
+    lines.forEach(function (rawLine) {
+      var line = rawLine || "";
+      if (/^```/.test(line)) {
+        if (inCode) {
+          flushCode();
+          inCode = false;
+        } else {
+          flushAll();
+          inCode = true;
+        }
+        return;
+      }
+
+      if (inCode) {
+        codeLines.push(line);
+        return;
+      }
+
+      if (!line.trim()) {
+        flushAll();
+        return;
+      }
+
+      var headingMatch = /^(#{1,6})\s+(.*)$/.exec(line);
+      if (headingMatch) {
+        flushAll();
+        html.push("<h" + headingMatch[1].length + ">" + renderMarkdownInline(headingMatch[2]) + "</h" + headingMatch[1].length + ">");
+        return;
+      }
+
+      if (/^(-{3,}|\*{3,}|_{3,})$/.test(line.trim())) {
+        flushAll();
+        html.push("<hr>");
+        return;
+      }
+
+      var quoteMatch = /^>\s?(.*)$/.exec(line);
+      if (quoteMatch) {
+        if (listItems.length) { flushList(); }
+        if (paragraph.length) { flushParagraph(); }
+        quote.push(quoteMatch[1]);
+        return;
+      }
+
+      var listMatch = parseListLine(line);
+      if (listMatch) {
+        if (paragraph.length) { flushParagraph(); }
+        if (quote.length) { flushQuote(); }
+        if (listType && listType !== listMatch.type && !(listType === "task" && listMatch.type === "task")) {
+          flushList();
+        }
+        listType = listMatch.type;
+        listItems.push(listMatch);
+        return;
+      }
+
+      if (quote.length) { flushQuote(); }
+      if (listItems.length && listType) { flushList(); }
+      paragraph.push(line);
+    });
+
+    if (inCode) {
+      flushCode();
+    }
+    flushAll();
+
+    return html.join("");
+  }
+
+  function renderPreviewOutputForTextarea(textarea) {
+    if (!textarea) { return; }
+    var previewId = textarea.getAttribute("data-preview-id") || "";
+    var output = previewId ? document.querySelector('.preview-output[data-preview-output-for="' + previewId + '"]') : null;
+    if (!output) { return; }
+    output.innerHTML = renderMarkdownPreview(textarea.value || "");
   }
 
   function renderPlaceholderForm(block, fields) {
@@ -290,7 +477,8 @@
         gRows.forEach(function (row, rowIndex) {
           var commandId = "cmd-" + safeKey(sNumber) + "-" + safeKey(gNumber) + "-" + String(rowIndex + 1);
           var template = row.template || "";
-          html += "<tr><td><code class=\"command-code\" id=\"" + escapeAttr(commandId) + "\" data-template=\"" + escapeAttr(template) + "\">" + escapeHtml(template) + "</code></td><td>" + escapeHtml(row.purpose || "") + "</td><td><button type=\"button\" class=\"copy-button\" data-copy-target=\"" + escapeAttr(commandId) + "\">Copy</button></td></tr>";
+          var commandClasses = "command-code" + (/\n/.test(template) ? " multiline" : "");
+          html += "<tr><td><code class=\"" + commandClasses + "\" id=\"" + escapeAttr(commandId) + "\" data-template=\"" + escapeAttr(template) + "\">" + escapeHtml(template) + "</code></td><td>" + escapeHtml(row.purpose || "") + "</td><td><button type=\"button\" class=\"copy-button\" data-copy-target=\"" + escapeAttr(commandId) + "\">Copy</button></td></tr>";
         });
 
         html += "</tbody></table></div><div class=\"group-description\"><h4>Description</h4>" + renderGroupDescription(group.description) + "</div></section>";
@@ -304,9 +492,11 @@
 
   function renderPreview(block) {
     var previewText = block.text || "";
-    if (!previewText) { return ""; }
     var previewId = block.id || "preview";
-    return "<section class=\"panel\" id=\"" + escapeAttr(previewId) + "\"><div class=\"section-heading\"><h2>" + escapeHtml(block.title || "Preview") + "</h2></div><div class=\"command-table-wrap\"><pre class=\"command-code\">" + escapeHtml(previewText) + "</pre></div></section>";
+    var previewHeadingId = previewId + "-title";
+    var previewTextareaId = previewId + "-source";
+    var previewOutputId = previewId + "-output";
+    return "<section class=\"panel preview-panel\" id=\"" + escapeAttr(previewId) + "\" aria-labelledby=\"" + escapeAttr(previewHeadingId) + "\"><div class=\"section-heading\"><h2 id=\"" + escapeAttr(previewHeadingId) + "\">" + escapeHtml(block.title || "Preview") + "</h2>" + (block.intro ? "<p>" + escapeHtml(block.intro) + "</p>" : "") + "</div><div class=\"preview-grid\"><div class=\"preview-column\"><label class=\"preview-label\" for=\"" + escapeAttr(previewTextareaId) + "\">Markdown source</label><textarea class=\"preview-input\" id=\"" + escapeAttr(previewTextareaId) + "\" data-preview-source=\"true\" data-preview-id=\"" + escapeAttr(previewId) + "\" data-template=\"" + escapeAttr(previewText) + "\">" + escapeHtml(previewText) + "</textarea><div class=\"preview-actions\"><button type=\"button\" class=\"copy-button\" data-copy-target=\"" + escapeAttr(previewTextareaId) + "\">Copy</button></div></div><div class=\"preview-column\"><div class=\"preview-output markdown-preview\" id=\"" + escapeAttr(previewOutputId) + "\" data-preview-output-for=\"" + escapeAttr(previewId) + "\"></div></div></div></section>";
   }
 
   function renderNote(block) {
@@ -337,11 +527,36 @@
     if (!content) { return; }
 
     var placeholderFields = resolvePlaceholderFields();
+    var placeholderValues = {};
+    placeholderFields.forEach(function (field) {
+      if (!field || !field.key) { return; }
+      placeholderValues[field.key] = field.defaultValue || field.key;
+    });
     var html = blocks.map(function (block) {
-      return renderBlock(block, placeholderFields);
+      if (block && block.type === "preview") {
+        var previewHtml = renderPreview(block);
+        return previewHtml;
+      }
+      if (block && block.type === "sectionGroups") {
+        return renderSectionGroups(block);
+      }
+      if (block && block.type === "pageHeader") { return renderPageHeader(block); }
+      if (block && block.type === "placeholderForm") { return renderPlaceholderForm(block, placeholderFields); }
+      if (block && block.type === "concepts") { return renderConcepts(block); }
+      if (block && block.type === "workflow") { return renderWorkflow(block); }
+      if (block && block.type === "note") { return renderNote(block); }
+      if (block && block.type === "underConstruction") { return renderUnderConstruction(block); }
+      return "";
     }).join("");
 
     content.innerHTML = html && html.trim() ? html : '<section class="hero" id="page-header"><h1>Template Page</h1><h2 class="description-title">Description</h2><p class="lead">Page data missing.</p></section><section class="panel" id="construction-status"><div class="section-heading"><h2>Status</h2><p>Under Construction</p></div></section>';
+
+    var previewTextareas = document.querySelectorAll(".preview-input[data-template]");
+    previewTextareas.forEach(function (textarea) {
+      var template = textarea.getAttribute("data-template") || "";
+      textarea.value = applyPlaceholderValues(template, placeholderValues);
+      renderPreviewOutputForTextarea(textarea);
+    });
   }
 
   function renderFooter() {
@@ -404,6 +619,14 @@
         });
         code.textContent = rendered;
       });
+      document.querySelectorAll(".preview-input[data-template]").forEach(function (textarea) {
+        var rendered = textarea.getAttribute("data-template") || "";
+        placeholderKeys.forEach(function (key) {
+          rendered = rendered.split(key).join(values[key]);
+        });
+        textarea.value = rendered;
+        renderPreviewOutputForTextarea(textarea);
+      });
     }
 
     function copyText(text) {
@@ -429,7 +652,8 @@
         var code = document.getElementById(button.getAttribute("data-copy-target"));
         if (!code) { return; }
         var original = button.textContent;
-        copyText(code.textContent).then(function () {
+        var text = code.tagName === "TEXTAREA" ? code.value : code.textContent;
+        copyText(text).then(function () {
           button.textContent = "Copied";
           window.setTimeout(function () { button.textContent = original; }, 1000);
         });
@@ -455,6 +679,12 @@
         renderTemplates();
       });
     }
+
+    document.querySelectorAll(".preview-input[data-template]").forEach(function (textarea) {
+      textarea.addEventListener("input", function () {
+        renderPreviewOutputForTextarea(textarea);
+      });
+    });
 
     renderTemplates();
   }

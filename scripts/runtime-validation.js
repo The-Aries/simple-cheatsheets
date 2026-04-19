@@ -11,7 +11,6 @@
   var formalSlugs = { git: true };
   var underConstructionSlugs = {
     linux: true,
-    markdown: true,
     regex: true,
     matlab: true
   };
@@ -389,6 +388,13 @@
 
       if (block.type === "sectionGroups") {
         validateSectionGroups(slug, blockIndex, block.sections);
+        return;
+      }
+
+      if (block.type === "preview") {
+        if (!isString(block.text)) {
+          warn(slug, blockPath, "text", "missing", "missing preview.text");
+        }
       }
     });
   }
