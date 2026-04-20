@@ -441,10 +441,10 @@
     var link = officialUrl ? "<a href=\"" + escapeAttr(officialUrl) + "\">" + escapeHtml(officialLabel) + "</a>" : "";
 
     if (text && link) {
-      return "<p>" + text + " More flags and advanced combinations are available in the " + link + ".</p>";
+      return "<p>" + text + " See the " + link + " for details and edge cases.</p>";
     }
     if (text) { return "<p>" + text + "</p>"; }
-    if (link) { return "<p>See the " + link + " for the full command reference.</p>"; }
+    if (link) { return "<p>See the " + link + " for the full syntax reference.</p>"; }
     return "";
   }
 
