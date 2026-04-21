@@ -1,7 +1,7 @@
 (function () {
   var release = {
-    version: "22f2fab",
-    branch: "main"
+    version: "local",
+    branch: "local"
   };
 
   window.CHEATSHEET_RELEASE = release;
