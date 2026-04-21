@@ -1,7 +1,7 @@
 (function () {
   var release = {
     version: "8de1fab",
-    branch: "codex/template-decouple-refactor"
+    branch: "dev"
   };
 
   window.CHEATSHEET_RELEASE = release;
