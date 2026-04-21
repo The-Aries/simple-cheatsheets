@@ -69,7 +69,7 @@
     return sectionBlock.sections;
   }
 
-  function resolvePreviewBlock() {
+  function resolvePlaygroundBlock() {
     return findBlock("preview");
   }
 
@@ -137,7 +137,7 @@
     var sections = resolveSectionGroups();
     var pageHeader = findBlock("pageHeader");
     var placeholderBlock = findBlock("placeholderForm");
-    var previewBlock = resolvePreviewBlock();
+    var previewBlock = resolvePlaygroundBlock();
     var concepts = findBlock("concepts");
     var workflow = findBlock("workflow");
 
@@ -161,8 +161,8 @@
     }
     if (hasPreview) {
       overviewItems.push({
-        label: previewBlock.title || "Preview",
-        href: "#" + (previewBlock.id || "preview")
+        label: previewBlock.title || "Playground",
+        href: "#" + (previewBlock.id || "playground")
       });
     }
     if (hasConcepts) {
@@ -492,11 +492,11 @@
 
   function renderPreview(block) {
     var previewText = block.text || "";
-    var previewId = block.id || "preview";
+    var previewId = block.id || "playground";
     var previewHeadingId = previewId + "-title";
     var previewTextareaId = previewId + "-source";
     var previewOutputId = previewId + "-output";
-    return "<section class=\"panel preview-panel\" id=\"" + escapeAttr(previewId) + "\" aria-labelledby=\"" + escapeAttr(previewHeadingId) + "\"><div class=\"section-heading\"><h2 id=\"" + escapeAttr(previewHeadingId) + "\">" + escapeHtml(block.title || "Preview") + "</h2>" + (block.intro ? "<p>" + escapeHtml(block.intro) + "</p>" : "") + "</div><div class=\"preview-grid\"><div class=\"preview-column\"><label class=\"preview-label\" for=\"" + escapeAttr(previewTextareaId) + "\">Markdown source</label><textarea class=\"preview-input\" id=\"" + escapeAttr(previewTextareaId) + "\" data-preview-source=\"true\" data-preview-id=\"" + escapeAttr(previewId) + "\" data-template=\"" + escapeAttr(previewText) + "\">" + escapeHtml(previewText) + "</textarea><div class=\"preview-actions\"><button type=\"button\" class=\"copy-button\" data-copy-target=\"" + escapeAttr(previewTextareaId) + "\">Copy</button></div></div><div class=\"preview-column\"><div class=\"preview-output markdown-preview\" id=\"" + escapeAttr(previewOutputId) + "\" data-preview-output-for=\"" + escapeAttr(previewId) + "\"></div></div></div></section>";
+    return "<section class=\"panel preview-panel\" id=\"" + escapeAttr(previewId) + "\" aria-labelledby=\"" + escapeAttr(previewHeadingId) + "\"><div class=\"section-heading\"><h2 id=\"" + escapeAttr(previewHeadingId) + "\">" + escapeHtml(block.title || "Playground") + "</h2>" + (block.intro ? "<p>" + escapeHtml(block.intro) + "</p>" : "") + "</div><div class=\"preview-grid\"><div class=\"preview-column\"><label class=\"preview-label\" for=\"" + escapeAttr(previewTextareaId) + "\">Source</label><textarea class=\"preview-input\" id=\"" + escapeAttr(previewTextareaId) + "\" data-preview-source=\"true\" data-preview-id=\"" + escapeAttr(previewId) + "\" data-template=\"" + escapeAttr(previewText) + "\">" + escapeHtml(previewText) + "</textarea><div class=\"preview-actions\"><button type=\"button\" class=\"copy-button\" data-copy-target=\"" + escapeAttr(previewTextareaId) + "\">Copy source</button></div></div><div class=\"preview-column\"><div class=\"preview-label\">Rendered output</div><div class=\"preview-output markdown-preview\" id=\"" + escapeAttr(previewOutputId) + "\" data-preview-output-for=\"" + escapeAttr(previewId) + "\"></div></div></div></section>";
   }
 
   function renderNote(block) {
@@ -713,4 +713,215 @@
   } catch (error) {
     renderHardFallback((page.meta && page.meta.title) || "Template Page", "Renderer failed. Under Construction.");
   }
+var renderMarkdownInline = function (text) {
+  var source = String(text == null ? "" : text);
+  var tokens = [];
+  function escapeHtmlLocal(value) {
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/\"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+  function store(markup) {
+    tokens.push(markup);
+    return "\u0000" + (tokens.length - 1) + "\u0000";
+  }
+  source = escapeHtmlLocal(source);
+  source = source.replace(/`([^`]+)`/g, function (_, code) {
+    return store("<code>" + code + "</code>");
+  });
+  source = source.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, function (_, alt, url) {
+    return store('<img src="' + url + '" alt="' + alt + '">');
+  });
+  source = source.replace(/\[([^\]]+)\]\(([^)]+)\)/g, function (_, label, url) {
+    return store('<a href="' + url + '">' + label + "</a>");
+  });
+  source = source.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+  source = source.replace(/__([^_]+)__/g, "<strong>$1</strong>");
+  source = source.replace(/~~([^~]+)~~/g, "<del>$1</del>");
+  source = source.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+  source = source.replace(/_([^_]+)_/g, "<em>$1</em>");
+  source = source.replace(/(https?:\/\/[^\s<]+)/g, function (_, url) {
+    return store('<a href="' + url + '">' + url + "</a>");
+  });
+  source = source.replace(/([\w.+-]+@[\w.-]+\.[A-Za-z]{2,})/g, function (_, email) {
+    return store('<a href="mailto:' + email + '">' + email + "</a>");
+  });
+  source = source.replace(/\u0000(\d+)\u0000/g, function (_, index) {
+    return tokens[Number(index)] || "";
+  });
+  return source;
+};
+
+var renderMarkdownPreview = function (text) {
+  var lines = String(text == null ? "" : text).replace(/\r\n?/g, "\n").split("\n");
+  var html = [];
+  var paragraph = [];
+  var listType = "";
+  var listOpen = false;
+  var blockquote = [];
+  var codeFence = "";
+  var codeLines = [];
+
+  function flushParagraph() {
+    if (paragraph.length) {
+      html.push("<p>" + renderMarkdownInline(paragraph.join(" ")) + "</p>");
+      paragraph = [];
+    }
+  }
+
+  function closeList() {
+    if (listOpen) {
+      html.push(listType === "ol" ? "</ol>" : "</ul>");
+      listOpen = false;
+      listType = "";
+    }
+  }
+
+  function flushBlockquote() {
+    if (blockquote.length) {
+      html.push("<blockquote>" + renderMarkdownPreview(blockquote.join("\n")) + "</blockquote>");
+      blockquote = [];
+    }
+  }
+
+  function isTableSeparator(line) {
+    return /^\s*\|?(\s*:?-+:?\s*\|)+\s*:?-+:?\s*\|?\s*$/.test(line);
+  }
+
+  function renderTableRow(line, cellTag) {
+    var cells = line.replace(/^\s*\|/, "").replace(/\|\s*$/, "").split("|");
+    return "<tr>" + cells.map(function (cell) {
+      return "<" + cellTag + ">" + renderMarkdownInline(cell.trim()) + "</" + cellTag + ">";
+    }).join("") + "</tr>";
+  }
+
+  function flushTable(block) {
+    if (!block || !block.length) {
+      return;
+    }
+    var rows = block.slice();
+    var head = rows.shift();
+    var body = rows;
+    var tableHtml = ["<table>", "<thead>", renderTableRow(head, "th"), "</thead>"];
+    if (body.length) {
+      tableHtml.push("<tbody>");
+      body.forEach(function (row) {
+        tableHtml.push(renderTableRow(row, "td"));
+      });
+      tableHtml.push("</tbody>");
+    }
+    tableHtml.push("</table>");
+    html.push(tableHtml.join(""));
+  }
+
+  for (var i = 0; i < lines.length; i += 1) {
+    var line = lines[i];
+    var trimmed = line.trim();
+    var next = lines[i + 1] || "";
+
+    if (codeFence) {
+      if (trimmed.indexOf(codeFence) === 0) {
+        html.push("<pre><code>" + codeLines.join("\n") + "</code></pre>");
+        codeFence = "";
+        codeLines = [];
+      } else {
+        codeLines.push(line.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"));
+      }
+      continue;
+    }
+
+    if (/^(```+|~~~+)\s*/.test(trimmed)) {
+      flushParagraph();
+      closeList();
+      flushBlockquote();
+      codeFence = trimmed.slice(0, 3);
+      codeLines = [];
+      continue;
+    }
+
+    if (!trimmed) {
+      flushParagraph();
+      closeList();
+      flushBlockquote();
+      continue;
+    }
+
+    if (/^> ?/.test(trimmed)) {
+      blockquote.push(trimmed.replace(/^> ?/, ""));
+      continue;
+    }
+
+    if (/^#{1,6}\s+/.test(trimmed)) {
+      flushParagraph();
+      closeList();
+      flushBlockquote();
+      var level = trimmed.match(/^#{1,6}/)[0].length;
+      html.push("<h" + level + ">" + renderMarkdownInline(trimmed.replace(/^#{1,6}\s+/, "")) + "</h" + level + ">");
+      continue;
+    }
+
+    if (/^(\*{3,}|-{3,}|_{3,})$/.test(trimmed)) {
+      flushParagraph();
+      closeList();
+      flushBlockquote();
+      html.push("<hr>");
+      continue;
+    }
+
+    if (/^\|.*\|$/.test(trimmed) && /^\s*\|?(\s*:?-+:?\s*\|)+\s*:?-+:?\s*\|?\s*$/.test(next.trim())) {
+      flushParagraph();
+      closeList();
+      flushBlockquote();
+      var tableRows = [trimmed];
+      i += 1;
+      while (i + 1 < lines.length && lines[i + 1].trim() && /^\|.*\|$/.test(lines[i + 1].trim())) {
+        tableRows.push(lines[i + 1].trim());
+        i += 1;
+      }
+      flushTable(tableRows);
+      continue;
+    }
+
+    var ordered = trimmed.match(/^(\d+)\.\s+/);
+    var unordered = trimmed.match(/^[-*+]\s+/);
+    var task = trimmed.match(/^[-*+]\s+\[( |x|X)\]\s+/);
+
+    if (ordered || unordered) {
+      flushParagraph();
+      flushBlockquote();
+      var nextType = ordered ? "ol" : "ul";
+      if (!listOpen || listType !== nextType) {
+        closeList();
+        listType = nextType;
+        listOpen = true;
+        html.push(listType === "ol" ? "<ol>" : "<ul>");
+      }
+      var itemText = trimmed.replace(/^(\d+\.\s+|[-*+]\s+)/, "");
+      if (task) {
+        itemText = itemText.replace(/^\[( |x|X)\]\s+/, "");
+        html.push('<li class="task-item"><input type="checkbox" disabled' + (task[1].toLowerCase() === "x" ? " checked" : "") + '> ' + renderMarkdownInline(itemText) + "</li>");
+      } else {
+        html.push("<li>" + renderMarkdownInline(itemText) + "</li>");
+      }
+      continue;
+    }
+
+    if (blockquote.length) {
+      flushBlockquote();
+    }
+
+    paragraph.push(trimmed);
+  }
+
+  flushParagraph();
+  closeList();
+  flushBlockquote();
+  if (codeFence) {
+    html.push("<pre><code>" + codeLines.join("\n") + "</code></pre>");
+  }
+  return html.join("");
+};
 })();

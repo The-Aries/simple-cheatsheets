@@ -441,3 +441,47 @@ a:hover { text-decoration-thickness: 0.08em; }
 .sidebar .sidebar-root-list > .sidebar-level2-item > .sidebar-subgroup {
   margin-left: 0;
 }
+.preview-grid {
+  align-items: stretch !important;
+  gap: 18px !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  --playground-height: clamp(320px, 52vh, 520px) !important;
+}
+
+.preview-column {
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.preview-input,
+.preview-output {
+  min-height: var(--playground-height) !important;
+  height: var(--playground-height) !important;
+  max-height: var(--playground-height) !important;
+  box-sizing: border-box !important;
+}
+
+.preview-input {
+  resize: none !important;
+  overflow: auto !important;
+}
+
+.preview-output {
+  overflow: auto !important;
+}
+
+.markdown-preview {
+  min-height: 100% !important;
+}
+
+#playground {
+  scroll-margin-top: 96px !important;
+}
+
+@media (max-width: 760px) {
+  .preview-grid {
+    grid-template-columns: 1fr !important;
+    --playground-height: clamp(280px, 42vh, 420px) !important;
+  }
+}

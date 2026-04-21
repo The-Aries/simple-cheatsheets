@@ -6,11 +6,11 @@
   }
 
   var markdownPlaceholders = [
-    { key: "pageTitle", label: "pageTitle", defaultValue: "Markdown Sample Page", help: "The title used in the preview heading and sample document." },
+    { key: "pageTitle", label: "pageTitle", defaultValue: "Markdown Sample Page", help: "The title used in the playground heading and sample document." },
     { key: "fileName", label: "fileName", defaultValue: "notes.md", help: "A markdown file name used in download examples." },
     { key: "filePath", label: "filePath", defaultValue: "./docs/notes.md", help: "A file path or relative URL used in download links." },
     { key: "resourceUrl", label: "resourceUrl", defaultValue: "https://example.com/markdown-guide", help: "A resource URL used in regular links." },
-    { key: "imageUrl", label: "imageUrl", defaultValue: "https://placehold.co/640x360?text=Markdown+Preview", help: "An image URL used in the preview image example." }
+    { key: "imageUrl", label: "imageUrl", defaultValue: "https://placehold.co/640x360?text=Markdown+Playground", help: "An image URL used in the playground image example." }
   ];
 
   function makeGroup(number, key, title, intro, rows, text, officialUrl, officialLabel) {
@@ -129,7 +129,7 @@
           "Images",
           "Images matter in docs and READMEs, but they usually come after text and links.",
           [
-            { template: "![Preview image](imageUrl)", purpose: "Embed an image preview from a URL." }
+            { template: "![Playground image](imageUrl)", purpose: "Embed an image from a URL." }
           ],
           "Images are useful when a picture or diagram adds faster context than text alone.",
           "https://spec.commonmark.org/spec#images",
@@ -221,7 +221,7 @@
     )
   ];
 
-  var markdownPreview = [
+  var markdownPlayground = [
     "# pageTitle",
     "",
     "Markdown on this page is split into **CommonMark** and **GFM**.",
@@ -234,7 +234,7 @@
     "- another item",
     "",
     "[Open resource](resourceUrl)",
-    "![Preview image](imageUrl)",
+    "![Playground image](imageUrl)",
     "",
     "> Quoted text stays visually separated from the main body.",
     "",
@@ -275,14 +275,14 @@
         id: "placeholders",
         headingId: "values-title",
         title: "Placeholders",
-        intro: "Set the sample values once, then apply or reset them to see the Markdown source and preview update together."
+        intro: "Set the sample values once, then apply or reset them to see the Markdown source and playground update together."
       },
       {
         type: "preview",
-        id: "preview",
-        title: "Preview",
-        intro: "Edit the Markdown source on the left. The rendered preview on the right updates as you type, and the global Apply and Reset buttons keep the placeholder examples in sync.",
-        text: markdownPreview
+        id: "playground",
+        title: "Playground",
+        intro: "Edit the Markdown source on the left. The rendered playground on the right updates as you type, and the global Apply and Reset buttons keep the placeholder examples in sync.",
+        text: markdownPlayground
       },
       {
         type: "sectionGroups",
