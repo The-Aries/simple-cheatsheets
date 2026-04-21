@@ -41,19 +41,20 @@
     makeSection(
       1,
       "CommonMark",
-      "This section is the baseline syntax for everyday Markdown writing. The order follows practical README and doc usage, not the spec chapter order.",
+      "",
       [
         makeGroup(
           1,
           "headings",
           "Headings",
-          "Start with headings because they shape almost every note, README, and doc page.",
+          "Use 1 to 6 leading # marks. Do not exceed 6. Headings organize the document outline, and each level can be repeated as needed.",
           [
-            { template: "# pageTitle", purpose: "Top-level document title that uses the pageTitle placeholder." },
-            { template: "## Section Title", purpose: "A section-level heading for a major topic." },
-            { template: "### Subsection Title", purpose: "A smaller heading for nested detail." }
+            { template: "# pageTitle", purpose: "Level 1 heading for the page title." },
+            { template: "## Section Title", purpose: "Level 2 heading for the main sections." },
+            { template: "### Subsection Title", purpose: "Level 3 heading for nested detail." },
+            { template: "###### Smallest Heading", purpose: "Level 6 heading, the deepest CommonMark heading level." }
           ],
-          "Headings are the fastest way to give a document a readable outline.",
+          "Headings give the document its outline. Use the smallest level that matches the structure you need.",
           "https://spec.commonmark.org/spec#atx-headings",
           "CommonMark spec"
         ),
@@ -61,12 +62,12 @@
           2,
           "paragraphs",
           "Paragraphs",
-          "Body text is the default content block, so it belongs near the top of any beginner page.",
+          "Paragraphs are plain text blocks separated by blank lines. One or more lines of text form a paragraph until a blank line starts the next block.",
           [
             { template: "First paragraph.\n\nSecond paragraph.", purpose: "Separate paragraphs with a blank line." },
             { template: "A short paragraph that wraps naturally.", purpose: "Use plain text for most body copy." }
           ],
-          "Paragraphs are the base case. Everything else builds around them.",
+          "Paragraphs are the default block. They keep prose readable without extra syntax.",
           "https://spec.commonmark.org/spec#paragraphs",
           "CommonMark spec"
         ),
@@ -74,12 +75,12 @@
           3,
           "links",
           "Links",
-          "Links are one of the first features people use in READMEs and documentation.",
+          "Use [label](url) for inline links. The label is required, and the URL can be absolute or relative. This page keeps link syntax to the inline form because it is the form most people use first.",
           [
             { template: "[Open resource](resourceUrl)", purpose: "Link to a web resource or reference page." },
             { template: "[Download file](filePath)", purpose: "Link to a file path or relative document." }
           ],
-          "Links show up everywhere, so they deserve an early place in the page.",
+          "Inline links are the most common way to connect documents, files, and references.",
           "https://spec.commonmark.org/spec#links",
           "CommonMark spec"
         ),
@@ -87,12 +88,13 @@
           4,
           "lists",
           "Lists",
-          "Bulleted and numbered lists are essential for steps, notes, and short summaries.",
+          "Use -, *, or + for unordered items. Use 1. for ordered items. List items can repeat freely, and ordered items can start from any number when you need a different sequence.",
           [
             { template: "- item", purpose: "Use bullets for unordered content." },
+            { template: "+ item", purpose: "Use the alternate unordered marker." },
             { template: "1. item", purpose: "Use numbers when order matters." }
           ],
-          "Lists are a core reading pattern in docs, onboarding pages, and README files.",
+          "Lists cover steps, summaries, and short repeated items. Use the marker that fits the reading pattern.",
           "https://spec.commonmark.org/spec#lists",
           "CommonMark spec"
         ),
@@ -100,13 +102,14 @@
           5,
           "emphasis",
           "Emphasis and strong",
-          "Inline emphasis is common, but it should stay secondary to the content itself.",
+          "Use *text* or _text_ for emphasis and **text** or __text__ for strong emphasis. This page keeps code spans in the next group so the two inline patterns stay easy to scan.",
           [
             { template: "**bold**", purpose: "Use strong emphasis for key terms and short callouts." },
             { template: "*italic*", purpose: "Use italics for lighter emphasis and names." },
-            { template: "`inline code`", purpose: "Use code spans for literal text and identifiers." }
+            { template: "__bold__", purpose: "Use the underscore strong-emphasis form when needed." },
+            { template: "_italic_", purpose: "Use the underscore emphasis form when needed." }
           ],
-          "Keep emphasis simple. It should support scanning, not fight with it.",
+          "Emphasis is for scanning and contrast, not for decoration.",
           "https://spec.commonmark.org/spec#emphasis-and-strong-emphasis",
           "CommonMark spec"
         ),
@@ -114,12 +117,13 @@
           6,
           "code-blocks",
           "Code spans and fenced code blocks",
-          "Code examples deserve an early slot because they are central to README and docs writing.",
+          "Use `inline code` for short literals, and fenced blocks with ``` or ~~~ for multi-line examples. Fence info strings are optional, and the fence can be any language tag you want to show.",
           [
             { template: "`inline code`", purpose: "Show a literal value inside a sentence." },
-            { template: "```js\nconsole.log(pageTitle);\n```", purpose: "Show a short fenced code block." }
+            { template: "```js\nconsole.log(pageTitle);\n```", purpose: "Show a fenced code block with an info string." },
+            { template: "~~~\nplain text code block\n~~~", purpose: "Use the alternate fence marker." }
           ],
-          "Code spans and fenced blocks are the main way to show literal examples without ambiguity.",
+          "Code spans and fenced blocks are the standard way to show literal examples without interpretation.",
           "https://spec.commonmark.org/spec#fenced-code-blocks",
           "CommonMark spec"
         ),
@@ -127,11 +131,11 @@
           7,
           "images",
           "Images",
-          "Images matter in docs and READMEs, but they usually come after text and links.",
+          "Use ![alt text](url) for images. The alt text is required for accessibility, and the URL can be absolute or relative like a link.",
           [
             { template: "![Playground image](imageUrl)", purpose: "Embed an image from a URL." }
           ],
-          "Images are useful when a picture or diagram adds faster context than text alone.",
+          "Images are useful when a picture or diagram explains faster than text alone.",
           "https://spec.commonmark.org/spec#images",
           "CommonMark spec"
         ),
@@ -139,11 +143,11 @@
           8,
           "blockquotes",
           "Blockquotes",
-          "Quotes are useful for short notes, warnings, or source snippets.",
+          "Use > for a blockquote. Multiple quoted lines stay in the same quote block until a blank line ends it, and nested quoting can use more > markers if needed.",
           [
             { template: "> Quoted text stays visually separated from the main body.", purpose: "Use a blockquote for short callouts or citations." }
           ],
-          "Blockquotes are useful, but they are usually a supporting pattern rather than the main structure.",
+          "Blockquotes are a supporting pattern for notes, citations, and short callouts.",
           "https://spec.commonmark.org/spec#block-quotes",
           "CommonMark spec"
         ),
@@ -151,12 +155,12 @@
           9,
           "horizontal-rules",
           "Horizontal rules",
-          "Rules are mostly a visual separator, so they should stay near the end of a beginner page.",
+          "Use ---, ***, or ___ on their own line. A thematic break usually needs a blank line before or after it to stay readable.",
           [
             { template: "---", purpose: "Separate sections with a simple thematic break." },
             { template: "***", purpose: "Use an alternative thematic break style if you prefer." }
           ],
-          "Thematic breaks are useful for visual separation, but they are not a primary writing tool.",
+          "Thematic breaks are only for visual separation, not for document structure.",
           "https://spec.commonmark.org/spec#thematic-breaks",
           "CommonMark spec"
         )
@@ -165,18 +169,18 @@
     makeSection(
       2,
       "GFM",
-      "This section adds GitHub Flavored Markdown features that show up often in GitHub comments, READMEs, and issue templates.",
+      "",
       [
         makeGroup(
           1,
           "task-list-items",
           "Task list items",
-          "Task lists are one of the most visible GitHub additions for issue tracking and docs.",
+          "Use - [ ] for an open task and - [x] or - [X] for a completed task. Task list items only make sense inside a list.",
           [
             { template: "- [ ] Draft the README", purpose: "Show an open task that still needs work." },
             { template: "- [x] Review the final copy", purpose: "Show a completed task." }
           ],
-          "Task lists are practical because they turn plain checklists into trackable GitHub UI elements.",
+          "Task lists are practical because GitHub renders them as interactive checkboxes.",
           "https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/about-task-lists",
           "GitHub Docs"
         ),
@@ -184,11 +188,11 @@
           2,
           "tables",
           "Tables",
-          "Tables are a top-level GFM skill for structured README and doc content.",
+          "Use a header row, a delimiter row, and one or more body rows. Each column is separated by pipes, and alignment markers live in the delimiter row.",
           [
             { template: "| Command | Purpose |\n| --- | --- |\n| git status | Show changes |\n| git diff | Inspect file differences |", purpose: "Create a simple comparison table." }
           ],
-          "Tables are common in docs because they compress structured information into a compact view.",
+          "Tables are common in docs because they compress structured information into a compact form.",
           "https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/organizing-information-with-tables",
           "GitHub Docs"
         ),
@@ -196,11 +200,11 @@
           3,
           "strikethrough",
           "Strikethrough",
-          "Strikethrough is a lightweight editing mark that shows up often in collaborative writing.",
+          "Use ~~text~~ for strikethrough. This is a GFM extension, so it is not part of the CommonMark baseline.",
           [
             { template: "~~removed text~~", purpose: "Mark text as obsolete or corrected." }
           ],
-          "Strikethrough is popular because it communicates revision without deleting context.",
+          "Strikethrough is useful for revision history, corrections, and quick edits.",
           "https://docs.github.com/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax",
           "GitHub Docs"
         ),
@@ -208,10 +212,11 @@
           4,
           "autolink-literals",
           "Autolink literals",
-          "Plain URLs and GitHub references often become links automatically in GitHub UI.",
+          "Bare URLs and email addresses become links automatically in GitHub UI. This page keeps the coverage focused on the literal URL and email forms that people paste most often.",
           [
             { template: "https://example.com", purpose: "Let GitHub turn a plain URL into a link." },
-            { template: "https://github.com/The-Aries/simple-cheatsheets", purpose: "Show how a repository URL is rendered automatically." }
+            { template: "https://github.com/The-Aries/simple-cheatsheets", purpose: "Show how a repository URL is rendered automatically." },
+            { template: "user@example.com", purpose: "Show how an email address becomes a link automatically." }
           ],
           "Autolinks reduce friction when you want to paste a reference and move on.",
           "https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/autolinked-references-and-urls",
@@ -242,10 +247,17 @@
     "console.log(pageTitle);",
     "```",
     "",
+    "###### Smallest Heading",
+    "",
     "## GFM",
     "",
     "- [ ] Draft the README",
     "- [x] Review the final copy",
+    "",
+    "| Command | Purpose |",
+    "| --- | --- |",
+    "| https://example.com | Autolink literal example |",
+    "| user@example.com | Email autolink example |",
     "",
     "~~removed text~~"
   ].join("\n");

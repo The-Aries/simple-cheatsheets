@@ -463,7 +463,7 @@
         html += "<hr class=\"section-divider\">";
       }
 
-      html += "<section class=\"panel\" id=\"" + escapeAttr(sAnchor) + "\"><div class=\"section-heading\"><h2>" + escapeHtml(sNumber) + ". " + escapeHtml(sTitle) + "</h2>" + (sIntro ? "<p>" + escapeHtml(sIntro) + "</p>" : "") + "</div>";
+      html += "<section class=\"panel\" id=\"" + escapeAttr(sAnchor) + "\"><div class=\"section-heading\"><h2>" + escapeHtml(sNumber) + ". " + escapeHtml(sTitle) + "</h2></div>";
 
       (section.groups || []).forEach(function (group, groupIndex) {
         var gAnchor = groupAnchor(section, group, sectionIndex, groupIndex);
