@@ -1,73 +1,56 @@
 # simple-cheatsheets
 
-A compact static cheatsheet site built with plain HTML, CSS, and vanilla JavaScript.
+A compact static cheatsheet site built with plain HTML, CSS, and vanilla JavaScript. Clean `/<slug>/` module URLs are preserved for GitHub Pages.
 
-## v1 Template Schema
+## How It Is Organized
 
-Template-driven module pages follow one shared data contract:
+- `data/common.js`: canonical site config for author info, footer links, title suffix, and fallback page factories.
+- `scripts/modules.js`: canonical module registry and the source for homepage / route navigation.
+- `data/pages/<slug>/index.js`: page-specific data, blocks, and placeholder values.
+- `data/pages/<slug>/styles.css`: optional page-local CSS, loaded through `extensions.styles`.
+- `templates/module-entry.html`: single HTML template for checked-in module route entries.
+- `tools/sync-module-entries.mjs`: regenerates the committed `/<slug>/index.html` route entries from the template and registry.
+- `tools/check-structure.mjs`: validates the registry, page data, assets, globals, and route-entry consistency.
+- `scripts/cheatsheet-renderers.js`: shared pure render helpers for blocks, markdown preview, footer, fallback markup, and sidebar models.
+- `scripts/cheatsheet-renderer.js`: page orchestrator that wires the shared renderers into the module shell.
+- `scripts/template-page.js`: page bootstrap and page-local extension loader.
+- `CHECKLIST.md`: day-to-day development checklist.
+- `docs/architecture.md`: architecture and source-of-truth reference.
 
-- `slug`
-- `meta`
-- `layout`
-- `extensions` (optional, page-scoped resources)
-- `placeholders`
-- `blocks`
-- `footer`
+## Working On A Module
 
-Block types supported by renderer:
+1. Add the module once in `scripts/modules.js`.
+2. Add `data/pages/<slug>/index.js`.
+3. Add `data/pages/<slug>/styles.css` only if the page truly needs local CSS.
+4. Run `node tools/sync-module-entries.mjs`.
+5. Run `node tools/check-structure.mjs`.
+6. Smoke-test the homepage and `/<slug>/` in a browser.
 
-- `pageHeader`
-- `placeholderForm`
-- `concepts`
-- `workflow`
-- `sectionGroups`
-- `playground`
-- `note`
-- `underConstruction`
+The checked-in `/<slug>/index.html` files are generated artifacts for GitHub Pages. They should be refreshed from the template instead of edited by hand.
 
-`note` is a shared content block and participates in the sidebar overview when it has an `id` or title.
+## Validation Commands
 
-Footer is configured through `footer.contactLinks`, `footer.links`, and `footer.copyright`.
+- `node tools/sync-module-entries.mjs --check`
+- `node tools/check-structure.mjs`
 
-## Architecture Layers
+The GitHub Actions deploy workflow runs the same checks before Pages upload.
 
-- Shared template shell:
-  - `scripts/cheatsheet-shell.js`: single structural shell for all cheatsheet pages.
-  - `scripts/template-page.js`: page bootstrap + extension loader.
-  - `scripts/cheatsheet-renderer.js`: block rendering and interactions.
-- Shared data and registry:
-  - `scripts/modules.js`: official module registry for homepage and top navigation.
-  - `data/common.js`: shared footer + `makeUnderConstructionPage()` factory.
-- Shared styles (global reusable layer):
-  - `styles/shared/tokens.css`
-  - `styles/shared/reset.css`
-  - `styles/shared/typography.css`
-  - `styles/shared/layout.css`
-  - `styles/shared/components.css`
-  - `styles.css`: aggregator entry for shared layers.
-- Page-scoped resources:
-  - `data/pages/<slug>/index.js`: page data + configuration.
-  - `data/pages/<slug>/styles.css`: page-local style overrides/extensions.
+## CSS Rules
 
-## Module Pages
+- Shared, reusable CSS stays in `styles/`.
+- Page-local CSS stays in `data/pages/<slug>/styles.css`.
+- Page-local styles must be loaded through `extensions.styles`.
+- Page-local selectors must be scoped with `body[data-module="<slug>"]`.
+- Empty placeholder stylesheets should be removed instead of kept as drift-prone stubs.
 
-All official module entries use the same shell and renderer pipeline:
+## Namespace Policy
 
-- `git/index.html` -> `data/pages/git/index.js`
-- `docker/index.html` -> `data/pages/docker/index.js`
-- `linux/index.html` -> `data/pages/linux/index.js`
-- `markdown/index.html` -> `data/pages/markdown/index.js`
-- `regex/index.html` -> `data/pages/regex/index.js`
-- `matlab/index.html` -> `data/pages/matlab/index.js`
+- Use `window.CHEATSHEET` for new cross-file state.
+- Stable sub-objects live under `window.CHEATSHEET`, such as `site`, `common`, `registry`, `renderers`, `shell`, `validation`, and `release`.
+- Compatibility aliases like `window.CHEATSHEET_*` remain only for legacy generated artifacts and migration safety.
+- Do not add new top-level globals unless the namespace map and validation whitelist are updated with a clear reason.
 
-Docker and Docker Compose are intentionally separate modules. This repository currently includes Docker only; Docker Compose will stay in its own future page and its own page-scoped data.
+## More Detail
 
-## Add a New Module
-
-1. Add one item in `scripts/modules.js`.
-2. Add one page folder and data file: `data/pages/<slug>/index.js`.
-3. Optional page-specific style: `data/pages/<slug>/styles.css`.
-4. Add one route entry page `<slug>/index.html` (same shared shell structure, only `data-module` and `data-page-src` differ).
-
-For a normal page, typically only step 2 is needed (plus module registration).
-For a page with custom visual behavior, keep changes in `data/pages/<slug>/styles.css` and `extensions.styles`.
+- [Architecture notes](docs/architecture.md)
+- [Development checklist](CHECKLIST.md)

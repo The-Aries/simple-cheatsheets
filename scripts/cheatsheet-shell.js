@@ -4,6 +4,9 @@
     return;
   }
 
+  var cheatsheet = window.CHEATSHEET = window.CHEATSHEET || {};
+  cheatsheet.shell = cheatsheet.shell || {};
+
   if (document.getElementById("page-content")) {
     return;
   }

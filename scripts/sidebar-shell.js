@@ -1,4 +1,6 @@
 (function () {
+  var cheatsheet = window.CHEATSHEET = window.CHEATSHEET || {};
+
   function escapeHtml(text) {
     return String(text || "")
       .replace(/&/g, "&amp;")
@@ -77,6 +79,7 @@
     sidebar.innerHTML = html;
   }
 
-  window.CHEATSHEET_SHELL = window.CHEATSHEET_SHELL || {};
-  window.CHEATSHEET_SHELL.renderSidebar = renderSidebar;
+  cheatsheet.shell = cheatsheet.shell || {};
+  cheatsheet.shell.renderSidebar = renderSidebar;
+  window.CHEATSHEET_SHELL = cheatsheet.shell;
 })();

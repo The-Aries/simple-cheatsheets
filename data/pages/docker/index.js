@@ -1,7 +1,9 @@
 (function () {
-  var common = window.CHEATSHEET_COMMON || {};
-  if (!common.sharedFooter) {
-    window.CHEATSHEET_PAGE_LOAD_ERROR = "CHEATSHEET_COMMON.sharedFooter is unavailable";
+  var cheatsheet = window.CHEATSHEET = window.CHEATSHEET || {};
+  var common = cheatsheet.common || {};
+  if (!common.footer) {
+    cheatsheet.pageLoadError = "CHEATSHEET.common.footer is unavailable";
+    window.CHEATSHEET_PAGE_LOAD_ERROR = "CHEATSHEET.common.footer is unavailable";
     return;
   }
 
@@ -307,7 +309,7 @@
     { title: "Publish", text: "Tag the image for the registry, then push it after you are signed in." }
   ];
 
-  window.CHEATSHEET_PAGE_DATA = {
+  var dockerPage = {
     slug: "docker",
     meta: {
       title: "Docker Cheatsheet - Simple Cheatsheets",
@@ -315,9 +317,6 @@
     },
     layout: {
       hasSidebar: true
-    },
-    extensions: {
-      styles: ["data/pages/docker/styles.css"]
     },
     placeholders: {
       fields: dockerPlaceholders
@@ -345,8 +344,7 @@
         id: "placeholders",
         headingId: "values-title",
         title: "Placeholders",
-        intro: "Set the sample values once, then apply them to commands and copy the results straight into your terminal.",
-        fields: dockerPlaceholders
+        intro: "Set the sample values once, then apply them to commands and copy the results straight into your terminal."
       },
       {
         type: "concepts",
@@ -372,6 +370,11 @@
         sections: dockerSections
       }
     ],
-    footer: common.sharedFooter
+    footer: common.footer
   };
+
+  cheatsheet.pageData = dockerPage;
+  cheatsheet.page = dockerPage;
+  window.CHEATSHEET_PAGE_DATA = dockerPage;
+  window.CHEATSHEET_PAGE = dockerPage;
 })();

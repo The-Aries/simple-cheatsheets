@@ -1,5 +1,6 @@
 (function () {
-  if (window.CHEATSHEET_RUNTIME_VALIDATION) {
+  var cheatsheet = window.CHEATSHEET = window.CHEATSHEET || {};
+  if (cheatsheet.validation) {
     return;
   }
 
@@ -370,10 +371,6 @@
       }
 
       if (block.type === "placeholderForm") {
-        if (placeholderFields == null && Array.isArray(block.fields) && block.fields.length > 0) {
-          warn(slug, blockPath, "fields", "deprecated", "placeholderForm.fields is deprecated, use page.placeholders.fields");
-          placeholderFields = block.fields;
-        }
         validatePlaceholderFields(slug, blockIndex, placeholderFields);
         return;
       }
@@ -455,7 +452,7 @@
 
     withScope(scope, function () {
       if (!Array.isArray(modules)) {
-        warn("home", ["modules"], "type", "missing", "window.CHEATSHEET_MODULES is missing or not an array");
+        warn("home", ["modules"], "type", "missing", "CHEATSHEET.registry.modules is missing or not an array");
         return;
       }
 
@@ -484,11 +481,13 @@
     return true;
   }
 
-  window.CHEATSHEET_RUNTIME_VALIDATION = {
+  cheatsheet.validation = {
     warnOnce: warnOnce,
     inferPageMode: inferPageMode,
     validatePageBootstrap: validatePageBootstrap,
     validatePageData: validatePageData,
     validateHomeData: validateHomeData
   };
+
+  window.CHEATSHEET_RUNTIME_VALIDATION = cheatsheet.validation;
 })();

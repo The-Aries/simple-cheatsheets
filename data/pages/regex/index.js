@@ -1,13 +1,15 @@
 (function () {
-  var common = window.CHEATSHEET_COMMON || {};
+  var cheatsheet = window.CHEATSHEET = window.CHEATSHEET || {};
+  var common = cheatsheet.common || {};
   if (typeof common.makeUnderConstructionPage !== "function") {
-    window.CHEATSHEET_PAGE_LOAD_ERROR = "common.makeUnderConstructionPage is unavailable";
+    cheatsheet.pageLoadError = "CHEATSHEET.common.makeUnderConstructionPage is unavailable";
+    window.CHEATSHEET_PAGE_LOAD_ERROR = "CHEATSHEET.common.makeUnderConstructionPage is unavailable";
     return;
   }
 
-  window.CHEATSHEET_PAGE_DATA = common.makeUnderConstructionPage("regex", "Regex", {
-    extensions: {
-      styles: ["data/pages/regex/styles.css"]
-    }
-  });
+  var page = common.makeUnderConstructionPage("regex", "Regex");
+  cheatsheet.pageData = page;
+  cheatsheet.page = page;
+  window.CHEATSHEET_PAGE_DATA = page;
+  window.CHEATSHEET_PAGE = page;
 })();

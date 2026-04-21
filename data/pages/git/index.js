@@ -1,7 +1,9 @@
 (function () {
-  var common = window.CHEATSHEET_COMMON || {};
-  if (!common.sharedFooter) {
-    window.CHEATSHEET_PAGE_LOAD_ERROR = "CHEATSHEET_COMMON.sharedFooter is unavailable";
+  var cheatsheet = window.CHEATSHEET = window.CHEATSHEET || {};
+  var common = cheatsheet.common || {};
+  if (!common.footer) {
+    cheatsheet.pageLoadError = "CHEATSHEET.common.footer is unavailable";
+    window.CHEATSHEET_PAGE_LOAD_ERROR = "CHEATSHEET.common.footer is unavailable";
     return;
   }
 
@@ -131,7 +133,7 @@
     blocks: [
       { type: "pageHeader", id: "page-header", title: "Git Cheatsheet", descriptionTitle: "Description", lead: "This page is a practical cheatsheet for common Git commands. You can fill your placeholders, apply them, and copy commands with your own values. It is not a full Git tutorial." },
       { type: "note", id: "official-references", title: "Official references", text: "Use the official Git documentation for command details and edge cases.", links: [{ label: "Git official docs", href: "https://git-scm.com/docs" }] },
-      { type: "placeholderForm", id: "placeholders", headingId: "values-title", title: "Placeholders", intro: "Set once, apply to command lines, then copy ready to run commands.", fields: gitPlaceholders },
+      { type: "placeholderForm", id: "placeholders", headingId: "values-title", title: "Placeholders", intro: "Set once, apply to command lines, then copy ready to run commands." },
       { type: "concepts", id: "key-concepts", title: "Key Concepts", items: [
         "Local repo lives on your machine. Remote repo can live on cloud Git hosting services such as GitHub, GitLab, Bitbucket, or Azure DevOps.",
         "Git keeps local and remote repositories synchronized in both directions.",
@@ -147,8 +149,11 @@
       ] },
       { type: "sectionGroups", sections: gitSections }
     ],
-    footer: common.sharedFooter
+    footer: common.footer
   };
 
+  cheatsheet.pageData = gitPage;
+  cheatsheet.page = gitPage;
   window.CHEATSHEET_PAGE_DATA = gitPage;
+  window.CHEATSHEET_PAGE = gitPage;
 })();

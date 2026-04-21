@@ -1,7 +1,9 @@
 (function () {
-  var common = window.CHEATSHEET_COMMON || {};
-  if (!common.sharedFooter) {
-    window.CHEATSHEET_PAGE_LOAD_ERROR = "common.sharedFooter is unavailable";
+  var cheatsheet = window.CHEATSHEET = window.CHEATSHEET || {};
+  var common = cheatsheet.common || {};
+  if (!common.footer) {
+    cheatsheet.pageLoadError = "CHEATSHEET.common.footer is unavailable";
+    window.CHEATSHEET_PAGE_LOAD_ERROR = "CHEATSHEET.common.footer is unavailable";
     return;
   }
 
@@ -276,7 +278,7 @@
     "user@example.com"
   ].join("\n");
 
-  window.CHEATSHEET_PAGE_DATA = {
+  var markdownPage = {
     slug: "markdown",
     meta: {
       title: "Markdown Cheatsheet - Simple Cheatsheets",
@@ -329,6 +331,11 @@
         sections: markdownSections
       }
     ],
-    footer: common.sharedFooter
+    footer: common.footer
   };
+
+  cheatsheet.pageData = markdownPage;
+  cheatsheet.page = markdownPage;
+  window.CHEATSHEET_PAGE_DATA = markdownPage;
+  window.CHEATSHEET_PAGE = markdownPage;
 })();
