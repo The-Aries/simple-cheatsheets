@@ -1,6 +1,6 @@
 (function () {
   var release = {
-    version: "v2026.04.21.2",
+    version: "9f3481f",
     branch: "main"
   };
 
