@@ -122,36 +122,3 @@
 .row-preview.markdown-preview img { border-color: #5a5a5a; }
 
 #playground { scroll-margin-top: 96px; }
-
-/* Keep markdown command rows readable so the copy column stays visible. */
-.cheatsheet-page[data-module="markdown"] .command-table {
-  min-width: 0;
-  table-layout: fixed;
-}
-
-.cheatsheet-page[data-module="markdown"] .command-table thead th:nth-child(1),
-.cheatsheet-page[data-module="markdown"] .command-table tbody td:nth-child(1) {
-  width: 30%;
-}
-
-.cheatsheet-page[data-module="markdown"] .command-table thead th:nth-child(2),
-.cheatsheet-page[data-module="markdown"] .command-table tbody td:nth-child(2) {
-  width: calc(70% - 348px);
-}
-
-.cheatsheet-page[data-module="markdown"] .command-table thead th:nth-child(3),
-.cheatsheet-page[data-module="markdown"] .command-table tbody td:nth-child(3) {
-  width: 260px;
-  min-width: 260px;
-}
-
-.cheatsheet-page[data-module="markdown"] .command-table thead th:nth-child(4),
-.cheatsheet-page[data-module="markdown"] .command-table tbody td:nth-child(4) {
-  width: 88px;
-  min-width: 88px;
-}
-
-.cheatsheet-page[data-module="markdown"] .command-code {
-  white-space: pre-wrap;
-  word-break: break-word;
-}

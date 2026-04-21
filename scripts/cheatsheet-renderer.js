@@ -46,6 +46,10 @@
     return escapeHtml(text).replace(/\n/g, "&#10;");
   }
 
+  function normalizeReferenceKey(text) {
+    return String(text || "").trim().toLowerCase();
+  }
+
   function findBlock(type) {
     for (var i = 0; i < blocks.length; i += 1) {
       if (blocks[i] && blocks[i].type === type) { return blocks[i]; }
@@ -221,7 +225,7 @@
     return rendered;
   }
 
-  function renderMarkdownInline(text) {
+  function renderMarkdownInline(text, refs) {
     var source = String(text == null ? "" : text);
     var tokens = [];
 
@@ -231,25 +235,49 @@
     }
 
     source = escapeHtml(source);
-    source = source.replace(/`([^`]+)`/g, function (_, code) {
+    source = source.replace(/(`+)([\s\S]*?)\1/g, function (_, fence, code) {
       return store("<code>" + code + "</code>");
     });
-    source = source.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, function (_, alt, uri) {
-      return store('<img src="' + escapeAttr(uri) + '" alt="' + escapeAttr(alt) + '">');
+    source = source.replace(/!\[([^\]]*)\]\(([^)\s]+)(?:\s+(?:"([^"]*)"|'([^']*)'))?\)/g, function (_, alt, uri, doubleTitle, singleTitle) {
+      var title = doubleTitle || singleTitle || "";
+      return store('<img src="' + escapeAttr(uri) + '" alt="' + escapeAttr(alt) + '"' + (title ? ' title="' + escapeAttr(title) + '"' : "") + ">");
     });
-    source = source.replace(/\[([^\]]+)\]\(([^)]+)\)/g, function (_, label, uri) {
-      return store('<a href="' + escapeAttr(uri) + '">' + label + "</a>");
+    source = source.replace(/\[([^\]]+)\]\(([^)\s]+)(?:\s+(?:"([^"]*)"|'([^']*)'))?\)/g, function (_, label, uri, doubleTitle, singleTitle) {
+      var title = doubleTitle || singleTitle || "";
+      return store('<a href="' + escapeAttr(uri) + '"' + (title ? ' title="' + escapeAttr(title) + '"' : "") + ">" + label + "</a>");
     });
+    source = source.replace(/!\[([^\]]*)\]\[([^\]]*)\]/g, function (_, alt, ref) {
+      var key = normalizeReferenceKey(ref || alt);
+      var def = refs && refs[key];
+      if (!def) { return _; }
+      return store('<img src="' + escapeAttr(def.url) + '" alt="' + escapeAttr(alt) + '"' + (def.title ? ' title="' + escapeAttr(def.title) + '"' : "") + ">");
+    });
+    source = source.replace(/\[([^\]]+)\]\[([^\]]*)\]/g, function (_, label, ref) {
+      var key = normalizeReferenceKey(ref || label);
+      var def = refs && refs[key];
+      if (!def) { return _; }
+      return store('<a href="' + escapeAttr(def.url) + '"' + (def.title ? ' title="' + escapeAttr(def.title) + '"' : "") + ">" + label + "</a>");
+    });
+    source = source.replace(/<((?:https?:\/\/|www\.)[^<>\s]+)>/g, function (_, url) {
+      var href = url.indexOf("www.") === 0 ? "https://" + url : url;
+      return store('<a href="' + escapeAttr(href) + '">' + escapeHtml(url) + "</a>");
+    });
+    source = source.replace(/<([^\s@<>]+@[^\s@<>]+\.[^<>\s]+)>/g, function (_, email) {
+      return store('<a href="mailto:' + escapeAttr(email) + '">' + escapeHtml(email) + "</a>");
+    });
+    source = source.replace(/\*\*\*([^*]+)\*\*\*/g, "<strong><em>$1</em></strong>");
+    source = source.replace(/___([^_]+)___/g, "<strong><em>$1</em></strong>");
     source = source.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
     source = source.replace(/__([^_]+)__/g, "<strong>$1</strong>");
     source = source.replace(/~~([^~]+)~~/g, "<del>$1</del>");
     source = source.replace(/\*([^*]+)\*/g, "<em>$1</em>");
     source = source.replace(/_([^_]+)_/g, "<em>$1</em>");
-    source = source.replace(/(https?:\/\/[^\s<]+)/g, function (_, url) {
-      return store('<a href="' + escapeAttr(url) + '">' + escapeHtml(url) + "</a>");
+    source = source.replace(/(^|[\s(>])((?:https?:\/\/|www\.)[^\s<]+)/g, function (_, prefix, url) {
+      var href = url.indexOf("www.") === 0 ? "https://" + url : url;
+      return prefix + store('<a href="' + escapeAttr(href) + '">' + escapeHtml(url) + "</a>");
     });
-    source = source.replace(/([\w.+-]+@[\w.-]+\.[A-Za-z]{2,})/g, function (_, email) {
-      return store('<a href="mailto:' + escapeAttr(email) + '">' + escapeHtml(email) + "</a>");
+    source = source.replace(/(^|[\s(>])([\w.+-]+@[\w.-]+\.[A-Za-z]{2,})(?=$|[\s<).,!?;:])/g, function (_, prefix, email) {
+      return prefix + store('<a href="mailto:' + escapeAttr(email) + '">' + escapeHtml(email) + "</a>");
     });
     source = source.replace(/\u0000(\d+)\u0000/g, function (_, index) {
       return tokens[Number(index)] || "";
@@ -257,19 +285,46 @@
     return source;
   }
 
-  function renderMarkdownPreview(text) {
+  function renderMarkdownPreview(text, refs) {
     var lines = String(text == null ? "" : text).replace(/\r\n?/g, "\n").split("\n");
+    var referenceMap = refs || {};
     var html = [];
     var paragraph = [];
     var listType = "";
     var listOpen = false;
+    var listDelimiter = "";
+    var listStart = 1;
     var blockquote = [];
-    var codeFence = "";
+    var codeFence = null;
     var codeLines = [];
+    var indentedCode = [];
+
+    lines.forEach(function (line) {
+      var def = line.match(/^\s*\[([^\]]+)\]:\s*(\S+)(?:\s+(?:"([^"]*)"|'([^']*)'))?\s*$/);
+      if (def) {
+        referenceMap[normalizeReferenceKey(def[1])] = {
+          url: def[2],
+          title: def[3] || def[4] || ""
+        };
+      }
+    });
 
     function flushParagraph() {
       if (paragraph.length) {
-        html.push("<p>" + renderMarkdownInline(paragraph.join(" ")) + "</p>");
+        var paragraphHtml = "";
+        paragraph.forEach(function (part, index) {
+          var current = part.replace(/\s+$/, "");
+          if (index > 0) {
+            var prev = paragraph[index - 1];
+            if (/\s{2}$/.test(prev) || /\\$/.test(prev)) {
+              paragraphHtml += "<br>";
+            } else {
+              paragraphHtml += " ";
+            }
+          }
+          paragraphHtml += renderMarkdownInline(current, referenceMap);
+        });
+        html.push("<p>" + paragraphHtml + "</p>");
         paragraph = [];
       }
     }
@@ -279,20 +334,23 @@
         html.push(listType === "ol" ? "</ol>" : "</ul>");
         listOpen = false;
         listType = "";
+        listDelimiter = "";
+        listStart = 1;
       }
     }
 
     function flushBlockquote() {
       if (blockquote.length) {
-        html.push("<blockquote>" + renderMarkdownPreview(blockquote.join("\n")) + "</blockquote>");
+        html.push("<blockquote>" + renderMarkdownPreview(blockquote.join("\n"), referenceMap) + "</blockquote>");
         blockquote = [];
       }
     }
 
-    function renderTableRow(line, cellTag) {
+    function renderTableRow(line, cellTag, alignments) {
       var cells = line.replace(/^\s*\|/, "").replace(/\|\s*$/, "").split("|");
-      return "<tr>" + cells.map(function (cell) {
-        return "<" + cellTag + ">" + renderMarkdownInline(cell.trim()) + "</" + cellTag + ">";
+      return "<tr>" + cells.map(function (cell, index) {
+        var alignment = alignments && alignments[index] ? ' align="' + alignments[index] + '"' : "";
+        return "<" + cellTag + alignment + ">" + renderMarkdownInline(cell.trim(), referenceMap) + "</" + cellTag + ">";
       }).join("") + "</tr>";
     }
 
@@ -300,12 +358,20 @@
       if (!block || !block.length) { return; }
       var rows = block.slice();
       var head = rows.shift();
+      var delimiter = rows.shift() || "";
+      var alignments = delimiter.replace(/^\s*\|/, "").replace(/\|\s*$/, "").split("|").map(function (cell) {
+        var token = cell.trim();
+        if (/^:-+:$/.test(token)) { return "center"; }
+        if (/^:-+$/.test(token)) { return "left"; }
+        if (/^-+:$/.test(token)) { return "right"; }
+        return "";
+      });
       var body = rows;
       var tableHtml = ["<table>", "<thead>", renderTableRow(head, "th"), "</thead>"];
       if (body.length) {
         tableHtml.push("<tbody>");
         body.forEach(function (row) {
-          tableHtml.push(renderTableRow(row, "td"));
+          tableHtml.push(renderTableRow(row, "td", alignments));
         });
         tableHtml.push("</tbody>");
       }
@@ -319,9 +385,9 @@
       var next = lines[i + 1] || "";
 
       if (codeFence) {
-        if (trimmed.indexOf(codeFence) === 0) {
+        if (new RegExp("^" + codeFence.char.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&") + "{" + codeFence.length + ",}\\s*$").test(trimmed)) {
           html.push("<pre><code>" + codeLines.join("\n") + "</code></pre>");
-          codeFence = "";
+          codeFence = null;
           codeLines = [];
         } else {
           codeLines.push(escapeHtml(line));
@@ -329,11 +395,27 @@
         continue;
       }
 
-      if (/^(```+|~~~+)\s*/.test(trimmed)) {
+      if (indentedCode.length) {
+        if (/^(?: {4}|\t)/.test(line)) {
+          indentedCode.push(escapeHtml(line.replace(/^(?: {4}|\t)/, "")));
+          continue;
+        }
+        if (!trimmed) {
+          indentedCode.push("");
+          continue;
+        }
+        html.push("<pre><code>" + indentedCode.join("\n") + "</code></pre>");
+        indentedCode = [];
+        i -= 1;
+        continue;
+      }
+
+      var openingFence = trimmed.match(/^(`{3,}|~{3,})\s*/);
+      if (openingFence) {
         flushParagraph();
         closeList();
         flushBlockquote();
-        codeFence = trimmed.slice(0, 3);
+        codeFence = { char: openingFence[1].charAt(0), length: openingFence[1].length };
         codeLines = [];
         continue;
       }
@@ -345,8 +427,34 @@
         continue;
       }
 
+      if (/^(?: {4}|\t)/.test(line)) {
+        flushParagraph();
+        closeList();
+        flushBlockquote();
+        indentedCode = [escapeHtml(line.replace(/^(?: {4}|\t)/, ""))];
+        continue;
+      }
+
       if (/^> ?/.test(trimmed)) {
         blockquote.push(trimmed.replace(/^> ?/, ""));
+        continue;
+      }
+
+      if (/^.+$/.test(trimmed) && /^=+$/.test(next.trim())) {
+        flushParagraph();
+        closeList();
+        flushBlockquote();
+        html.push("<h1>" + renderMarkdownInline(trimmed, referenceMap) + "</h1>");
+        i += 1;
+        continue;
+      }
+
+      if (/^.+$/.test(trimmed) && /^-+$/.test(next.trim()) && !/^[-*+]\s+/.test(trimmed) && !/^\d+\.\s+/.test(trimmed)) {
+        flushParagraph();
+        closeList();
+        flushBlockquote();
+        html.push("<h2>" + renderMarkdownInline(trimmed, referenceMap) + "</h2>");
+        i += 1;
         continue;
       }
 
@@ -355,7 +463,7 @@
         closeList();
         flushBlockquote();
         var level = trimmed.match(/^#{1,6}/)[0].length;
-        html.push("<h" + level + ">" + renderMarkdownInline(trimmed.replace(/^#{1,6}\s+/, "")) + "</h" + level + ">");
+        html.push("<h" + level + ">" + renderMarkdownInline(trimmed.replace(/^#{1,6}\s+/, ""), referenceMap) + "</h" + level + ">");
         continue;
       }
 
@@ -367,11 +475,15 @@
         continue;
       }
 
+      if (/^\s*\[([^\]]+)\]:\s*(\S+)(?:\s+(?:"([^"]*)"|'([^']*)'))?\s*$/.test(trimmed)) {
+        continue;
+      }
+
       if (/^\|.*\|$/.test(trimmed) && /^\s*\|?(\s*:?-+:?\s*\|)+\s*:?-+:?\s*\|?\s*$/.test(next.trim())) {
         flushParagraph();
         closeList();
         flushBlockquote();
-        var tableRows = [trimmed];
+        var tableRows = [trimmed, next.trim()];
         i += 1;
         while (i + 1 < lines.length && lines[i + 1].trim() && /^\|.*\|$/.test(lines[i + 1].trim())) {
           tableRows.push(lines[i + 1].trim());
@@ -381,7 +493,7 @@
         continue;
       }
 
-      var ordered = trimmed.match(/^(\d+)\.\s+/);
+      var ordered = trimmed.match(/^(\d+)([.)])\s+/);
       var unordered = trimmed.match(/^[-*+]\s+/);
       var task = trimmed.match(/^[-*+]\s+\[( |x|X)\]\s+/);
 
@@ -389,18 +501,22 @@
         flushParagraph();
         flushBlockquote();
         var nextType = ordered ? "ol" : "ul";
-        if (!listOpen || listType !== nextType) {
+        var nextDelimiter = ordered ? ordered[2] : "";
+        var nextStart = ordered ? Number(ordered[1]) || 1 : 1;
+        if (!listOpen || listType !== nextType || (nextType === "ol" && listDelimiter !== nextDelimiter)) {
           closeList();
           listType = nextType;
           listOpen = true;
-          html.push(listType === "ol" ? "<ol>" : "<ul>");
+          listDelimiter = nextDelimiter;
+          listStart = nextStart;
+          html.push(listType === "ol" ? "<ol" + (listStart !== 1 ? ' start="' + listStart + '"' : "") + ">" : "<ul>");
         }
-        var itemText = trimmed.replace(/^(\d+\.\s+|[-*+]\s+)/, "");
+        var itemText = trimmed.replace(/^(\d+[.)]\s+|[-*+]\s+)/, "");
         if (task) {
           itemText = itemText.replace(/^\[( |x|X)\]\s+/, "");
-          html.push('<li class="task-item"><input type="checkbox" disabled' + (task[1].toLowerCase() === "x" ? " checked" : "") + "> " + renderMarkdownInline(itemText) + "</li>");
+          html.push('<li class="task-item"><input type="checkbox" disabled' + (task[1].toLowerCase() === "x" ? " checked" : "") + "> " + renderMarkdownInline(itemText, referenceMap) + "</li>");
         } else {
-          html.push("<li>" + renderMarkdownInline(itemText) + "</li>");
+          html.push("<li>" + renderMarkdownInline(itemText, referenceMap) + "</li>");
         }
         continue;
       }
@@ -409,7 +525,7 @@
         flushBlockquote();
       }
 
-      paragraph.push(trimmed);
+      paragraph.push(line);
     }
 
     flushParagraph();
@@ -417,6 +533,9 @@
     flushBlockquote();
     if (codeFence) {
       html.push("<pre><code>" + codeLines.join("\n") + "</code></pre>");
+    }
+    if (indentedCode.length) {
+      html.push("<pre><code>" + indentedCode.join("\n") + "</code></pre>");
     }
     return html.join("");
   }
@@ -482,10 +601,10 @@
     var link = officialUrl ? "<a href=\"" + escapeAttr(officialUrl) + "\">" + escapeHtml(officialLabel) + "</a>" : "";
 
     if (text && link) {
-      return "<p>" + text + " See the " + link + " for details and edge cases.</p>";
+      return "<p>" + text + " Official docs: " + link + ".</p>";
     }
     if (text) { return "<p>" + text + "</p>"; }
-    if (link) { return "<p>See the " + link + " for the full syntax reference.</p>"; }
+    if (link) { return "<p>Official docs: " + link + ".</p>"; }
     return "";
   }
 
