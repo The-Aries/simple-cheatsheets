@@ -604,7 +604,6 @@
 
     var text = description.text ? escapeHtml(description.text) : "";
     var officialUrl = description.officialUrl || "";
-    var officialLabel = description.officialLabel || "official documentation";
     var link = officialUrl ? "<a href=\"" + escapeAttr(officialUrl) + "\">the official docs</a>" : "";
 
     if (text && link) {
