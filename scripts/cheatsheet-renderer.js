@@ -665,8 +665,20 @@
 
   function renderNote(block) {
     var text = block.text || "";
-    if (!text) { return ""; }
-    return "<section class=\"panel\"><div class=\"section-heading\"><h2>" + escapeHtml(block.title || "Note") + "</h2><p>" + escapeHtml(text) + "</p></div></section>";
+    var links = Array.isArray(block.links) ? block.links : [];
+    if (!text && !links.length) { return ""; }
+
+    var html = "<section class=\"panel\"><div class=\"section-heading\"><h2>" + escapeHtml(block.title || "Note") + "</h2>";
+    if (text) {
+      html += "<p>" + escapeHtml(text) + "</p>";
+    }
+    if (links.length) {
+      html += '<p class="note-links">' + links.map(function (link) {
+        return '<a href="' + escapeAttr(link.href || "#") + '">' + escapeHtml(link.label || "") + "</a>";
+      }).join(' <span aria-hidden="true">|</span> ') + "</p>";
+    }
+    html += "</div></section>";
+    return html;
   }
 
   function renderUnderConstruction(block) {

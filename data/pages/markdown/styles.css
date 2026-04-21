@@ -110,6 +110,11 @@
 .row-preview.markdown-preview a { color: #d7e6ff; }
 .row-preview.markdown-preview blockquote { border-left-color: #6c6c6c; }
 .row-preview.markdown-preview pre { border-color: #5a5a5a; background: #121212; color: #fff; }
+.row-preview.markdown-preview a,
+.row-preview.markdown-preview code {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
 .row-preview.markdown-preview p code,
 .row-preview.markdown-preview li code {
   border-color: #5a5a5a;
@@ -120,5 +125,11 @@
 .row-preview.markdown-preview th,
 .row-preview.markdown-preview td,
 .row-preview.markdown-preview img { border-color: #5a5a5a; }
+.row-preview.markdown-preview img {
+  display: block;
+  max-width: 100%;
+  max-height: 72px;
+  object-fit: contain;
+}
 
 #playground { scroll-margin-top: 96px; }

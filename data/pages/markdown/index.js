@@ -300,6 +300,15 @@
         lead: "Markdown has four common layers: original Markdown, CommonMark, GFM, and platform-specific extensions. This page uses CommonMark as the baseline and adds the GFM syntax that is most useful in READMEs, docs, issues, and comments. Platform-specific extensions are intentionally out of scope."
       },
       {
+        type: "note",
+        title: "Official references",
+        text: "Use the specs below when you need the exact rules or want to check edge cases quickly.",
+        links: [
+          { label: "CommonMark Spec", href: "https://spec.commonmark.org/" },
+          { label: "GFM Spec", href: "https://github.github.com/gfm/" }
+        ]
+      },
+      {
         type: "placeholderForm",
         id: "placeholders",
         headingId: "values-title",

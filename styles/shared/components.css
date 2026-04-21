@@ -193,6 +193,13 @@
 }
 
 .group-description { margin-top: 10px; }
+.note-links {
+  margin: 8px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
 .contact-note { margin: 36px 0 0; }
 
 .preview-panel .section-heading p { max-width: 78ch; }
