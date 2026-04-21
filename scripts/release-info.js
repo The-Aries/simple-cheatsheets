@@ -1,6 +1,6 @@
 (function () {
   var release = {
-    version: "8de1fab",
+    version: "22f2fab",
     branch: "main"
   };
 
