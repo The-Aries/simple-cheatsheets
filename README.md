@@ -17,6 +17,17 @@ A compact static cheatsheet site built with plain HTML, CSS, and vanilla JavaScr
 - `CHECKLIST.md`: day-to-day development checklist.
 - `docs/architecture.md`: architecture and source-of-truth reference.
 
+## Page Content Conventions
+
+- Git and Docker use the command-page block pattern: `pageHeader`, `note`, `placeholderForm`, `concepts`, `workflow`, `sectionGroups`.
+- Markdown uses the syntax-page block pattern: `pageHeader`, `note`, `placeholderForm`, `playground`, `sectionGroups`.
+- Section titles use Title Case.
+- CLI group titles use the full command name, not a bare verb.
+- Placeholder keys stay camelCase; placeholder labels are human-readable.
+- Group descriptions keep `text` and `officialUrl` in page data only.
+- The renderer generates the official reference label text; do not add `officialLabel` back into page data.
+- Git placeholders should avoid GitHub-specific naming so the page stays about Git, not the hosting platform.
+
 ## Working On A Module
 
 1. Add the module once in `scripts/modules.js`.

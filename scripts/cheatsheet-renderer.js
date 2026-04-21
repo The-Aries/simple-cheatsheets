@@ -106,7 +106,7 @@
 
     var blocks = Array.isArray(page.blocks) ? page.blocks : [];
     var html = blocks.map(function (block) {
-      return renderers.renderBlock ? renderers.renderBlock(block, placeholderFields) : "";
+      return renderers.renderBlock ? renderers.renderBlock(block, placeholderFields, page) : "";
     }).join("");
 
     content.innerHTML = html && html.trim()

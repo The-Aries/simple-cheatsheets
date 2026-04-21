@@ -77,6 +77,64 @@
     return rendered;
   }
 
+  function toSentenceCase(text) {
+    return String(text || "")
+      .trim()
+      .replace(/\s+/g, " ")
+      .toLowerCase();
+  }
+
+  function buildMarkdownOfficialReferenceLabel(section, group) {
+    var sectionTitle = section && section.title ? String(section.title).trim() : "";
+    var groupKey = group && group.key ? String(group.key).trim() : "";
+    var knownLabels = {
+      "CommonMark/headings": "See CommonMark spec ATX headings.",
+      "CommonMark/paragraphs": "See CommonMark spec paragraphs.",
+      "CommonMark/links-images": "See CommonMark spec links.",
+      "CommonMark/lists": "See CommonMark spec lists.",
+      "CommonMark/emphasis": "See CommonMark spec emphasis and strong emphasis.",
+      "CommonMark/code-blocks": "See CommonMark spec code spans.",
+      "CommonMark/blockquotes": "See CommonMark spec block quotes.",
+      "CommonMark/horizontal-rules": "See CommonMark spec thematic breaks.",
+      "GFM/task-list-items": "See GitHub Docs about task lists.",
+      "GFM/tables": "See GitHub Docs organizing information with tables.",
+      "GFM/strikethrough": "See GitHub Docs basic writing and formatting syntax.",
+      "GFM/autolink-literals": "See GitHub Docs autolinked references and URLs."
+    };
+    var knownKey = sectionTitle + "/" + groupKey;
+    if (knownLabels[knownKey]) {
+      return knownLabels[knownKey];
+    }
+    if (sectionTitle) {
+      return "See " + sectionTitle + " " + toSentenceCase(group && group.title ? group.title : groupKey) + ".";
+    }
+    return "See " + toSentenceCase(group && group.title ? group.title : groupKey) + ".";
+  }
+
+  function buildOfficialReferenceLabel(page, section, group) {
+    var slug = page && page.slug ? String(page.slug) : "";
+    var sectionTitle = section && section.title ? String(section.title).trim() : "";
+    var groupTitle = group && group.title ? String(group.title).trim() : "";
+
+    if (!groupTitle) {
+      return "See the official reference.";
+    }
+
+    if (slug === "git" || slug === "docker" || slug === "linux") {
+      return "See " + groupTitle + ".";
+    }
+
+    if (slug === "markdown") {
+      return buildMarkdownOfficialReferenceLabel(section, group);
+    }
+
+    if (sectionTitle) {
+      return "See " + sectionTitle + " " + toSentenceCase(groupTitle) + ".";
+    }
+
+    return "See " + toSentenceCase(groupTitle) + ".";
+  }
+
   function renderMarkdownInline(text, refs) {
     var source = String(text == null ? "" : text);
     var tokens = [];
@@ -457,7 +515,7 @@
     return html;
   }
 
-  function renderGroupDescription(description) {
+  function renderGroupDescription(description, page, section, group) {
     if (!description) {
       return "";
     }
@@ -467,25 +525,20 @@
 
     var text = description.text ? escapeHtml(description.text) : "";
     var officialUrl = description.officialUrl || "";
-    var link = officialUrl ? "<a href=\"" + escapeAttr(officialUrl) + "\">the official docs</a>" : "";
+    var officialLabel = buildOfficialReferenceLabel(page, section, group);
+    var officialLink = officialUrl ? "<a href=\"" + escapeAttr(officialUrl) + "\">" + escapeHtml(officialLabel) + "</a>" : "";
+    var html = "";
 
-    if (text && link) {
-      var linkedText = text.replace(/the official docs/g, link);
-      if (linkedText !== text) {
-        return "<p>" + linkedText + "</p>";
-      }
-      return "<p>" + text + " " + link + ".</p>";
-    }
     if (text) {
-      return "<p>" + text + "</p>";
+      html += "<p>" + text + "</p>";
     }
-    if (link) {
-      return "<p>" + link + ".</p>";
+    if (officialLink) {
+      html += "<p>" + officialLink + "</p>";
     }
-    return "";
+    return html;
   }
 
-  function renderSectionGroups(block) {
+  function renderSectionGroups(block, page) {
     var sections = Array.isArray(block.sections) ? block.sections : [];
     var showPreviewColumn = !!(block && block.previewColumn);
     if (!sections.length) {
@@ -521,7 +574,7 @@
           html += "<tr><td><code class=\"" + commandClasses + "\" id=\"" + escapeAttr(commandId) + "\" data-template=\"" + escapeAttr(template) + "\">" + escapeHtml(template) + "</code></td><td><div class=\"command-purpose\">" + escapeHtml(row.purpose || "") + "</div></td>" + (showPreviewColumn ? "<td>" + previewHtml + "</td>" : "") + "<td><button type=\"button\" class=\"copy-button\" data-copy-target=\"" + escapeAttr(commandId) + "\">Copy</button></td></tr>";
         });
 
-        html += "</tbody></table></div><div class=\"group-description\"><h4>Description</h4>" + renderGroupDescription(group.description) + "</div></section>";
+        html += "</tbody></table></div><div class=\"group-description\"><h4>Description</h4>" + renderGroupDescription(group.description, page, section, group) + "</div></section>";
       });
 
       html += "</section>";
@@ -565,7 +618,7 @@
     return "<section class=\"panel\" id=\"" + escapeAttr(block.id || "construction-status") + "\" aria-labelledby=\"construction-title\"><div class=\"section-heading\"><h2 id=\"construction-title\">" + escapeHtml(block.title || "Status") + "</h2><p>" + escapeHtml(block.text || "This cheatsheet is under construction.") + "</p></div></section>";
   }
 
-  function renderBlock(block, placeholderFields) {
+  function renderBlock(block, placeholderFields, page) {
     if (!block || !block.type) {
       return "";
     }
@@ -582,7 +635,7 @@
       return renderWorkflow(block);
     }
     if (block.type === "sectionGroups") {
-      return renderSectionGroups(block);
+      return renderSectionGroups(block, page);
     }
     if (block.type === "playground") {
       return renderPlayground(block);

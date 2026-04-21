@@ -54,6 +54,19 @@ This repository stays on plain HTML, CSS, and vanilla JavaScript. The goal is to
 
 The orchestration files should stay thin. Pure HTML generation belongs in the shared renderer layer, not in the bootstrap code.
 
+## Page Content Conventions
+
+These rules describe the three canonical sample pages and the shape new pages should follow.
+
+- Command pages such as Git and Docker should use the block order `pageHeader`, `note`, `placeholderForm`, `concepts`, `workflow`, `sectionGroups`.
+- Syntax or concept pages such as Markdown should use the block order `pageHeader`, `note`, `placeholderForm`, `playground`, `sectionGroups`.
+- Section titles should use Title Case.
+- CLI group titles on command pages should use the full command name, such as `git commit` or `docker run`.
+- Placeholder keys stay camelCase, while placeholder labels are human-readable.
+- Group descriptions should keep only `text` and `officialUrl` in page data.
+- `officialLabel` is no longer part of the data layer; the shared renderer generates the exact official reference text from the page, section, and group metadata.
+- Git placeholders should describe Git concepts directly and avoid GitHub-specific naming.
+
 ## Footer And Fallback Rules
 
 - Footer content is defined once in `data/common.js`.

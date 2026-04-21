@@ -159,12 +159,67 @@ function checkRouteEntriesAndPages(issues) {
 
     if (!page.placeholders || !Array.isArray(page.placeholders.fields)) {
       addIssue(issues, `page.placeholders.fields is missing for ${module.key}`);
+    } else {
+      page.placeholders.fields.forEach((field, fieldIndex) => {
+        if (!field || typeof field !== "object") {
+          addIssue(issues, `placeholder field ${fieldIndex + 1} is not an object for ${module.key}`);
+          return;
+        }
+        if (typeof field.key !== "string" || !field.key.trim()) {
+          addIssue(issues, `placeholder field ${fieldIndex + 1} is missing key for ${module.key}`);
+        }
+        if (typeof field.label !== "string" || !field.label.trim()) {
+          addIssue(issues, `placeholder field ${fieldIndex + 1} is missing label for ${module.key}`);
+        }
+        if (field.label === field.key) {
+          addIssue(issues, `placeholder field ${field.key || fieldIndex + 1} still uses the key as its label for ${module.key}`);
+        }
+        if (module.key === "git" && /github/i.test(String(field.key || ""))) {
+          addIssue(issues, `git placeholder key still references GitHub: ${field.key}`);
+        }
+      });
     }
 
     if (Array.isArray(page.blocks)) {
       page.blocks.forEach((block, blockIndex) => {
         if (block && block.type === "placeholderForm" && Object.prototype.hasOwnProperty.call(block, "fields")) {
           addIssue(issues, `placeholderForm.fields is deprecated in ${module.key} block ${blockIndex + 1}`);
+        }
+        if (block && block.type === "sectionGroups" && Array.isArray(block.sections)) {
+          block.sections.forEach((section, sectionIndex) => {
+            if (!section || typeof section !== "object") {
+              addIssue(issues, `sectionGroups section ${sectionIndex + 1} is not an object in ${module.key}`);
+              return;
+            }
+            if (Array.isArray(section.groups)) {
+              section.groups.forEach((group, groupIndex) => {
+                const pathLabel = `sectionGroups section ${sectionIndex + 1} group ${groupIndex + 1}`;
+                if (!group || typeof group !== "object") {
+                  addIssue(issues, `${pathLabel} is not an object in ${module.key}`);
+                  return;
+                }
+                if (module.key === "git" || module.key === "docker") {
+                  const expectedPrefix = `${module.key} `;
+                  if (typeof group.title !== "string" || !group.title.startsWith(expectedPrefix)) {
+                    addIssue(issues, `${pathLabel} must use the full command title in ${module.key}`);
+                  }
+                }
+                if (!group.description || typeof group.description !== "object") {
+                  addIssue(issues, `${pathLabel} is missing description in ${module.key}`);
+                  return;
+                }
+                if (Object.prototype.hasOwnProperty.call(group.description, "officialLabel")) {
+                  addIssue(issues, `${pathLabel} still uses deprecated officialLabel in ${module.key}`);
+                }
+                if (typeof group.description.text !== "string" || !group.description.text.trim()) {
+                  addIssue(issues, `${pathLabel} is missing description.text in ${module.key}`);
+                }
+                if (typeof group.description.officialUrl !== "string" || !group.description.officialUrl.trim()) {
+                  addIssue(issues, `${pathLabel} is missing description.officialUrl in ${module.key}`);
+                }
+              });
+            }
+          });
         }
       });
     }

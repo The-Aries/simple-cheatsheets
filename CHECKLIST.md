@@ -9,6 +9,12 @@ Use this checklist before merging changes or adding a new module.
 - [ ] Add `data/pages/<slug>/styles.css` only if the page truly needs local CSS.
 - [ ] Make sure page data uses `page.placeholders.fields` when placeholders are needed.
 - [ ] Make sure the page footer points to the shared footer object from `data/common.js`.
+- [ ] Use the right block pattern for the page type: command pages get `concepts` and `workflow`, syntax pages get `playground`.
+- [ ] Use Title Case section titles.
+- [ ] Use full command group titles on CLI pages such as Git and Docker.
+- [ ] Keep placeholder keys camelCase and labels human-readable.
+- [ ] Keep group descriptions to `text` plus `officialUrl`; do not add `officialLabel`.
+- [ ] Use Git-specific placeholder names on the Git page, not GitHub-specific ones.
 - [ ] Run `node tools/sync-module-entries.mjs`.
 - [ ] Run `node tools/check-structure.mjs`.
 - [ ] Open `/<slug>/` in a browser and confirm the page renders.

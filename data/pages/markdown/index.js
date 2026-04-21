@@ -8,15 +8,15 @@
   }
 
   var markdownPlaceholders = [
-    { key: "fileLabel", label: "fileLabel", defaultValue: "notes.md", help: "Label used in file-link examples." },
-    { key: "fileUri", label: "fileUri", defaultValue: "./docs/notes.md", help: "URI or relative path used for file links." },
-    { key: "resourceLabel", label: "resourceLabel", defaultValue: "Markdown guide", help: "Label used in regular link examples." },
-    { key: "resourceUri", label: "resourceUri", defaultValue: "https://example.com/markdown-guide", help: "URI used in regular link examples." },
-    { key: "imageLabel", label: "imageLabel", defaultValue: "Markdown preview", help: "Alt label used in image examples." },
-    { key: "imageUri", label: "imageUri", defaultValue: "https://placehold.co/640x360?text=Markdown+Playground", help: "URI used in image examples." }
+    { key: "fileLabel", label: "File Label", defaultValue: "notes.md", help: "Label used in file-link examples." },
+    { key: "fileUri", label: "File URI", defaultValue: "./docs/notes.md", help: "URI or relative path used for file links." },
+    { key: "resourceLabel", label: "Resource Label", defaultValue: "Markdown guide", help: "Label used in regular link examples." },
+    { key: "resourceUri", label: "Resource URI", defaultValue: "https://example.com/markdown-guide", help: "URI used in regular link examples." },
+    { key: "imageLabel", label: "Image Label", defaultValue: "Markdown preview", help: "Alt label used in image examples." },
+    { key: "imageUri", label: "Image URI", defaultValue: "https://placehold.co/640x360?text=Markdown+Playground", help: "URI used in image examples." }
   ];
 
-  function makeGroup(number, key, title, intro, rows, text, officialUrl, officialLabel) {
+  function makeGroup(number, key, title, intro, rows, text, officialUrl) {
     return {
       number: String(number),
       key: key,
@@ -25,8 +25,7 @@
       rows: rows,
       description: {
         text: text,
-        officialUrl: officialUrl,
-        officialLabel: officialLabel
+        officialUrl: officialUrl
       }
     };
   }
@@ -58,8 +57,7 @@
             { template: "Heading\n---", purpose: "Setext level 2 heading.", previewMarkdown: "Heading\n---" }
           ],
           "Use headings to build outline depth. ATX covers levels 1 to 6, while Setext only covers levels 1 and 2.",
-          "https://spec.commonmark.org/spec#atx-headings",
-          "CommonMark spec"
+          "https://spec.commonmark.org/spec#atx-headings"
         ),
         makeGroup(
           2,
@@ -73,13 +71,12 @@
             { template: "Hard break with backslash\\\nNext line.", purpose: "A trailing backslash also forces a hard line break.", previewMarkdown: "Hard break with backslash\\\nNext line." }
           ],
           "Paragraphs carry most prose. Blank lines split blocks, soft breaks do not, and hard breaks use trailing spaces or a trailing backslash.",
-          "https://spec.commonmark.org/spec#paragraphs",
-          "CommonMark spec"
+          "https://spec.commonmark.org/spec#paragraphs"
         ),
         makeGroup(
           3,
           "links-images",
-          "Links and images",
+          "Links And Images",
           "Links and images share the same bracket and parenthesis structure. Inline forms keep the destination next to the label, while reference forms split the label from the definition.",
           [
             { template: "[resourceLabel](resourceUri \"Open the guide\")", purpose: "Inline link with an optional title.", previewMarkdown: "[resourceLabel](resourceUri \"Open the guide\")" },
@@ -89,8 +86,7 @@
             { template: "![imageLabel][preview-image]\n\n[preview-image]: imageUri \"Preview image\"", purpose: "Reference-style image with a separate definition.", previewMarkdown: "![imageLabel][preview-image]\n\n[preview-image]: imageUri \"Preview image\"" }
           ],
           "Links and images share the same destination and title pattern. Images are link syntax with a leading !.",
-          "https://spec.commonmark.org/spec#links",
-          "CommonMark spec"
+          "https://spec.commonmark.org/spec#links"
         ),
         makeGroup(
           4,
@@ -105,13 +101,12 @@
             { template: "1) first item", purpose: "Ordered list with a parenthesis delimiter.", previewMarkdown: "1) first item\n2) second item" }
           ],
           "Lists are the most common compact structure for docs and READMEs. Indented items nest, and blank lines make a list loose.",
-          "https://spec.commonmark.org/spec#lists",
-          "CommonMark spec"
+          "https://spec.commonmark.org/spec#lists"
         ),
         makeGroup(
           5,
           "emphasis",
-          "Emphasis and strong",
+          "Emphasis And Strong",
           "Single delimiters mark emphasis. Double delimiters mark strong emphasis. Triple delimiters can combine both, but parsing still has boundary rules.",
           [
             { template: "*italic*", purpose: "Emphasis with asterisks.", previewMarkdown: "*italic*" },
@@ -122,13 +117,12 @@
             { template: "___bold italic___", purpose: "Combined strong and emphasis with underscores.", previewMarkdown: "___bold italic___" }
           ],
           "Emphasis is range-sensitive. Not every wrapped run becomes emphasis, so delimiter placement still matters.",
-          "https://spec.commonmark.org/spec#emphasis-and-strong-emphasis",
-          "CommonMark spec"
+          "https://spec.commonmark.org/spec#emphasis-and-strong-emphasis"
         ),
         makeGroup(
           6,
           "code-blocks",
-          "Code spans and fenced code blocks",
+          "Code Spans And Fenced Code Blocks",
           "Inline code uses backticks and can use longer fences when the content contains backticks. Fenced code blocks use at least three backticks or tildes with a matching closing fence. Indented code blocks use four spaces or one tab.",
           [
             { template: "`inline code`", purpose: "Inline code span.", previewMarkdown: "Use `inline code` for identifiers." },
@@ -138,8 +132,7 @@
             { template: "    indented code block\n    second line", purpose: "Indented code block with four spaces.", previewMarkdown: "    indented code block\n    second line" }
           ],
           "Code formatting keeps literal text literal. Use spans for inline tokens and blocks for multi-line samples.",
-          "https://spec.commonmark.org/spec#code-spans",
-          "CommonMark spec"
+          "https://spec.commonmark.org/spec#code-spans"
         ),
         makeGroup(
           7,
@@ -153,13 +146,12 @@
             { template: "> quote\n>\n> - quoted list item\n> - another item", purpose: "Blockquote containing list content.", previewMarkdown: "> quote\n>\n> - quoted list item\n> - another item" }
           ],
           "Use blockquotes for citations, notes, and short callouts. Nested quotes and other blocks are still part of the same structure.",
-          "https://spec.commonmark.org/spec#block-quotes",
-          "CommonMark spec"
+          "https://spec.commonmark.org/spec#block-quotes"
         ),
         makeGroup(
           8,
           "horizontal-rules",
-          "Horizontal rules",
+          "Horizontal Rules",
           "Thematic breaks support ---, ***, or ___ on their own line.",
           [
             { template: "---", purpose: "Thematic break with dashes.", previewMarkdown: "Text above\n\n---\n\nText below" },
@@ -167,8 +159,7 @@
             { template: "___", purpose: "Thematic break with underscores.", previewMarkdown: "Text above\n\n___\n\nText below" }
           ],
           "Use thematic breaks as separators, not as heading substitutes.",
-          "https://spec.commonmark.org/spec#thematic-breaks",
-          "CommonMark spec"
+          "https://spec.commonmark.org/spec#thematic-breaks"
         )
       ]
     ),
@@ -180,7 +171,7 @@
         makeGroup(
           1,
           "task-list-items",
-          "Task list items",
+          "Task List Items",
           "Task lists support - [ ] for open items and - [x] or - [X] for done items.",
           [
             { template: "- [ ] Draft the README", purpose: "Unchecked task item.", previewMarkdown: "- [ ] Draft the README" },
@@ -189,8 +180,7 @@
             { template: "- [ ] Parent task\n  - [x] Child task", purpose: "Nested task list item.", previewMarkdown: "- [ ] Parent task\n  - [x] Child task" }
           ],
           "Task lists are a GFM extension rendered as checkboxes in GitHub surfaces.",
-          "https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/about-task-lists",
-          "GitHub Docs"
+          "https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/about-task-lists"
         ),
         makeGroup(
           2,
@@ -201,8 +191,7 @@
             { template: "| Left | Center | Right |\n| :-- | :--: | --: |\n| A | B | C |\n| D | E | F |", purpose: "Table with left, center, and right alignment.", previewMarkdown: "| Left | Center | Right |\n| :-- | :--: | --: |\n| A | B | C |\n| D | E | F |" }
           ],
           "Use tables when two-dimensional comparisons are easier than lists.",
-          "https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/organizing-information-with-tables",
-          "GitHub Docs"
+          "https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/organizing-information-with-tables"
         ),
         makeGroup(
           3,
@@ -214,13 +203,12 @@
             { template: "~~removed~~ and **kept**", purpose: "Combine strikethrough with other inline formatting.", previewMarkdown: "~~removed~~ and **kept**" }
           ],
           "Strikethrough helps show revision intent without deleting context.",
-          "https://docs.github.com/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax",
-          "GitHub Docs"
+          "https://docs.github.com/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax"
         ),
         makeGroup(
           4,
           "autolink-literals",
-          "Autolink literals",
+          "Autolink Literals",
           "Autolink literals are a GFM extension. Bare URLs, www. links, and bare email addresses are linked automatically. This is different from CommonMark angle-bracket autolinks.",
           [
             { template: "https://example.com", purpose: "Plain URL autolink.", previewMarkdown: "https://example.com" },
@@ -229,8 +217,7 @@
             { template: "https://github.com/The-Aries/simple-cheatsheets", purpose: "Repository URL autolink.", previewMarkdown: "https://github.com/The-Aries/simple-cheatsheets" }
           ],
           "Autolink literals are useful when fast references matter more than custom link labels.",
-          "https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/autolinked-references-and-urls",
-          "GitHub Docs"
+          "https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/autolinked-references-and-urls"
         )
       ]
     )
@@ -304,8 +291,8 @@
       {
         type: "note",
         id: "official-references",
-        title: "Official references",
-        text: "Use the specs below when you need the exact rules or want to check edge cases quickly.",
+        title: "Official References",
+        text: "Use the CommonMark and GitHub Docs references below when you need the exact rules or want to check edge cases quickly.",
         links: [
           { label: "CommonMark Spec", href: "https://spec.commonmark.org/" },
           { label: "GFM Spec", href: "https://github.github.com/gfm/" }
