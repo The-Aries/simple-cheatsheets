@@ -222,161 +222,202 @@
   }
 
   function renderMarkdownInline(text) {
-    var output = escapeHtml(text || "");
-    output = output.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, function (_, alt, src) {
-      return '<img src="' + escapeAttr(src) + '" alt="' + escapeAttr(alt) + '">';
+    var source = String(text == null ? "" : text);
+    var tokens = [];
+
+    function store(markup) {
+      tokens.push(markup);
+      return "\u0000" + (tokens.length - 1) + "\u0000";
+    }
+
+    source = escapeHtml(source);
+    source = source.replace(/`([^`]+)`/g, function (_, code) {
+      return store("<code>" + code + "</code>");
     });
-    output = output.replace(/\[([^\]]+)\]\(([^)]+)\)/g, function (_, label, href) {
-      return '<a href="' + escapeAttr(href) + '">' + label + '</a>';
+    source = source.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, function (_, alt, uri) {
+      return store('<img src="' + escapeAttr(uri) + '" alt="' + escapeAttr(alt) + '">');
     });
-    output = output.replace(/`([^`]+)`/g, function (_, code) {
-      return '<code>' + code + '</code>';
+    source = source.replace(/\[([^\]]+)\]\(([^)]+)\)/g, function (_, label, uri) {
+      return store('<a href="' + escapeAttr(uri) + '">' + label + "</a>");
     });
-    output = output.replace(/\*\*([^*]+)\*\*/g, function (_, strong) {
-      return '<strong>' + strong + '</strong>';
+    source = source.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+    source = source.replace(/__([^_]+)__/g, "<strong>$1</strong>");
+    source = source.replace(/~~([^~]+)~~/g, "<del>$1</del>");
+    source = source.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+    source = source.replace(/_([^_]+)_/g, "<em>$1</em>");
+    source = source.replace(/(https?:\/\/[^\s<]+)/g, function (_, url) {
+      return store('<a href="' + escapeAttr(url) + '">' + escapeHtml(url) + "</a>");
     });
-    output = output.replace(/~~([^~]+)~~/g, function (_, strike) {
-      return '<del>' + strike + '</del>';
+    source = source.replace(/([\w.+-]+@[\w.-]+\.[A-Za-z]{2,})/g, function (_, email) {
+      return store('<a href="mailto:' + escapeAttr(email) + '">' + escapeHtml(email) + "</a>");
     });
-    output = output.replace(/\*([^*]+)\*/g, function (_, italic) {
-      return '<em>' + italic + '</em>';
+    source = source.replace(/\u0000(\d+)\u0000/g, function (_, index) {
+      return tokens[Number(index)] || "";
     });
-    return output;
+    return source;
   }
 
   function renderMarkdownPreview(text) {
-    var lines = String(text || "").replace(/\r\n/g, "\n").split("\n");
+    var lines = String(text == null ? "" : text).replace(/\r\n?/g, "\n").split("\n");
     var html = [];
     var paragraph = [];
-    var quote = [];
     var listType = "";
-    var listItems = [];
-    var inCode = false;
+    var listOpen = false;
+    var blockquote = [];
+    var codeFence = "";
     var codeLines = [];
 
     function flushParagraph() {
-      if (!paragraph.length) { return; }
-      html.push("<p>" + renderMarkdownInline(paragraph.join(" ")) + "</p>");
-      paragraph = [];
+      if (paragraph.length) {
+        html.push("<p>" + renderMarkdownInline(paragraph.join(" ")) + "</p>");
+        paragraph = [];
+      }
     }
 
-    function flushQuote() {
-      if (!quote.length) { return; }
-      html.push("<blockquote><p>" + renderMarkdownInline(quote.join(" ")) + "</p></blockquote>");
-      quote = [];
+    function closeList() {
+      if (listOpen) {
+        html.push(listType === "ol" ? "</ol>" : "</ul>");
+        listOpen = false;
+        listType = "";
+      }
     }
 
-    function flushList() {
-      if (!listItems.length) { return; }
-      var listTag = listType === "ordered" ? "ol" : "ul";
-      var listHtml = "<" + listTag + ">";
-      listItems.forEach(function (item) {
-        if (item.type === "task") {
-          listHtml += "<li><label><input type=\"checkbox\" disabled" + (item.checked ? " checked" : "") + "> " + renderMarkdownInline(item.text) + "</label></li>";
+    function flushBlockquote() {
+      if (blockquote.length) {
+        html.push("<blockquote>" + renderMarkdownPreview(blockquote.join("\n")) + "</blockquote>");
+        blockquote = [];
+      }
+    }
+
+    function renderTableRow(line, cellTag) {
+      var cells = line.replace(/^\s*\|/, "").replace(/\|\s*$/, "").split("|");
+      return "<tr>" + cells.map(function (cell) {
+        return "<" + cellTag + ">" + renderMarkdownInline(cell.trim()) + "</" + cellTag + ">";
+      }).join("") + "</tr>";
+    }
+
+    function flushTable(block) {
+      if (!block || !block.length) { return; }
+      var rows = block.slice();
+      var head = rows.shift();
+      var body = rows;
+      var tableHtml = ["<table>", "<thead>", renderTableRow(head, "th"), "</thead>"];
+      if (body.length) {
+        tableHtml.push("<tbody>");
+        body.forEach(function (row) {
+          tableHtml.push(renderTableRow(row, "td"));
+        });
+        tableHtml.push("</tbody>");
+      }
+      tableHtml.push("</table>");
+      html.push(tableHtml.join(""));
+    }
+
+    for (var i = 0; i < lines.length; i += 1) {
+      var line = lines[i];
+      var trimmed = line.trim();
+      var next = lines[i + 1] || "";
+
+      if (codeFence) {
+        if (trimmed.indexOf(codeFence) === 0) {
+          html.push("<pre><code>" + codeLines.join("\n") + "</code></pre>");
+          codeFence = "";
+          codeLines = [];
         } else {
-          listHtml += "<li>" + renderMarkdownInline(item.text) + "</li>";
+          codeLines.push(escapeHtml(line));
         }
-      });
-      listHtml += "</" + listTag + ">";
-      html.push(listHtml);
-      listItems = [];
-      listType = "";
-    }
-
-    function flushCode() {
-      if (!codeLines.length) { return; }
-      html.push("<pre><code>" + escapeHtml(codeLines.join("\n")) + "</code></pre>");
-      codeLines = [];
-    }
-
-    function flushAll() {
-      flushParagraph();
-      flushQuote();
-      flushList();
-    }
-
-    function parseListLine(line) {
-      var taskMatch = /^-\s+\[([ xX])\]\s+(.+)$/.exec(line);
-      if (taskMatch) {
-        return { type: "task", checked: taskMatch[1].toLowerCase() === "x", text: taskMatch[2] };
-      }
-      var orderedMatch = /^\d+\.\s+(.+)$/.exec(line);
-      if (orderedMatch) {
-        return { type: "ordered", text: orderedMatch[1] };
-      }
-      var bulletMatch = /^[-*+]\s+(.+)$/.exec(line);
-      if (bulletMatch) {
-        return { type: "unordered", text: bulletMatch[1] };
-      }
-      return null;
-    }
-
-    lines.forEach(function (rawLine) {
-      var line = rawLine || "";
-      if (/^```/.test(line)) {
-        if (inCode) {
-          flushCode();
-          inCode = false;
-        } else {
-          flushAll();
-          inCode = true;
-        }
-        return;
+        continue;
       }
 
-      if (inCode) {
-        codeLines.push(line);
-        return;
+      if (/^(```+|~~~+)\s*/.test(trimmed)) {
+        flushParagraph();
+        closeList();
+        flushBlockquote();
+        codeFence = trimmed.slice(0, 3);
+        codeLines = [];
+        continue;
       }
 
-      if (!line.trim()) {
-        flushAll();
-        return;
+      if (!trimmed) {
+        flushParagraph();
+        closeList();
+        flushBlockquote();
+        continue;
       }
 
-      var headingMatch = /^(#{1,6})\s+(.*)$/.exec(line);
-      if (headingMatch) {
-        flushAll();
-        html.push("<h" + headingMatch[1].length + ">" + renderMarkdownInline(headingMatch[2]) + "</h" + headingMatch[1].length + ">");
-        return;
+      if (/^> ?/.test(trimmed)) {
+        blockquote.push(trimmed.replace(/^> ?/, ""));
+        continue;
       }
 
-      if (/^(-{3,}|\*{3,}|_{3,})$/.test(line.trim())) {
-        flushAll();
+      if (/^#{1,6}\s+/.test(trimmed)) {
+        flushParagraph();
+        closeList();
+        flushBlockquote();
+        var level = trimmed.match(/^#{1,6}/)[0].length;
+        html.push("<h" + level + ">" + renderMarkdownInline(trimmed.replace(/^#{1,6}\s+/, "")) + "</h" + level + ">");
+        continue;
+      }
+
+      if (/^(\*{3,}|-{3,}|_{3,})$/.test(trimmed)) {
+        flushParagraph();
+        closeList();
+        flushBlockquote();
         html.push("<hr>");
-        return;
+        continue;
       }
 
-      var quoteMatch = /^>\s?(.*)$/.exec(line);
-      if (quoteMatch) {
-        if (listItems.length) { flushList(); }
-        if (paragraph.length) { flushParagraph(); }
-        quote.push(quoteMatch[1]);
-        return;
-      }
-
-      var listMatch = parseListLine(line);
-      if (listMatch) {
-        if (paragraph.length) { flushParagraph(); }
-        if (quote.length) { flushQuote(); }
-        if (listType && listType !== listMatch.type && !(listType === "task" && listMatch.type === "task")) {
-          flushList();
+      if (/^\|.*\|$/.test(trimmed) && /^\s*\|?(\s*:?-+:?\s*\|)+\s*:?-+:?\s*\|?\s*$/.test(next.trim())) {
+        flushParagraph();
+        closeList();
+        flushBlockquote();
+        var tableRows = [trimmed];
+        i += 1;
+        while (i + 1 < lines.length && lines[i + 1].trim() && /^\|.*\|$/.test(lines[i + 1].trim())) {
+          tableRows.push(lines[i + 1].trim());
+          i += 1;
         }
-        listType = listMatch.type;
-        listItems.push(listMatch);
-        return;
+        flushTable(tableRows);
+        continue;
       }
 
-      if (quote.length) { flushQuote(); }
-      if (listItems.length && listType) { flushList(); }
-      paragraph.push(line);
-    });
+      var ordered = trimmed.match(/^(\d+)\.\s+/);
+      var unordered = trimmed.match(/^[-*+]\s+/);
+      var task = trimmed.match(/^[-*+]\s+\[( |x|X)\]\s+/);
 
-    if (inCode) {
-      flushCode();
+      if (ordered || unordered) {
+        flushParagraph();
+        flushBlockquote();
+        var nextType = ordered ? "ol" : "ul";
+        if (!listOpen || listType !== nextType) {
+          closeList();
+          listType = nextType;
+          listOpen = true;
+          html.push(listType === "ol" ? "<ol>" : "<ul>");
+        }
+        var itemText = trimmed.replace(/^(\d+\.\s+|[-*+]\s+)/, "");
+        if (task) {
+          itemText = itemText.replace(/^\[( |x|X)\]\s+/, "");
+          html.push('<li class="task-item"><input type="checkbox" disabled' + (task[1].toLowerCase() === "x" ? " checked" : "") + "> " + renderMarkdownInline(itemText) + "</li>");
+        } else {
+          html.push("<li>" + renderMarkdownInline(itemText) + "</li>");
+        }
+        continue;
+      }
+
+      if (blockquote.length) {
+        flushBlockquote();
+      }
+
+      paragraph.push(trimmed);
     }
-    flushAll();
 
+    flushParagraph();
+    closeList();
+    flushBlockquote();
+    if (codeFence) {
+      html.push("<pre><code>" + codeLines.join("\n") + "</code></pre>");
+    }
     return html.join("");
   }
 
@@ -477,8 +518,10 @@
         gRows.forEach(function (row, rowIndex) {
           var commandId = "cmd-" + safeKey(sNumber) + "-" + safeKey(gNumber) + "-" + String(rowIndex + 1);
           var template = row.template || "";
+          var previewTemplate = row.previewMarkdown || "";
           var commandClasses = "command-code" + (/\n/.test(template) ? " multiline" : "");
-          html += "<tr><td><code class=\"" + commandClasses + "\" id=\"" + escapeAttr(commandId) + "\" data-template=\"" + escapeAttr(template) + "\">" + escapeHtml(template) + "</code></td><td>" + escapeHtml(row.purpose || "") + "</td><td><button type=\"button\" class=\"copy-button\" data-copy-target=\"" + escapeAttr(commandId) + "\">Copy</button></td></tr>";
+          var previewHtml = previewTemplate ? "<div class=\"row-preview markdown-preview\" data-template=\"" + escapeAttr(previewTemplate) + "\"></div>" : "";
+          html += "<tr><td><code class=\"" + commandClasses + "\" id=\"" + escapeAttr(commandId) + "\" data-template=\"" + escapeAttr(template) + "\">" + escapeHtml(template) + "</code></td><td><div class=\"command-purpose\">" + escapeHtml(row.purpose || "") + "</div>" + previewHtml + "</td><td><button type=\"button\" class=\"copy-button\" data-copy-target=\"" + escapeAttr(commandId) + "\">Copy</button></td></tr>";
         });
 
         html += "</tbody></table></div><div class=\"group-description\"><h4>Description</h4>" + renderGroupDescription(group.description) + "</div></section>";
@@ -557,6 +600,11 @@
       textarea.value = applyPlaceholderValues(template, placeholderValues);
       renderPreviewOutputForTextarea(textarea);
     });
+    document.querySelectorAll(".row-preview[data-template]").forEach(function (preview) {
+      var template = preview.getAttribute("data-template") || "";
+      var rendered = applyPlaceholderValues(template, placeholderValues);
+      preview.innerHTML = renderMarkdownPreview(rendered);
+    });
   }
 
   function renderFooter() {
@@ -626,6 +674,13 @@
         });
         textarea.value = rendered;
         renderPreviewOutputForTextarea(textarea);
+      });
+      document.querySelectorAll(".row-preview[data-template]").forEach(function (preview) {
+        var rendered = preview.getAttribute("data-template") || "";
+        placeholderKeys.forEach(function (key) {
+          rendered = rendered.split(key).join(values[key]);
+        });
+        preview.innerHTML = renderMarkdownPreview(rendered);
       });
     }
 
@@ -713,215 +768,4 @@
   } catch (error) {
     renderHardFallback((page.meta && page.meta.title) || "Template Page", "Renderer failed. Under Construction.");
   }
-var renderMarkdownInline = function (text) {
-  var source = String(text == null ? "" : text);
-  var tokens = [];
-  function escapeHtmlLocal(value) {
-    return String(value)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/\"/g, "&quot;")
-      .replace(/'/g, "&#39;");
-  }
-  function store(markup) {
-    tokens.push(markup);
-    return "\u0000" + (tokens.length - 1) + "\u0000";
-  }
-  source = escapeHtmlLocal(source);
-  source = source.replace(/`([^`]+)`/g, function (_, code) {
-    return store("<code>" + code + "</code>");
-  });
-  source = source.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, function (_, alt, url) {
-    return store('<img src="' + url + '" alt="' + alt + '">');
-  });
-  source = source.replace(/\[([^\]]+)\]\(([^)]+)\)/g, function (_, label, url) {
-    return store('<a href="' + url + '">' + label + "</a>");
-  });
-  source = source.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
-  source = source.replace(/__([^_]+)__/g, "<strong>$1</strong>");
-  source = source.replace(/~~([^~]+)~~/g, "<del>$1</del>");
-  source = source.replace(/\*([^*]+)\*/g, "<em>$1</em>");
-  source = source.replace(/_([^_]+)_/g, "<em>$1</em>");
-  source = source.replace(/(https?:\/\/[^\s<]+)/g, function (_, url) {
-    return store('<a href="' + url + '">' + url + "</a>");
-  });
-  source = source.replace(/([\w.+-]+@[\w.-]+\.[A-Za-z]{2,})/g, function (_, email) {
-    return store('<a href="mailto:' + email + '">' + email + "</a>");
-  });
-  source = source.replace(/\u0000(\d+)\u0000/g, function (_, index) {
-    return tokens[Number(index)] || "";
-  });
-  return source;
-};
-
-var renderMarkdownPreview = function (text) {
-  var lines = String(text == null ? "" : text).replace(/\r\n?/g, "\n").split("\n");
-  var html = [];
-  var paragraph = [];
-  var listType = "";
-  var listOpen = false;
-  var blockquote = [];
-  var codeFence = "";
-  var codeLines = [];
-
-  function flushParagraph() {
-    if (paragraph.length) {
-      html.push("<p>" + renderMarkdownInline(paragraph.join(" ")) + "</p>");
-      paragraph = [];
-    }
-  }
-
-  function closeList() {
-    if (listOpen) {
-      html.push(listType === "ol" ? "</ol>" : "</ul>");
-      listOpen = false;
-      listType = "";
-    }
-  }
-
-  function flushBlockquote() {
-    if (blockquote.length) {
-      html.push("<blockquote>" + renderMarkdownPreview(blockquote.join("\n")) + "</blockquote>");
-      blockquote = [];
-    }
-  }
-
-  function isTableSeparator(line) {
-    return /^\s*\|?(\s*:?-+:?\s*\|)+\s*:?-+:?\s*\|?\s*$/.test(line);
-  }
-
-  function renderTableRow(line, cellTag) {
-    var cells = line.replace(/^\s*\|/, "").replace(/\|\s*$/, "").split("|");
-    return "<tr>" + cells.map(function (cell) {
-      return "<" + cellTag + ">" + renderMarkdownInline(cell.trim()) + "</" + cellTag + ">";
-    }).join("") + "</tr>";
-  }
-
-  function flushTable(block) {
-    if (!block || !block.length) {
-      return;
-    }
-    var rows = block.slice();
-    var head = rows.shift();
-    var body = rows;
-    var tableHtml = ["<table>", "<thead>", renderTableRow(head, "th"), "</thead>"];
-    if (body.length) {
-      tableHtml.push("<tbody>");
-      body.forEach(function (row) {
-        tableHtml.push(renderTableRow(row, "td"));
-      });
-      tableHtml.push("</tbody>");
-    }
-    tableHtml.push("</table>");
-    html.push(tableHtml.join(""));
-  }
-
-  for (var i = 0; i < lines.length; i += 1) {
-    var line = lines[i];
-    var trimmed = line.trim();
-    var next = lines[i + 1] || "";
-
-    if (codeFence) {
-      if (trimmed.indexOf(codeFence) === 0) {
-        html.push("<pre><code>" + codeLines.join("\n") + "</code></pre>");
-        codeFence = "";
-        codeLines = [];
-      } else {
-        codeLines.push(line.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"));
-      }
-      continue;
-    }
-
-    if (/^(```+|~~~+)\s*/.test(trimmed)) {
-      flushParagraph();
-      closeList();
-      flushBlockquote();
-      codeFence = trimmed.slice(0, 3);
-      codeLines = [];
-      continue;
-    }
-
-    if (!trimmed) {
-      flushParagraph();
-      closeList();
-      flushBlockquote();
-      continue;
-    }
-
-    if (/^> ?/.test(trimmed)) {
-      blockquote.push(trimmed.replace(/^> ?/, ""));
-      continue;
-    }
-
-    if (/^#{1,6}\s+/.test(trimmed)) {
-      flushParagraph();
-      closeList();
-      flushBlockquote();
-      var level = trimmed.match(/^#{1,6}/)[0].length;
-      html.push("<h" + level + ">" + renderMarkdownInline(trimmed.replace(/^#{1,6}\s+/, "")) + "</h" + level + ">");
-      continue;
-    }
-
-    if (/^(\*{3,}|-{3,}|_{3,})$/.test(trimmed)) {
-      flushParagraph();
-      closeList();
-      flushBlockquote();
-      html.push("<hr>");
-      continue;
-    }
-
-    if (/^\|.*\|$/.test(trimmed) && /^\s*\|?(\s*:?-+:?\s*\|)+\s*:?-+:?\s*\|?\s*$/.test(next.trim())) {
-      flushParagraph();
-      closeList();
-      flushBlockquote();
-      var tableRows = [trimmed];
-      i += 1;
-      while (i + 1 < lines.length && lines[i + 1].trim() && /^\|.*\|$/.test(lines[i + 1].trim())) {
-        tableRows.push(lines[i + 1].trim());
-        i += 1;
-      }
-      flushTable(tableRows);
-      continue;
-    }
-
-    var ordered = trimmed.match(/^(\d+)\.\s+/);
-    var unordered = trimmed.match(/^[-*+]\s+/);
-    var task = trimmed.match(/^[-*+]\s+\[( |x|X)\]\s+/);
-
-    if (ordered || unordered) {
-      flushParagraph();
-      flushBlockquote();
-      var nextType = ordered ? "ol" : "ul";
-      if (!listOpen || listType !== nextType) {
-        closeList();
-        listType = nextType;
-        listOpen = true;
-        html.push(listType === "ol" ? "<ol>" : "<ul>");
-      }
-      var itemText = trimmed.replace(/^(\d+\.\s+|[-*+]\s+)/, "");
-      if (task) {
-        itemText = itemText.replace(/^\[( |x|X)\]\s+/, "");
-        html.push('<li class="task-item"><input type="checkbox" disabled' + (task[1].toLowerCase() === "x" ? " checked" : "") + '> ' + renderMarkdownInline(itemText) + "</li>");
-      } else {
-        html.push("<li>" + renderMarkdownInline(itemText) + "</li>");
-      }
-      continue;
-    }
-
-    if (blockquote.length) {
-      flushBlockquote();
-    }
-
-    paragraph.push(trimmed);
-  }
-
-  flushParagraph();
-  closeList();
-  flushBlockquote();
-  if (codeFence) {
-    html.push("<pre><code>" + codeLines.join("\n") + "</code></pre>");
-  }
-  return html.join("");
-};
 })();
