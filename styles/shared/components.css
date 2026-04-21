@@ -74,7 +74,7 @@
   outline: none;
 }
 
-.concept-list { display: grid; gap: 10px; }
+.concept-list { display: grid; gap: 0; }
 
 .workflow-sequence {
   margin: 0;
@@ -256,9 +256,9 @@
   cursor: pointer;
   list-style: none;
   user-select: none;
-  font-size: 0.94rem;
+  font-size: var(--cheatsheet-body-size);
   font-weight: 500;
-  line-height: 1.5;
+  line-height: var(--cheatsheet-body-line-height);
   padding-left: 13px;
   margin: 0;
 }
@@ -288,12 +288,12 @@
   text-decoration: none;
 }
 .sidebar-level2-link {
-  font-size: 0.92rem;
-  line-height: 1.5;
+  font-size: var(--cheatsheet-body-size);
+  line-height: var(--cheatsheet-body-line-height);
 }
 .sidebar-level3-link {
-  font-size: 0.88rem;
-  line-height: 1.45;
+  font-size: var(--cheatsheet-body-size);
+  line-height: var(--cheatsheet-body-line-height);
 }
 .sidebar-subgroup > summary {
   position: relative;

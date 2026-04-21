@@ -605,13 +605,17 @@
     var text = description.text ? escapeHtml(description.text) : "";
     var officialUrl = description.officialUrl || "";
     var officialLabel = description.officialLabel || "official documentation";
-    var link = officialUrl ? "<a href=\"" + escapeAttr(officialUrl) + "\">" + escapeHtml(officialLabel) + "</a>" : "";
+    var link = officialUrl ? "<a href=\"" + escapeAttr(officialUrl) + "\">the official docs</a>" : "";
 
     if (text && link) {
-      return "<p>" + text + " Official docs: " + link + ".</p>";
+      var linkedText = text.replace(/the official docs/g, link);
+      if (linkedText !== text) {
+        return "<p>" + linkedText + "</p>";
+      }
+      return "<p>" + text + " " + link + ".</p>";
     }
     if (text) { return "<p>" + text + "</p>"; }
-    if (link) { return "<p>Official docs: " + link + ".</p>"; }
+    if (link) { return "<p>" + link + ".</p>"; }
     return "";
   }
 

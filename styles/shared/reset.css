@@ -4,7 +4,7 @@ html { scroll-behavior: smooth; }
 
 body {
   margin: 0;
-  font-family: Calibri, "Segoe UI", Arial, Helvetica, sans-serif;
+  font-family: Calibri, sans-serif;
   color: var(--text);
   background: var(--bg);
   font-size: 17px;

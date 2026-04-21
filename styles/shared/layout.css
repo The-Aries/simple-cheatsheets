@@ -39,7 +39,7 @@
 }
 
 .sidebar {
-  font-family: Calibri, "Segoe UI", Arial, Helvetica, sans-serif;
+  font-family: inherit;
   position: fixed;
   top: var(--topbar-height);
   left: 0;
@@ -48,8 +48,8 @@
   overflow: auto;
   padding: 22px 18px 28px;
   background: #fff;
-  font-size: 0.92rem;
-  line-height: 1.5;
+  font-size: var(--cheatsheet-body-size);
+  line-height: var(--cheatsheet-body-line-height);
 }
 
 .content {
