@@ -301,6 +301,7 @@
       },
       {
         type: "note",
+        id: "official-references",
         title: "Official references",
         text: "Use the specs below when you need the exact rules or want to check edge cases quickly.",
         links: [

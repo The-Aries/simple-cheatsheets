@@ -141,6 +141,7 @@
     var sections = resolveSectionGroups();
     var pageHeader = findBlock("pageHeader");
     var placeholderBlock = findBlock("placeholderForm");
+    var noteBlocks = blocks.filter(function (block) { return block && block.type === "note"; });
     var previewBlock = resolvePlaygroundBlock();
     var concepts = findBlock("concepts");
     var workflow = findBlock("workflow");
@@ -157,6 +158,12 @@
         href: "#" + (pageHeader.id || "page-header")
       });
     }
+    noteBlocks.forEach(function (block) {
+      overviewItems.push({
+        label: block.title || "Note",
+        href: "#" + (block.id || safeKey(block.title || "note"))
+      });
+    });
     if (hasPlaceholders) {
       overviewItems.push({
         label: "Placeholders",
@@ -668,7 +675,9 @@
     var links = Array.isArray(block.links) ? block.links : [];
     if (!text && !links.length) { return ""; }
 
-    var html = "<section class=\"panel\"><div class=\"section-heading\"><h2>" + escapeHtml(block.title || "Note") + "</h2>";
+    var noteId = block.id || safeKey(block.title || "note");
+    var headingId = noteId + "-title";
+    var html = "<section class=\"panel\" id=\"" + escapeAttr(noteId) + "\" aria-labelledby=\"" + escapeAttr(headingId) + "\"><div class=\"section-heading\"><h2 id=\"" + escapeAttr(headingId) + "\">" + escapeHtml(block.title || "Note") + "</h2>";
     if (text) {
       html += "<p>" + escapeHtml(text) + "</p>";
     }
