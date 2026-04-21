@@ -1,6 +1,6 @@
 (function () {
   var release = {
-    version: "v2026.04.21.2",
+    version: "8de1fab",
     branch: "codex/template-decouple-refactor"
   };
 
