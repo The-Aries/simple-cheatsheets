@@ -138,38 +138,45 @@ a:hover { text-decoration-thickness: 0.08em; }
 .command-group + .command-group { margin-top: 32px; }
 .command-group h3 { margin: 0; font-size: 1.21rem; }
 .group-intro { margin-top: 8px; }
-.command-table-wrap { margin-top: 10px; overflow: hidden; border-radius: var(--radius); }
-.command-table { width: 100%; border-collapse: collapse; }
+.command-table-wrap { margin-top: 10px; overflow-x: auto; overflow-y: visible; border-radius: var(--radius); }
+.command-table { width: 100%; min-width: 900px; border-collapse: collapse; }
 .command-table thead th { background: #000; color: #fff; text-align: left; padding: 0.66rem 0.72rem; font-size: 0.9rem; }
 .command-table tbody td { padding: 0.66rem 0.72rem; vertical-align: middle; border-top: 1px solid #000; font-size: 0.96rem; }
-.command-table thead th:nth-child(3), .command-table tbody td:nth-child(3) { width: 34%; min-width: 260px; }
-.command-table thead th:last-child, .command-table tbody td:last-child { width: 88px; text-align: center; white-space: nowrap; }
+.command-table thead th:nth-child(1), .command-table tbody td:nth-child(1) { width: 32%; }
+.command-table thead th:nth-child(2), .command-table tbody td:nth-child(2) { width: 28%; }
+.command-table thead th:nth-child(3), .command-table tbody td:nth-child(3) { width: 30%; min-width: 260px; }
+.command-table thead th:nth-child(4), .command-table tbody td:nth-child(4) {
+  width: 88px;
+  min-width: 88px;
+  text-align: center;
+  white-space: nowrap;
+}
 .command-code { font-family: "Cascadia Code", Consolas, "Courier New", monospace; font-size: 0.92rem; line-height: 1.45; white-space: nowrap; }
 .command-code.multiline { display: block; white-space: pre-wrap; }
 .command-purpose { margin: 0; }
 .row-preview {
   margin-top: 0;
-  padding: 2px 0;
-  border: 0;
-  border-radius: 0;
+  padding: 6px 8px;
+  border: 1px solid #3d3d3d;
+  border-radius: 6px;
   background: #000;
   color: #fff;
-  min-height: 0;
+  min-height: 56px;
   max-height: 96px;
   overflow: auto;
   box-sizing: border-box;
-  font-size: 0.9rem;
-  line-height: 1.45;
+  font-size: 0.88rem;
+  line-height: 1.5;
 }
 .row-preview > :last-child { margin-bottom: 0; }
 .row-preview-empty {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  color: #7c7c7c;
+  justify-content: center;
+  color: #7a7a7a;
   font-family: "Cascadia Code", Consolas, "Courier New", monospace;
   letter-spacing: 0.02em;
-  min-height: 20px;
+  min-height: 40px;
 }
 .group-description { margin-top: 10px; }
 .group-description h4 { margin: 0 0 6px; font-size: 0.98rem; }
@@ -294,6 +301,48 @@ a:hover { text-decoration-thickness: 0.08em; }
   text-align: left;
   vertical-align: top;
 }
+.preview-output.markdown-preview {
+  background: #fff;
+  color: #000;
+}
+.preview-output.markdown-preview blockquote { border-left-color: #000; }
+.preview-output.markdown-preview pre {
+  border-color: #000;
+  background: #fff;
+  color: #000;
+}
+.preview-output.markdown-preview p code,
+.preview-output.markdown-preview li code {
+  border-color: #000;
+  background: transparent;
+  color: inherit;
+}
+.preview-output.markdown-preview hr { border-top-color: #000; }
+.preview-output.markdown-preview th,
+.preview-output.markdown-preview td,
+.preview-output.markdown-preview img { border-color: #000; }
+
+.row-preview.markdown-preview {
+  background: #000;
+  color: #fff;
+}
+.row-preview.markdown-preview a { color: #d7e6ff; }
+.row-preview.markdown-preview blockquote { border-left-color: #6c6c6c; }
+.row-preview.markdown-preview pre {
+  border-color: #5a5a5a;
+  background: #121212;
+  color: #fff;
+}
+.row-preview.markdown-preview p code,
+.row-preview.markdown-preview li code {
+  border-color: #5a5a5a;
+  background: #1a1a1a;
+  color: #fff;
+}
+.row-preview.markdown-preview hr { border-top-color: #5a5a5a; }
+.row-preview.markdown-preview th,
+.row-preview.markdown-preview td,
+.row-preview.markdown-preview img { border-color: #5a5a5a; }
 .contact-note { margin: 36px 0 0; }
 .footer { display: flex; flex-wrap: wrap; gap: 18px; margin: 0 auto; max-width: 960px; padding: 18px 30px 30px; font-size: 0.98rem; }
 .git-page .footer, .cheatsheet-page .footer { margin-left: calc(var(--sidebar-width) + 34px); margin-right: 0; }
