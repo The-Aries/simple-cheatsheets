@@ -1,3 +1,8 @@
+:root {
+  --cheatsheet-body-size: 1.08rem;
+  --cheatsheet-body-line-height: 1.72;
+}
+
 .brand {
   font-weight: 700;
   font-size: 1.58rem;
@@ -31,8 +36,8 @@
 .home-hero p {
   margin: 14px 0 0;
   max-width: 56ch;
-  font-size: 1.1rem;
-  line-height: 1.68;
+  font-size: var(--cheatsheet-body-size);
+  line-height: var(--cheatsheet-body-line-height);
 }
 
 .home-section h2 {
@@ -54,8 +59,8 @@
 .lead {
   margin: 0;
   max-width: 74ch;
-  font-size: 1.08rem;
-  line-height: 1.72;
+  font-size: var(--cheatsheet-body-size);
+  line-height: var(--cheatsheet-body-line-height);
 }
 
 .section-heading h2 {
@@ -68,10 +73,11 @@
 .group-description p,
 .contact-note,
 .concept-list p,
-.value-help {
+.value-help,
+.workflow-sequence p {
   margin: 0;
-  font-size: 1.01rem;
-  line-height: 1.66;
+  font-size: var(--cheatsheet-body-size);
+  line-height: var(--cheatsheet-body-line-height);
 }
 
 .command-group h3 {
