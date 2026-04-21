@@ -513,15 +513,17 @@
         var gIntro = group.intro || "";
         var gRows = Array.isArray(group.rows) ? group.rows : [];
 
-        html += "<section class=\"command-group\" id=\"" + escapeAttr(gAnchor) + "\"><h3>" + escapeHtml(sNumber) + "." + escapeHtml(gNumber) + " " + escapeHtml(gTitle) + "</h3>" + (gIntro ? "<p class=\"group-intro\">" + escapeHtml(gIntro) + "</p>" : "") + "<div class=\"command-table-wrap\"><table class=\"command-table\"><thead><tr><th>Command</th><th>Purpose</th><th>Copy</th></tr></thead><tbody>";
+        html += "<section class=\"command-group\" id=\"" + escapeAttr(gAnchor) + "\"><h3>" + escapeHtml(sNumber) + "." + escapeHtml(gNumber) + " " + escapeHtml(gTitle) + "</h3>" + (gIntro ? "<p class=\"group-intro\">" + escapeHtml(gIntro) + "</p>" : "") + "<div class=\"command-table-wrap\"><table class=\"command-table\"><thead><tr><th>Command</th><th>Purpose</th><th>Preview</th><th>Copy</th></tr></thead><tbody>";
 
         gRows.forEach(function (row, rowIndex) {
           var commandId = "cmd-" + safeKey(sNumber) + "-" + safeKey(gNumber) + "-" + String(rowIndex + 1);
           var template = row.template || "";
           var previewTemplate = row.previewMarkdown || "";
           var commandClasses = "command-code" + (/\n/.test(template) ? " multiline" : "");
-          var previewHtml = previewTemplate ? "<div class=\"row-preview markdown-preview\" data-template=\"" + escapeAttr(previewTemplate) + "\"></div>" : "";
-          html += "<tr><td><code class=\"" + commandClasses + "\" id=\"" + escapeAttr(commandId) + "\" data-template=\"" + escapeAttr(template) + "\">" + escapeHtml(template) + "</code></td><td><div class=\"command-purpose\">" + escapeHtml(row.purpose || "") + "</div>" + previewHtml + "</td><td><button type=\"button\" class=\"copy-button\" data-copy-target=\"" + escapeAttr(commandId) + "\">Copy</button></td></tr>";
+          var previewHtml = previewTemplate
+            ? "<div class=\"row-preview markdown-preview\" data-template=\"" + escapeAttr(previewTemplate) + "\"></div>"
+            : "<div class=\"row-preview row-preview-empty\">N/A</div>";
+          html += "<tr><td><code class=\"" + commandClasses + "\" id=\"" + escapeAttr(commandId) + "\" data-template=\"" + escapeAttr(template) + "\">" + escapeHtml(template) + "</code></td><td><div class=\"command-purpose\">" + escapeHtml(row.purpose || "") + "</div></td><td>" + previewHtml + "</td><td><button type=\"button\" class=\"copy-button\" data-copy-target=\"" + escapeAttr(commandId) + "\">Copy</button></td></tr>";
         });
 
         html += "</tbody></table></div><div class=\"group-description\"><h4>Description</h4>" + renderGroupDescription(group.description) + "</div></section>";
