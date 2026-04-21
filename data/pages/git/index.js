@@ -133,7 +133,7 @@
       { type: "note", id: "official-references", title: "Official references", text: "Use the official Git documentation for command details and edge cases.", links: [{ label: "Git official docs", href: "https://git-scm.com/docs" }] },
       { type: "placeholderForm", id: "placeholders", headingId: "values-title", title: "Placeholders", intro: "Set once, apply to command lines, then copy ready to run commands.", fields: gitPlaceholders },
       { type: "concepts", id: "key-concepts", title: "Key Concepts", items: [
-        "Local repo lives on your machine. Remote repo lives on GitHub.",
+        "Local repo lives on your machine. Remote repo can live on cloud Git hosting services such as GitHub, GitLab, Bitbucket, or Azure DevOps.",
         "Git keeps local and remote repositories synchronized in both directions.",
         "Branch is a work line, remote is the linked server target, and sync covers fetch, pull, and push.",
         "These placeholders customize identity, branch names, remote alias, and repository location in command examples."

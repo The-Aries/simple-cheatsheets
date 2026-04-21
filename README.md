@@ -25,6 +25,8 @@ Block types supported by renderer:
 - `note`
 - `underConstruction`
 
+`note` is a shared content block and participates in the sidebar overview when it has an `id` or title.
+
 Footer is configured through `footer.contactLinks`, `footer.links`, and `footer.copyright`.
 
 ## Architecture Layers
