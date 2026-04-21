@@ -253,6 +253,9 @@
     layout: {
       hasSidebar: true
     },
+    extensions: {
+      styles: ["data/pages/markdown/styles.css"]
+    },
     placeholders: {
       fields: markdownPlaceholders
     },

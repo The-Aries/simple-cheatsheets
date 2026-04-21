@@ -80,10 +80,42 @@
     page.slug = key || "unknown";
   }
 
+  function resolveAssetHref(path) {
+    if (!path) {
+      return "";
+    }
+    if (/^(https?:)?\/\//.test(path) || path.charAt(0) === "/") {
+      return path;
+    }
+    var root = (body && body.dataset && body.dataset.root) || "../";
+    return root + String(path).replace(/^\.?\//, "");
+  }
+
+  function applyExtensionStyles(styles) {
+    if (!Array.isArray(styles) || !styles.length) {
+      return;
+    }
+    styles.forEach(function (item) {
+      var href = resolveAssetHref(item);
+      if (!href || document.querySelector('link[data-cheatsheet-extension="' + href + '"]')) {
+        return;
+      }
+      var link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = href;
+      link.setAttribute("data-cheatsheet-extension", href);
+      document.head.appendChild(link);
+    });
+  }
+
+  var extensions = page.extensions || {};
+  applyExtensionStyles(extensions.styles || []);
+  window.CHEATSHEET_PAGE_EXTENSIONS = extensions;
+
   if (validation && typeof validation.inferPageMode === "function") {
     window.CHEATSHEET_PAGE_MODE = validation.inferPageMode(page.slug || key, page);
   } else {
-    window.CHEATSHEET_PAGE_MODE = key === "git" ? "formal" : "underConstruction";
+    window.CHEATSHEET_PAGE_MODE = "underConstruction";
   }
 
   window.CHEATSHEET_PAGE_IS_FALLBACK = pageIsFallback;

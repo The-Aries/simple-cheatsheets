@@ -4,16 +4,17 @@ A compact static cheatsheet site built with plain HTML, CSS, and vanilla JavaScr
 
 ## v1 Template Schema
 
-Template-driven module pages now follow one data model:
+Template-driven module pages follow one shared data contract:
 
 - `slug`
 - `meta`
 - `layout`
+- `extensions` (optional, page-scoped resources)
 - `placeholders`
 - `blocks`
 - `footer`
 
-Block types supported in renderer:
+Block types supported by renderer:
 
 - `pageHeader`
 - `placeholderForm`
@@ -24,39 +25,44 @@ Block types supported in renderer:
 - `note`
 - `underConstruction`
 
-Footer is configured separately from blocks through `footer.contactLinks`, `footer.links`, and `footer.copyright`.
+Footer is configured through `footer.contactLinks`, `footer.links`, and `footer.copyright`.
 
-## Current Architecture
+## Architecture Layers
 
-- `styles.css`: shared visual system for homepage and cheatsheet pages.
-- `scripts/modules.js`: central module registry used by homepage and page top navigation.
-- `scripts/template-page.js`: resolves a single page from `window.CHEATSHEET_PAGE_DATA` and provides detailed fallback diagnostics.
-- `data/common.js`: shared footer and `makeUnderConstructionPage()` factory.
-- `data/pages/<slug>.js`: one page data file per template module.
-- `scripts/pages-data.js`: temporary legacy data file kept for migration safety (not used by template module pages).
-- `scripts/cheatsheet-renderer.js`: v1 renderer for blocks, sidebar derivation, footer rendering, copy, and placeholder apply/reset.
-- `scripts/home-renderer.js`: auto renders homepage module links from `modules.js`.
+- Shared template shell:
+  - `scripts/cheatsheet-shell.js`: single structural shell for all cheatsheet pages.
+  - `scripts/template-page.js`: page bootstrap + extension loader.
+  - `scripts/cheatsheet-renderer.js`: block rendering and interactions.
+- Shared data and registry:
+  - `scripts/modules.js`: official module registry for homepage and top navigation.
+  - `data/common.js`: shared footer + `makeUnderConstructionPage()` factory.
+- Shared styles (global reusable layer):
+  - `styles/shared/tokens.css`
+  - `styles/shared/reset.css`
+  - `styles/shared/typography.css`
+  - `styles/shared/layout.css`
+  - `styles/shared/components.css`
+  - `styles.css`: aggregator entry for shared layers.
+- Page-scoped resources:
+  - `data/pages/<slug>/index.js`: page data + configuration.
+  - `data/pages/<slug>/styles.css`: page-local style overrides/extensions.
 
 ## Module Pages
 
-- `git/index.html`: template shell + `data/pages/git.js` (official production Git page).
-- `linux/index.html`: template shell + `data/pages/linux.js` (`underConstruction`).
-- `markdown/index.html`: template shell + `data/pages/markdown.js` (`underConstruction`).
-- `regex/index.html`: template shell + `data/pages/regex.js` (`underConstruction`).
-- `matlab/index.html`: template shell + `data/pages/matlab.js` (`underConstruction`).
+All official module entries use the same shell and renderer pipeline:
 
-Official top/home navigation is `git/linux/markdown/regex/matlab`.
+- `git/index.html` -> `data/pages/git/index.js`
+- `linux/index.html` -> `data/pages/linux/index.js`
+- `markdown/index.html` -> `data/pages/markdown/index.js`
+- `regex/index.html` -> `data/pages/regex/index.js`
+- `matlab/index.html` -> `data/pages/matlab/index.js`
 
-## Latest Status (2026-04-18)
+## Add a New Module
 
-- Git is now served as the single official module page through the template path.
-- Git command-group descriptions keep per-command official documentation links.
-- Git page header now includes a direct link to the official Git documentation.
+1. Add one item in `scripts/modules.js`.
+2. Add one page folder and data file: `data/pages/<slug>/index.js`.
+3. Optional page-specific style: `data/pages/<slug>/styles.css`.
+4. Add one route entry page `<slug>/index.html` (same shared shell structure, only `data-module` and `data-page-src` differ).
 
-## Add a New Module (Minimum Changes)
-
-1. Add one item in `scripts/modules.js` (only for official modules).
-2. Add one page data file in `data/pages/<slug>.js`.
-3. Add one page shell folder like `<slug>/index.html` and point it to `data/common.js` + `data/pages/<slug>.js`.
-
-No CSS duplication is required, and homepage/module navigation updates automatically from the module list.
+For a normal page, typically only step 2 is needed (plus module registration).
+For a page with custom visual behavior, keep changes in `data/pages/<slug>/styles.css` and `extensions.styles`.

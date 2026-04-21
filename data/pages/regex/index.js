@@ -5,5 +5,9 @@
     return;
   }
 
-  window.CHEATSHEET_PAGE_DATA = common.makeUnderConstructionPage("matlab", "MATLAB");
+  window.CHEATSHEET_PAGE_DATA = common.makeUnderConstructionPage("regex", "Regex", {
+    extensions: {
+      styles: ["data/pages/regex/styles.css"]
+    }
+  });
 })();

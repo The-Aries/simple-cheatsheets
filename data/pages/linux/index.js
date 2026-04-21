@@ -5,5 +5,9 @@
     return;
   }
 
-  window.CHEATSHEET_PAGE_DATA = common.makeUnderConstructionPage("regex", "Regex");
+  window.CHEATSHEET_PAGE_DATA = common.makeUnderConstructionPage("linux", "Linux", {
+    extensions: {
+      styles: ["data/pages/linux/styles.css"]
+    }
+  });
 })();
