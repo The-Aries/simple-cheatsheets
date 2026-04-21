@@ -73,10 +73,15 @@
 .section-heading p,
 .group-intro,
 .group-description p,
-.contact-note,
 .concept-list p,
-.value-help,
 .workflow-sequence p {
+  margin: 0;
+  font-size: var(--cheatsheet-description-size);
+  line-height: var(--cheatsheet-description-line-height);
+}
+
+.value-help,
+.contact-note {
   margin: 0;
   font-size: var(--cheatsheet-body-size);
   line-height: var(--cheatsheet-body-line-height);
