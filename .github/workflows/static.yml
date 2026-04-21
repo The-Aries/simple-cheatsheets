@@ -22,7 +22,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  DEPLOY_SOURCE_BRANCH: dev
+  DEPLOY_SOURCE_BRANCH: main
 
 jobs:
   # Single deploy job since we're just deploying
