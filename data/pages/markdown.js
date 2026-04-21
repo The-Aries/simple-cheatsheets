@@ -272,7 +272,7 @@
         intro: "Set the sample values once, then apply or reset them to see the Markdown source and playground update together."
       },
       {
-        type: "preview",
+        type: "playground",
         id: "playground",
         title: "Playground",
         intro: "Edit the Markdown source on the left. The rendered playground on the right updates as you type, and the global Apply and Reset buttons keep the placeholder examples in sync.",
@@ -280,6 +280,7 @@
       },
       {
         type: "sectionGroups",
+        previewColumn: true,
         sections: markdownSections
       }
     ],

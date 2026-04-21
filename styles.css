@@ -151,6 +151,14 @@ a:hover { text-decoration-thickness: 0.08em; }
   text-align: center;
   white-space: nowrap;
 }
+.command-table.no-preview thead th:nth-child(1), .command-table.no-preview tbody td:nth-child(1) { width: 42%; }
+.command-table.no-preview thead th:nth-child(2), .command-table.no-preview tbody td:nth-child(2) { width: calc(58% - 88px); }
+.command-table.no-preview thead th:nth-child(3), .command-table.no-preview tbody td:nth-child(3) {
+  width: 88px;
+  min-width: 88px;
+  text-align: center;
+  white-space: nowrap;
+}
 .command-code { font-family: "Cascadia Code", Consolas, "Courier New", monospace; font-size: 0.92rem; line-height: 1.45; white-space: nowrap; }
 .command-code.multiline { display: block; white-space: pre-wrap; }
 .command-purpose { margin: 0; }

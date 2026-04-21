@@ -83,7 +83,7 @@
   if (validation && typeof validation.inferPageMode === "function") {
     window.CHEATSHEET_PAGE_MODE = validation.inferPageMode(page.slug || key, page);
   } else {
-    window.CHEATSHEET_PAGE_MODE = key === "git" ? "formal" : "underConstruction";
+    window.CHEATSHEET_PAGE_MODE = "underConstruction";
   }
 
   window.CHEATSHEET_PAGE_IS_FALLBACK = pageIsFallback;

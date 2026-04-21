@@ -21,6 +21,9 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
+env:
+  DEPLOY_SOURCE_BRANCH: codex/template-decouple-refactor
+
 jobs:
   # Single deploy job since we're just deploying
   deploy:
@@ -31,6 +34,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ env.DEPLOY_SOURCE_BRANCH }}
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
