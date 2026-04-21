@@ -5,5 +5,9 @@
     return;
   }
 
-  window.CHEATSHEET_PAGE_DATA = common.makeUnderConstructionPage("linux", "Linux");
+  window.CHEATSHEET_PAGE_DATA = common.makeUnderConstructionPage("matlab", "MATLAB", {
+    extensions: {
+      styles: ["data/pages/matlab/styles.css"]
+    }
+  });
 })();

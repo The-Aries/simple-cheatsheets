@@ -11,7 +11,8 @@
     copyright: "Copyright © 2026 Junhao Zhang"
   };
 
-  function makeUnderConstructionPage(slug, title) {
+  function makeUnderConstructionPage(slug, title, options) {
+    options = options || {};
     return {
       slug: slug,
       meta: {
@@ -24,6 +25,7 @@
       placeholders: {
         fields: []
       },
+      extensions: options.extensions || {},
       blocks: [
         {
           type: "pageHeader",

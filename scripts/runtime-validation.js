@@ -8,12 +8,6 @@
   var scopeIssues = Object.create(null);
   var currentScope = "global";
   var prefix = "[sc]";
-  var formalSlugs = { git: true };
-  var underConstructionSlugs = {
-    linux: true,
-    regex: true,
-    matlab: true
-  };
   var supportedBlockTypes = {
     pageHeader: true,
     placeholderForm: true,
@@ -146,17 +140,16 @@
     if (slug === "home") {
       return "home";
     }
-    if (formalSlugs[slug]) {
-      return "formal";
-    }
-    if (underConstructionSlugs[slug]) {
-      return "underConstruction";
-    }
+    var hasFormalContent = false;
+    var hasConstruction = false;
     if (page && Array.isArray(page.blocks)) {
       for (var i = 0; i < page.blocks.length; i += 1) {
         var block = page.blocks[i];
         if (!block) {
           continue;
+        }
+        if (block.type === "underConstruction") {
+          hasConstruction = true;
         }
         if (
           block.type === "sectionGroups" ||
@@ -166,9 +159,15 @@
           block.type === "playground" ||
           block.type === "note"
         ) {
-          return "formal";
+          hasFormalContent = true;
         }
       }
+    }
+    if (hasFormalContent) {
+      return "formal";
+    }
+    if (hasConstruction) {
+      return "underConstruction";
     }
     return "underConstruction";
   }

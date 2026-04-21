@@ -513,7 +513,6 @@
         var gTitle = group.title || group.key || "Untitled group";
         var gIntro = group.intro || "";
         var gRows = Array.isArray(group.rows) ? group.rows : [];
-
         html += "<section class=\"command-group\" id=\"" + escapeAttr(gAnchor) + "\"><h3>" + escapeHtml(sNumber) + "." + escapeHtml(gNumber) + " " + escapeHtml(gTitle) + "</h3>" + (gIntro ? "<p class=\"group-intro\">" + escapeHtml(gIntro) + "</p>" : "") + "<div class=\"command-table-wrap\"><table class=\"command-table" + (showPreviewColumn ? "" : " no-preview") + "\"><thead><tr><th>Command</th><th>Purpose</th>" + (showPreviewColumn ? "<th>Preview</th>" : "") + "<th>Copy</th></tr></thead><tbody>";
 
         gRows.forEach(function (row, rowIndex) {

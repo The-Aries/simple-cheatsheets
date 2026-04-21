@@ -1,0 +1,89 @@
+.brand {
+  font-weight: 700;
+  font-size: 1.58rem;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+}
+
+.topbar nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.topbar nav a {
+  font-family: Calibri, "Segoe UI", Arial, Helvetica, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.home-hero h1 {
+  margin: 0;
+  font-size: 2.55rem;
+  line-height: 1.08;
+}
+
+.home-hero p {
+  margin: 14px 0 0;
+  max-width: 56ch;
+  font-size: 1.1rem;
+  line-height: 1.68;
+}
+
+.home-section h2 {
+  margin: 0 0 14px;
+  font-size: 1.34rem;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: 3.1rem;
+  line-height: 1.03;
+}
+
+.description-title {
+  margin: 24px 0 10px;
+  font-size: 1.38rem;
+}
+
+.lead {
+  margin: 0;
+  max-width: 74ch;
+  font-size: 1.08rem;
+  line-height: 1.72;
+}
+
+.section-heading h2 {
+  margin: 0 0 8px;
+  font-size: 1.64rem;
+}
+
+.section-heading p,
+.group-intro,
+.group-description p,
+.contact-note,
+.concept-list p,
+.value-help {
+  margin: 0;
+  font-size: 1.01rem;
+  line-height: 1.66;
+}
+
+.command-group h3 {
+  margin: 0;
+  font-size: 1.21rem;
+}
+
+.group-description h4 {
+  margin: 0 0 6px;
+  font-size: 0.98rem;
+}
+
+.footer {
+  font-size: 0.98rem;
+}
