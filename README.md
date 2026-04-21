@@ -21,7 +21,7 @@ Block types supported by renderer:
 - `concepts`
 - `workflow`
 - `sectionGroups`
-- `preview`
+- `playground`
 - `note`
 - `underConstruction`
 

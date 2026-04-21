@@ -14,7 +14,7 @@
     concepts: true,
     workflow: true,
     sectionGroups: true,
-    preview: true,
+    playground: true,
     note: true,
     underConstruction: true
   };
@@ -156,7 +156,7 @@
           block.type === "placeholderForm" ||
           block.type === "workflow" ||
           block.type === "concepts" ||
-          block.type === "preview" ||
+          block.type === "playground" ||
           block.type === "note"
         ) {
           hasFormalContent = true;
@@ -390,9 +390,9 @@
         return;
       }
 
-      if (block.type === "preview") {
+      if (block.type === "playground") {
         if (!isString(block.text)) {
-          warn(slug, blockPath, "text", "missing", "missing preview.text");
+          warn(slug, blockPath, "text", "missing", "missing playground.text");
         }
       }
     });

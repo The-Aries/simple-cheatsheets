@@ -70,7 +70,7 @@
   }
 
   function resolvePlaygroundBlock() {
-    return findBlock("preview");
+    return findBlock("playground");
   }
 
   function moduleHref(module) {
@@ -491,6 +491,7 @@
 
   function renderSectionGroups(block) {
     var sections = Array.isArray(block.sections) ? block.sections : [];
+    var showPreviewColumn = !!(block && block.previewColumn);
     if (!sections.length) { return ""; }
 
     var html = "";
@@ -512,8 +513,7 @@
         var gTitle = group.title || group.key || "Untitled group";
         var gIntro = group.intro || "";
         var gRows = Array.isArray(group.rows) ? group.rows : [];
-
-        html += "<section class=\"command-group\" id=\"" + escapeAttr(gAnchor) + "\"><h3>" + escapeHtml(sNumber) + "." + escapeHtml(gNumber) + " " + escapeHtml(gTitle) + "</h3>" + (gIntro ? "<p class=\"group-intro\">" + escapeHtml(gIntro) + "</p>" : "") + "<div class=\"command-table-wrap\"><table class=\"command-table\"><thead><tr><th>Command</th><th>Purpose</th><th>Preview</th><th>Copy</th></tr></thead><tbody>";
+        html += "<section class=\"command-group\" id=\"" + escapeAttr(gAnchor) + "\"><h3>" + escapeHtml(sNumber) + "." + escapeHtml(gNumber) + " " + escapeHtml(gTitle) + "</h3>" + (gIntro ? "<p class=\"group-intro\">" + escapeHtml(gIntro) + "</p>" : "") + "<div class=\"command-table-wrap\"><table class=\"command-table" + (showPreviewColumn ? "" : " no-preview") + "\"><thead><tr><th>Command</th><th>Purpose</th>" + (showPreviewColumn ? "<th>Preview</th>" : "") + "<th>Copy</th></tr></thead><tbody>";
 
         gRows.forEach(function (row, rowIndex) {
           var commandId = "cmd-" + safeKey(sNumber) + "-" + safeKey(gNumber) + "-" + String(rowIndex + 1);
@@ -523,7 +523,7 @@
           var previewHtml = previewTemplate
             ? "<div class=\"row-preview markdown-preview\" data-template=\"" + escapeAttr(previewTemplate) + "\"></div>"
             : "<div class=\"row-preview row-preview-empty\">N/A</div>";
-          html += "<tr><td><code class=\"" + commandClasses + "\" id=\"" + escapeAttr(commandId) + "\" data-template=\"" + escapeAttr(template) + "\">" + escapeHtml(template) + "</code></td><td><div class=\"command-purpose\">" + escapeHtml(row.purpose || "") + "</div></td><td>" + previewHtml + "</td><td><button type=\"button\" class=\"copy-button\" data-copy-target=\"" + escapeAttr(commandId) + "\">Copy</button></td></tr>";
+          html += "<tr><td><code class=\"" + commandClasses + "\" id=\"" + escapeAttr(commandId) + "\" data-template=\"" + escapeAttr(template) + "\">" + escapeHtml(template) + "</code></td><td><div class=\"command-purpose\">" + escapeHtml(row.purpose || "") + "</div></td>" + (showPreviewColumn ? "<td>" + previewHtml + "</td>" : "") + "<td><button type=\"button\" class=\"copy-button\" data-copy-target=\"" + escapeAttr(commandId) + "\">Copy</button></td></tr>";
         });
 
         html += "</tbody></table></div><div class=\"group-description\"><h4>Description</h4>" + renderGroupDescription(group.description) + "</div></section>";
@@ -535,7 +535,7 @@
     return html;
   }
 
-  function renderPreview(block) {
+  function renderPlayground(block) {
     var previewText = block.text || "";
     var previewId = block.id || "playground";
     var previewHeadingId = previewId + "-title";
@@ -561,7 +561,7 @@
     if (block.type === "concepts") { return renderConcepts(block); }
     if (block.type === "workflow") { return renderWorkflow(block); }
     if (block.type === "sectionGroups") { return renderSectionGroups(block); }
-    if (block.type === "preview") { return renderPreview(block); }
+    if (block.type === "playground") { return renderPlayground(block); }
     if (block.type === "note") { return renderNote(block); }
     if (block.type === "underConstruction") { return renderUnderConstruction(block); }
     return "";
@@ -578,9 +578,8 @@
       placeholderValues[field.key] = field.defaultValue || field.key;
     });
     var html = blocks.map(function (block) {
-      if (block && block.type === "preview") {
-        var previewHtml = renderPreview(block);
-        return previewHtml;
+      if (block && block.type === "playground") {
+        return renderPlayground(block);
       }
       if (block && block.type === "sectionGroups") {
         return renderSectionGroups(block);

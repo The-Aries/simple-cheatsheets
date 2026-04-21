@@ -108,8 +108,25 @@
     });
   }
 
+  function applyExtensionScripts(scripts) {
+    if (!Array.isArray(scripts) || !scripts.length) {
+      return;
+    }
+    scripts.forEach(function (item) {
+      var src = resolveAssetHref(item);
+      if (!src || document.querySelector('script[data-cheatsheet-extension="' + src + '"]')) {
+        return;
+      }
+      var script = document.createElement("script");
+      script.src = src;
+      script.setAttribute("data-cheatsheet-extension", src);
+      document.head.appendChild(script);
+    });
+  }
+
   var extensions = page.extensions || {};
   applyExtensionStyles(extensions.styles || []);
+  applyExtensionScripts(extensions.scripts || []);
   window.CHEATSHEET_PAGE_EXTENSIONS = extensions;
 
   if (validation && typeof validation.inferPageMode === "function") {
