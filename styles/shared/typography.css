@@ -1,6 +1,8 @@
 :root {
-  --cheatsheet-body-size: 1.08rem;
-  --cheatsheet-body-line-height: 1.72;
+  --cheatsheet-body-size: 0.94rem;
+  --cheatsheet-body-line-height: 1.5;
+  --cheatsheet-description-size: 1.08rem;
+  --cheatsheet-description-line-height: 1.72;
 }
 
 .brand {
@@ -59,8 +61,8 @@
 .lead {
   margin: 0;
   max-width: 74ch;
-  font-size: var(--cheatsheet-body-size);
-  line-height: var(--cheatsheet-body-line-height);
+  font-size: var(--cheatsheet-description-size);
+  line-height: var(--cheatsheet-description-line-height);
 }
 
 .section-heading h2 {

@@ -52,40 +52,40 @@
       makeGroup(
         1,
         "login",
-        "login",
+        "docker login",
         "Authenticate to a registry before pulling private images or publishing new ones.",
         [
           { template: "docker login", purpose: "Sign in to the default registry with your local Docker credentials." },
           { template: "docker login registry.example.com", purpose: "Sign in to a private registry host before pull or push." }
         ],
-        "Use this first when a registry needs authentication. For less common registry flags and credential behavior, check the official docs.",
+        "For the Docker login reference, see the official docs.",
         "https://docs.docker.com/reference/cli/docker/login/",
         "docker login documentation"
       ),
       makeGroup(
         2,
         "pull",
-        "pull",
+        "docker pull",
         "Download an image so it is available locally for run or inspect workflows.",
         [
           { template: "docker pull imageRef", purpose: "Pull the image you want to run or inspect later." },
           { template: "docker pull imageRef@sha256:0123456789abcdef", purpose: "Pull a specific digest when you need an exact immutable image." }
         ],
-        "Use an exact reference when you want repeatable local runs. For registry options, pull policies, and edge cases, see the official docs.",
+        "For the Docker image pull reference, see the official docs.",
         "https://docs.docker.com/reference/cli/docker/image/pull/",
         "docker pull documentation"
       ),
       makeGroup(
         3,
         "images",
-        "images",
+        "docker images",
         "List local images so you can verify what is already downloaded or built.",
         [
           { template: "docker images", purpose: "Show the local image list with repositories, tags, IDs, and sizes." },
           { template: "docker images imageName", purpose: "Filter the local list to one repository name." },
           { template: "docker images -a", purpose: "Show all images, including intermediate and dangling ones." }
         ],
-        "Use the repository filter for quick lookup, and use `-a` when you need the full local image set. For formatting and filtering details, see the official docs.",
+        "For the Docker image list reference, see the official docs.",
         "https://docs.docker.com/reference/cli/docker/image/",
         "docker image documentation"
       )
@@ -94,7 +94,7 @@
       makeGroup(
         1,
         "run",
-        "run",
+        "docker run",
         "Start a new container from an image and keep the command simple enough for local development.",
         [
           { template: "docker run --name containerName -p hostPort:containerPort -d imageRef", purpose: "Run a detached service and publish one port to the host." },
@@ -103,73 +103,73 @@
           { template: "docker run --name containerName -v hostPath:containerPath imageRef", purpose: "Mount a local path into the container for source files or data." },
           { template: "docker run --rm -it imageRef sh", purpose: "Run a short-lived container and remove it after exit." }
         ],
-        "Use `-d` for services, `-p` for port mapping, `-e` for environment variables, and `-v` for local data or source mounts. For restart policy, pull policy, resource limits, and other advanced flags, see the official docs.",
+        "For the Docker container run reference, see the official docs.",
         "https://docs.docker.com/reference/cli/docker/container/run/",
         "docker run documentation"
       ),
       makeGroup(
         2,
         "ps",
-        "ps",
+        "docker ps",
         "Check which containers are running and get the container name or ID you need for other commands.",
         [
           { template: "docker ps", purpose: "Show only running containers." },
           { template: "docker ps -a", purpose: "Show running and stopped containers." },
           { template: "docker ps --filter name=containerName", purpose: "Narrow the list to a specific container name." }
         ],
-        "Use `-a` when you need stopped containers too, and use filters when you are looking for one exact container. For output formatting and more filter options, see the official docs.",
+        "For the Docker container list reference, see the official docs.",
         "https://docs.docker.com/reference/cli/docker/container/ls/",
         "docker ps documentation"
       ),
       makeGroup(
         3,
         "stop",
-        "stop",
+        "docker stop",
         "Stop a running container cleanly so you can inspect or remove it afterward.",
         [
           { template: "docker stop containerName", purpose: "Stop a container by name." },
           { template: "docker stop containerId", purpose: "Stop a container by ID when the name is not handy." }
         ],
-        "Use names for readability and IDs when you copied the value from `docker ps`. For signal and timeout options, see the official docs.",
+        "For the Docker container stop reference, see the official docs.",
         "https://docs.docker.com/reference/cli/docker/container/stop/",
         "docker stop documentation"
       ),
       makeGroup(
         4,
         "start",
-        "start",
+        "docker start",
         "Start a previously stopped container again without rebuilding it.",
         [
           { template: "docker start containerName", purpose: "Start a stopped container by name." },
           { template: "docker start containerId", purpose: "Start a stopped container by ID." }
         ],
-        "Use this when you want the same container state and configuration back. For attach options and less common flags, see the official docs.",
+        "For the Docker container start reference, see the official docs.",
         "https://docs.docker.com/reference/cli/docker/container/start/",
         "docker start documentation"
       ),
       makeGroup(
         5,
         "restart",
-        "restart",
+        "docker restart",
         "Bounce a container when you need a quick service refresh.",
         [
           { template: "docker restart containerName", purpose: "Stop and start a container in one step." },
           { template: "docker restart containerId", purpose: "Restart a container by ID." }
         ],
-        "Use restart for a quick refresh after changing a local dependency or environment. For timeout and signal behavior, see the official docs.",
+        "For the Docker container restart reference, see the official docs.",
         "https://docs.docker.com/reference/cli/docker/container/restart/",
         "docker restart documentation"
       ),
       makeGroup(
         6,
         "rm",
-        "rm",
+        "docker rm",
         "Remove a container after you are done with it, especially after test or debug runs.",
         [
           { template: "docker rm containerName", purpose: "Remove a stopped container by name." },
           { template: "docker rm -f containerName", purpose: "Force remove a running container when you are sure it should go away." }
         ],
-        "Remove stopped containers regularly so your local list stays readable. Use `-f` only when you understand that it stops and removes the container together. For more options, see the official docs.",
+        "For the Docker container remove reference, see the official docs.",
         "https://docs.docker.com/reference/cli/docker/container/rm/",
         "docker rm documentation"
       )
@@ -178,37 +178,37 @@
       makeGroup(
         1,
         "image-rm",
-        "image rm",
+        "docker image rm",
         "Remove a local image when you no longer need the tag or ID.",
         [
           { template: "docker image rm imageRef", purpose: "Remove a tagged image reference from the local machine." },
           { template: "docker image rm imageId", purpose: "Remove an image by ID when you copied it from `docker images`." }
         ],
-        "Warning: removing images can break containers that still depend on them. For more removal flags and platform details, see the official docs.",
+        "Warning: removing images can break containers that still depend on them. For the Docker image remove reference, see the official docs.",
         "https://docs.docker.com/reference/cli/docker/image/rm/",
         "docker image rm documentation"
       ),
       makeGroup(
         2,
         "container-prune",
-        "container prune",
+        "docker container prune",
         "Remove all stopped containers to reclaim space and reduce clutter.",
         [
           { template: "docker container prune", purpose: "Delete every stopped container after a confirmation prompt." }
         ],
-        "Warning: this deletes every stopped container, not just the one you are thinking about. Review the prompt carefully, and check the official docs for `--filter` and `-f` behavior.",
+        "Warning: this deletes every stopped container, not just the one you are thinking about. For the Docker container prune reference, see the official docs.",
         "https://docs.docker.com/reference/cli/docker/container/prune/",
         "docker container prune documentation"
       ),
       makeGroup(
         3,
         "system-prune",
-        "system prune",
+        "docker system prune",
         "Remove unused containers, networks, images, and build cache in one cleanup pass.",
         [
           { template: "docker system prune", purpose: "Remove unused Docker objects after a confirmation prompt." }
         ],
-        "Warning: this is the broad cleanup command and can remove more than you expect. For the `-a` option and the exact prune scope, see the official docs.",
+        "Warning: this is the broad cleanup command and can remove more than you expect. For the Docker pruning guide, see the official docs.",
         "https://docs.docker.com/engine/manage-resources/pruning/",
         "Docker pruning documentation"
       )
@@ -217,39 +217,39 @@
       makeGroup(
         1,
         "logs",
-        "logs",
+        "docker logs",
         "Read container output to troubleshoot startup failures or runtime errors.",
         [
           { template: "docker logs containerName", purpose: "Print the current log output for a container." },
           { template: "docker logs -f --tail 100 containerName", purpose: "Watch new log lines while starting from the most recent output." }
         ],
-        "Use `-f` when you want live log follow and `--tail` when you only need the recent part of a long log. For timestamps, since/until filters, and formatting, see the official docs.",
+        "For the Docker container logs reference, see the official docs.",
         "https://docs.docker.com/reference/cli/docker/container/logs/",
         "docker logs documentation"
       ),
       makeGroup(
         2,
         "exec",
-        "exec",
+        "docker exec",
         "Open a shell or run a command inside a running container.",
         [
           { template: "docker exec -it containerName sh", purpose: "Open an interactive shell inside the running container." },
           { template: "docker exec -it containerName env", purpose: "Inspect environment variables or run another simple command in the container." }
         ],
-        "Use `-it` for interactive debugging and choose the shell that exists in the image, usually `sh` for minimal images. For detach keys and other options, see the official docs.",
+        "For the Docker container exec reference, see the official docs.",
         "https://docs.docker.com/reference/cli/docker/container/exec/",
         "docker exec documentation"
       ),
       makeGroup(
         3,
         "inspect",
-        "inspect",
+        "docker inspect",
         "Inspect low-level container or image details when logs and ps are not enough.",
         [
           { template: "docker inspect containerId", purpose: "Print detailed JSON for a container." },
           { template: "docker inspect imageRef", purpose: "Print detailed JSON for an image." }
         ],
-        "Use inspect when you need ports, mounts, labels, network data, or exact IDs. For formatting and platform options, see the official docs.",
+        "For the Docker inspect reference, see the official docs.",
         "https://docs.docker.com/reference/cli/docker/container/inspect/",
         "docker inspect documentation"
       )
@@ -258,13 +258,13 @@
       makeGroup(
         1,
         "build",
-        "build",
+        "docker build",
         "Create a local image from a Dockerfile for development or README examples.",
         [
           { template: "docker build -t imageName:imageTag .", purpose: "Build the current directory into a tagged local image." },
           { template: "docker build -f Dockerfile -t imageName:imageTag .", purpose: "Build from an explicit Dockerfile path." }
         ],
-        "Use `-t` for a friendly local name and `-f` when the Dockerfile is not in the default location. For build context, cache, secrets, and other advanced flags, see the official docs.",
+        "For the Docker build reference, see the official docs.",
         "https://docs.docker.com/reference/cli/docker/build-legacy/",
         "docker build documentation"
       )
@@ -273,26 +273,26 @@
       makeGroup(
         1,
         "tag",
-        "tag",
+        "docker tag",
         "Create a publish-ready image name without rebuilding the image.",
         [
           { template: "docker tag sourceImageRef targetImageRef", purpose: "Give an existing image a new registry-ready name." },
           { template: "docker tag imageId targetImageRef", purpose: "Tag an image by ID when you copied it from `docker images`." }
         ],
-        "Use tag when you want one local build to carry multiple names or registry targets. For naming rules and advanced tag behavior, see the official docs.",
+        "For the Docker image tag reference, see the official docs.",
         "https://docs.docker.com/reference/cli/docker/image/tag/",
         "docker tag documentation"
       ),
       makeGroup(
         2,
         "push",
-        "push",
+        "docker push",
         "Upload a tagged image to a registry after you have logged in.",
         [
           { template: "docker push targetImageRef", purpose: "Push the tagged image to the registry." },
           { template: "docker push imageRef", purpose: "Push a single-tag image directly when the name is already registry-ready." }
         ],
-        "Use push after tag so the registry sees the exact name you want users to pull later. For multi-tag pushes and registry options, see the official docs.",
+        "For the Docker image push reference, see the official docs.",
         "https://docs.docker.com/reference/cli/docker/image/push/",
         "docker push documentation"
       )
@@ -329,6 +329,16 @@
         title: "Docker Cheatsheet",
         descriptionTitle: "Description",
         lead: "This page is a practical cheatsheet for the most common Docker commands. It focuses on local development, debugging, running services, and README examples. It uses Docker Engine and the docker CLI as the baseline. For uncommon flags and advanced behavior, see the official Docker docs linked in each section."
+      },
+      {
+        type: "note",
+        id: "official-references",
+        title: "Official references",
+        text: "Use these official docs for the command reference, syntax details, and edge cases.",
+        links: [
+          { label: "Docker CLI reference", href: "https://docs.docker.com/reference/cli/docker/" },
+          { label: "Docker Engine docs", href: "https://docs.docker.com/engine/" }
+        ]
       },
       {
         type: "placeholderForm",
