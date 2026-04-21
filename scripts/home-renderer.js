@@ -4,6 +4,9 @@
   var body = document.body;
   var root = (body && body.dataset && body.dataset.root) || "./";
   window.CHEATSHEET_PAGE_MODE = "home";
+  if (typeof window.CHEATSHEET_LOG_RELEASE === "function") {
+    window.CHEATSHEET_LOG_RELEASE();
+  }
 
   if (validation && typeof validation.validateHomeData === "function") {
     validation.validateHomeData(modules);

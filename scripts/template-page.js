@@ -137,4 +137,7 @@
 
   window.CHEATSHEET_PAGE_IS_FALLBACK = pageIsFallback;
   window.CHEATSHEET_PAGE = page;
+  if (typeof window.CHEATSHEET_LOG_RELEASE === "function") {
+    window.CHEATSHEET_LOG_RELEASE();
+  }
 })();
