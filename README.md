@@ -54,10 +54,13 @@ Footer is configured through `footer.contactLinks`, `footer.links`, and `footer.
 All official module entries use the same shell and renderer pipeline:
 
 - `git/index.html` -> `data/pages/git/index.js`
+- `docker/index.html` -> `data/pages/docker/index.js`
 - `linux/index.html` -> `data/pages/linux/index.js`
 - `markdown/index.html` -> `data/pages/markdown/index.js`
 - `regex/index.html` -> `data/pages/regex/index.js`
 - `matlab/index.html` -> `data/pages/matlab/index.js`
+
+Docker and Docker Compose are intentionally separate modules. This repository currently includes Docker only; Docker Compose will stay in its own future page and its own page-scoped data.
 
 ## Add a New Module
 
